@@ -1,0 +1,4 @@
+scmobile.device = {};
+scmobile.device.version = '%1$s';
+scmobile.device.name = '%2$s';
+scmobile.device.uuid = '%3$s';
