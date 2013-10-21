@@ -1,0 +1,26 @@
+#Android generated
+bin
+build
+gen
+local.properties
+proguard.cfg
+
+#Eclipse
+.project
+.classpath
+.settings
+
+#IntelliJ IDEA
+.idea
+
+#Other
+.gradle
+*~
+*.DS_Store
+*.class
+*.checkstyle
+/.classpath
+/.project
+.svn
+target
+out
