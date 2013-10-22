@@ -7,12 +7,6 @@ import android.text.TextUtils;
 
 import org.json.JSONException;
 
-import net.sitecore.android.sdk.web.IoUtils;
-import net.sitecore.android.sdk.web.R;
-import net.sitecore.android.sdk.web.ScCallbackContext;
-import net.sitecore.android.sdk.web.ScParams;
-import net.sitecore.android.sdk.web.ScPlugin;
-
 import static net.sitecore.android.sdk.web.LogUtils.LOGE;
 
 /**

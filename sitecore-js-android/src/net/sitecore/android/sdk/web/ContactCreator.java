@@ -16,8 +16,6 @@ import android.text.TextUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.sitecore.android.sdk.web.ScParams;
-
 import static net.sitecore.android.sdk.web.LogUtils.LOGD;
 
 class ContactCreator {

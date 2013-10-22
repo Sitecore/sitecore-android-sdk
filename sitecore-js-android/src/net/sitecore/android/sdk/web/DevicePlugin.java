@@ -2,12 +2,6 @@ package net.sitecore.android.sdk.web;
 
 import android.provider.Settings;
 
-import net.sitecore.android.sdk.web.IoUtils;
-import net.sitecore.android.sdk.web.R;
-import net.sitecore.android.sdk.web.ScCallbackContext;
-import net.sitecore.android.sdk.web.ScParams;
-import net.sitecore.android.sdk.web.ScPlugin;
-
 /**
  * Plugin for retrieving device information.
  * <p>Example :

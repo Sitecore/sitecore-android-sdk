@@ -3,16 +3,10 @@ package net.sitecore.android.sdk.web;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
+import android.text.Html;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
-
-import net.sitecore.android.sdk.web.ActivityContext;
-import net.sitecore.android.sdk.web.IoUtils;
-import net.sitecore.android.sdk.web.R;
-import net.sitecore.android.sdk.web.ScCallbackContext;
-import net.sitecore.android.sdk.web.ScParams;
-import net.sitecore.android.sdk.web.ScPlugin;
 
 import static net.sitecore.android.sdk.web.LogUtils.LOGE;
 
@@ -124,7 +118,7 @@ public final class SharePlugin extends ScPlugin {
         boolean isHtml = params.optBoolean("isHtml");
         if (isHtml) {
             final String body = params.getString("body");
-            intent.putExtra(Intent.EXTRA_TEXT, body);
+            intent.putExtra(Intent.EXTRA_TEXT, Html.fromHtml(body));
         }
 
         try {

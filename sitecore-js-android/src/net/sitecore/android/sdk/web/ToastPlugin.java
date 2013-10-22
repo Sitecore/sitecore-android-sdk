@@ -5,12 +5,6 @@ import android.widget.Toast;
 
 import org.json.JSONException;
 
-import net.sitecore.android.sdk.web.IoUtils;
-import net.sitecore.android.sdk.web.R;
-import net.sitecore.android.sdk.web.ScCallbackContext;
-import net.sitecore.android.sdk.web.ScParams;
-import net.sitecore.android.sdk.web.ScPlugin;
-
 /**
  * Plugin for showing Android {@link Toast} messages.
  * <p>Example :
