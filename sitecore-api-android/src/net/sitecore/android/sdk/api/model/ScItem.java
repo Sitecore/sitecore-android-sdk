@@ -1,17 +1,20 @@
 package net.sitecore.android.sdk.api.model;
 
 import android.content.ContentProviderOperation;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.text.TextUtils;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import net.sitecore.android.sdk.api.provider.ScItemsContract.Items;
 
 /** Represents Sitecore item. */
-public class ScItem {
+public class ScItem implements Parcelable {
 
     public static final String ROOT_ITEM_ID = "{11111111-1111-1111-1111-111111111111}";
 
@@ -90,9 +93,48 @@ public class ScItem {
         return mFields;
     }
 
-    /**
-     * @return {@link #getId()} of parent item.
-     */
+    protected ScItem(Parcel in) {
+        mDatabase = in.readString();
+        mDisplayName = in.readString();
+        mHasChildren = in.readByte() != 0x00;
+        mId = in.readString();
+        mLanguage = in.readString();
+        mLongId = in.readString();
+        mPath = in.readString();
+        mTemplate = in.readString();
+        mVersion = in.readInt();
+        mFields = new ArrayList<ScField>();
+        in.readList(mFields, ScItem.class.getClassLoader());
+    }
+
+    public int describeContents() {
+        return 0;
+    }
+
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mDatabase);
+        dest.writeString(mDisplayName);
+        dest.writeByte((byte) (mHasChildren ? 0x01 : 0x00));
+        dest.writeString(mId);
+        dest.writeString(mLanguage);
+        dest.writeString(mLongId);
+        dest.writeString(mPath);
+        dest.writeString(mTemplate);
+        dest.writeInt(mVersion);
+        dest.writeList(mFields);
+    }
+
+    public static final Parcelable.Creator<ScItem> CREATOR = new Parcelable.Creator<ScItem>() {
+        public ScItem createFromParcel(Parcel in) {
+            return new ScItem(in);
+        }
+
+        public ScItem[] newArray(int size) {
+            return new ScItem[size];
+        }
+    };
+
+    /** @return {@link #getId()} of parent item. */
     public String getParentItemId() {
         String parentId = null;
         String[] segments = TextUtils.split(mLongId, "/");
