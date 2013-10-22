@@ -1,6 +1,7 @@
 package net.sitecore.android.sdk.api.model;
 
 import com.android.volley.Response;
+
 import net.sitecore.android.sdk.api.ScRequest;
 /**
  * Class represents get item request.
