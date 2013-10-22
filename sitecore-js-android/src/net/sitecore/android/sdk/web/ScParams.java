@@ -1,10 +1,9 @@
 package net.sitecore.android.sdk.web;
 
-import android.text.Html;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -80,7 +79,7 @@ class ScParams {
     }
 
     private String getDecodedString(String value) {
-        return Html.fromHtml(value).toString();
+        return StringEscapeUtils.unescapeHtml4(value);
     }
 
     /**
