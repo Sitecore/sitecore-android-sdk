@@ -11,6 +11,7 @@ import com.google.mockwebserver.MockWebServer;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -28,7 +29,8 @@ public class MockedServerAndroidTestCase {
         //ShadowLog.stream = System.out;
         mServer = new MockWebServer();
         mServer.play();
-        mRequestQueue = RequestQueueProvider.getRequestQueue(getContext());
+        mRequestQueue = RequestQueueProvider.newSitecoreRequestQueue(getContext().getContentResolver(),
+                Executors.newSingleThreadExecutor());
     }
 
     @After

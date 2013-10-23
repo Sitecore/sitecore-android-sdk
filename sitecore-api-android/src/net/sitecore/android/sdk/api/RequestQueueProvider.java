@@ -4,6 +4,8 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.net.http.AndroidHttpClient;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 
 import com.android.volley.Network;
 import com.android.volley.RequestQueue;
@@ -13,6 +15,8 @@ import com.android.volley.toolbox.HttpClientStack;
 import com.android.volley.toolbox.HttpStack;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.NoCache;
+
+import java.util.concurrent.Executor;
 
 import net.sitecore.android.sdk.api.provider.ScItemsProvider;
 
@@ -48,6 +52,17 @@ public class RequestQueueProvider {
      * @return {@code queue}.
      */
     static RequestQueue newSitecoreRequestQueue(ContentResolver resolver) {
+        final Handler handler = new Handler(Looper.getMainLooper());
+        final Executor executor = new Executor() {
+            @Override
+            public void execute(Runnable command) {
+                handler.post(command);
+            }
+        };
+        return newSitecoreRequestQueue(resolver, executor);
+    }
+
+    static RequestQueue newSitecoreRequestQueue(ContentResolver resolver, Executor executor) {
         final String userAgent = "Sitecore/1.0 Mobile SDK for Android";
 
         HttpStack stack = null;
@@ -60,7 +75,7 @@ public class RequestQueueProvider {
         }
 
         final Network network = new BasicNetwork(stack);
-        final ResponseDelivery delivery = new ContentProviderExecutorDelivery(resolver);
+        final ResponseDelivery delivery = new ContentProviderExecutorDelivery(resolver, executor);
         final RequestQueue queue = new RequestQueue(new NoCache(), network, 4, delivery);
         queue.start();
 
