@@ -1,5 +1,7 @@
 package net.sitecore.android.sdk.api.model;
 
+import android.text.TextUtils;
+
 import java.util.ArrayList;
 
 /**
@@ -24,6 +26,7 @@ public class ScBaselistField extends ScField {
         String[] array = rawValue.split("\\|");
         mItemsIds = new ArrayList<String>(array.length);
         for (String s : array) {
+            if (TextUtils .isEmpty(s)) continue;
             mItemsIds.add(s);
         }
     }

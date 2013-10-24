@@ -1,6 +1,8 @@
 package net.sitecore.android.sdk.api.model;
 
 import android.content.ContentProviderOperation;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import net.sitecore.android.sdk.api.provider.ScItemsContract.Fields;
 
@@ -13,10 +15,10 @@ import net.sitecore.android.sdk.api.provider.ScItemsContract.Fields;
  * @see ScRichtextField
  * @see ScBaselistField
  * @see ScCheckBoxField
-  */
-public class ScField {
+ */
+public class ScField implements Parcelable {
 
-    public enum Type {
+    public enum Type implements Parcelable {
         TEXT("Text"),
         RICHTEXT("Rich Text"),
         SINGLE_LINE_TEXT("Single-Line Text"),
@@ -61,6 +63,28 @@ public class ScField {
 
             return UNKNOWN;
         }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(final Parcel dest, final int flags) {
+            dest.writeInt(ordinal());
+        }
+
+        public static final Creator<Type> CREATOR = new Creator<Type>() {
+            @Override
+            public Type createFromParcel(final Parcel source) {
+                return Type.values()[source.readInt()];
+            }
+
+            @Override
+            public Type[] newArray(final int size) {
+                return new Type[size];
+            }
+        };
     }
 
     private final String mId;
@@ -105,6 +129,7 @@ public class ScField {
 
     /**
      * Factory method that creates a {@link ScField} of the specified field type.
+     *
      * @param name     field name
      * @param id       field id
      * @param type     field type
@@ -178,4 +203,31 @@ public class ScField {
         return builder.build();
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.mId);
+        dest.writeString(this.mName);
+        dest.writeParcelable(this.mType, flags);
+        dest.writeString(this.mRawValue);
+    }
+
+    public static Parcelable.Creator<ScField> CREATOR = new Parcelable.Creator<ScField>() {
+        public ScField createFromParcel(Parcel source) {
+            String id = source.readString();
+            String name = source.readString();
+            Type type = source.readParcelable(Type.class.getClassLoader());
+            String rawValue = source.readString();
+
+            return ScField.createFieldFromType(type, name, id, rawValue);
+        }
+
+        public ScField[] newArray(int size) {
+            return new ScField[size];
+        }
+    };
 }

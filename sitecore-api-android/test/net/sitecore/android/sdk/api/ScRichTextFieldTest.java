@@ -48,7 +48,7 @@ public class ScRichTextFieldTest extends MockedServerAndroidTestCase {
         assertEquals(ScField.Type.RICHTEXT, richtextField.getType());
 
         String expectedHtml = TestData.rich_text_not_changed;
-        String actualHtml = richtextField.getHtmlText(ScApiSession.getAnonymousSession("http://test/"));
+        String actualHtml = richtextField.getHtmlText("http://test/");
         assertEquals(expectedHtml, actualHtml);
     }
 
@@ -58,7 +58,7 @@ public class ScRichTextFieldTest extends MockedServerAndroidTestCase {
         assertEquals(ScField.Type.RICHTEXT, richtextField.getType());
 
         String expectedHtml = TestData.rich_text_test_notchanged_single_qoutes;
-        String actualHtml = richtextField.getHtmlText(ScApiSession.getAnonymousSession("http://test/"));
+        String actualHtml = richtextField.getHtmlText("http://test/");
         assertEquals(expectedHtml, actualHtml);
     }
 
@@ -68,7 +68,7 @@ public class ScRichTextFieldTest extends MockedServerAndroidTestCase {
         assertEquals(ScField.Type.RICHTEXT, richtextField.getType());
 
         String expectedHtml = TestData.rich_text_test_changed;
-        String actualHtml = richtextField.getHtmlText(ScApiSession.getAnonymousSession("http://test/"));
+        String actualHtml = richtextField.getHtmlText("http://test/");
         assertEquals(expectedHtml, actualHtml);
     }
 
@@ -78,7 +78,7 @@ public class ScRichTextFieldTest extends MockedServerAndroidTestCase {
         assertEquals(ScField.Type.RICHTEXT, richtextField.getType());
 
         String expectedHtml = TestData.rich_text_test_changed_single_qoutes;
-        String actualHtml = richtextField.getHtmlText(ScApiSession.getAnonymousSession("http://test/"));
+        String actualHtml = richtextField.getHtmlText("http://test/");
         assertEquals(expectedHtml, actualHtml);
     }
 
@@ -88,7 +88,7 @@ public class ScRichTextFieldTest extends MockedServerAndroidTestCase {
         assertEquals(ScField.Type.RICHTEXT, richtextField.getType());
 
         String expectedHtml = TestData.rich_text_test_nonlink_unchanged_singleqoutes;
-        String actualHtml = richtextField.getHtmlText(ScApiSession.getAnonymousSession("http://test/"));
+        String actualHtml = richtextField.getHtmlText("http://test/");
         assertEquals(expectedHtml, actualHtml);
     }
 }

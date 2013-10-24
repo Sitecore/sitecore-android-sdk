@@ -3,6 +3,8 @@ package net.sitecore.android.sdk.api;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.OperationApplicationException;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.RemoteException;
 
 import com.android.volley.ExecutorDelivery;
@@ -10,7 +12,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 
 import java.util.ArrayList;
-import java.util.concurrent.Executors;
+import java.util.concurrent.Executor;
 
 import net.sitecore.android.sdk.api.provider.ScItemsContract;
 
@@ -23,8 +25,8 @@ class ContentProviderExecutorDelivery extends ExecutorDelivery {
 
     private final ContentResolver mResolver;
 
-    public ContentProviderExecutorDelivery(ContentResolver resolver) {
-        super(Executors.newSingleThreadExecutor());
+    public ContentProviderExecutorDelivery(ContentResolver resolver, Executor executor) {
+        super(executor);
         mResolver = resolver;
     }
 
