@@ -1,6 +1,5 @@
 package net.sitecore.android.sdk.api;
 
-import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -24,7 +23,7 @@ public class RequestBuilderTest extends MockedServerAndroidTestCase {
     private ScApiSession mSession;
 
     @Before
-    public void setUp() throws IOException {
+    public void setUp() throws Exception {
         super.setUp();
         mSession = ScApiSession.getAnonymousSession("http://sample.com");
     }

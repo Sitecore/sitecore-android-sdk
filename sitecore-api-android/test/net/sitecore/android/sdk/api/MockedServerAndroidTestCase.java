@@ -24,7 +24,7 @@ public class MockedServerAndroidTestCase {
     RequestQueue mRequestQueue;
 
     @Before
-    public void setUp() throws IOException {
+    public void setUp() throws Exception {
         //ShadowLog.stream = System.out;
         mServer = new MockWebServer();
         mServer.play();

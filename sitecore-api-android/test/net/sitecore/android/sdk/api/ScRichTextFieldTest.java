@@ -2,10 +2,7 @@ package net.sitecore.android.sdk.api;
 
 import com.android.volley.toolbox.RequestFuture;
 
-import java.io.IOException;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -27,8 +24,8 @@ public class ScRichTextFieldTest extends MockedServerAndroidTestCase {
     private ScItem mItem;
 
     @Before
-    public void sendRequest() throws InterruptedException, ExecutionException, TimeoutException, IOException {
-        setUp();
+    public void setUp() throws Exception {
+        super.setUp();
         setMockResponse(TestData._200_1_item_rich_text_test);
 
         ScApiSession session = ScApiSession.getAnonymousSession(getBackendUrl());

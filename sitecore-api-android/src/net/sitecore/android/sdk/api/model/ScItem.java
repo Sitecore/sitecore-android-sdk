@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import net.sitecore.android.sdk.api.provider.ScItemsContract.Items;
@@ -101,6 +102,23 @@ public class ScItem {
         }
 
         return parentId;
+    }
+
+    /**
+     * Returns {@link LinkedList} containing {@link #getId()} of all ancestor items of current item.
+     * Current item id comes first in results, root item id will be the last one.
+     *
+     * @return {@link LinkedList} with item Ids.
+     */
+    public LinkedList<String> getItemAncestorsIds() {
+        LinkedList<String> result = new LinkedList<String>();
+        String[] segments = TextUtils.split(mLongId, "/");
+
+        for (String segment : segments) {
+            if (!TextUtils.isEmpty(segment)) result.addFirst(segment);
+        }
+
+        return result;
     }
 
     /**
