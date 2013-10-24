@@ -3,6 +3,8 @@ package net.sitecore.android.sdk.api.provider;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
+import java.lang.reflect.Field;
+
 import net.sitecore.android.sdk.api.model.ScField;
 import net.sitecore.android.sdk.api.model.ScItem;
 
@@ -34,22 +36,41 @@ import static android.content.ContentResolver.CURSOR_ITEM_BASE_TYPE;
  */
 public class ScItemsContract {
 
-    public static final String CONTENT_AUTHORITY = "net.sitecore.android.sdk.api.provider";
+    public static final String CONTENT_AUTHORITY = initAuthority();
+
+    /**
+     * Use reflection to populate {@link #CONTENT_AUTHORITY} in runtime. It must be defined in
+     * {@code net.sitecore.android.sdk.api.CacheConfig.CONTENT_AUTHORITY} constant field.
+     */
+    private static final String initAuthority() {
+        String authority = "net.sitecore.android.sdk.api.provider";
+
+        try {
+            ClassLoader loader = ScItemsContract.class.getClassLoader();
+
+            Class<?> clz = loader.loadClass("net.sitecore.android.sdk.api.ScItemsProviderConfig");
+            Field declaredField = clz.getDeclaredField("CONTENT_AUTHORITY");
+
+            authority = declaredField.get(null).toString();
+        } catch (ClassNotFoundException e) {
+        } catch (NoSuchFieldException e) {
+        } catch (IllegalArgumentException e) {
+        } catch (IllegalAccessException e) {
+        }
+
+        return authority;
+    }
 
     private static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
-    /**
-     * Defines data model how {@link ScItem} are stored in {@link ScItemsProvider}
-     */
+    /** Defines data model how {@link ScItem} are stored in {@link ScItemsProvider} */
     public static class Items implements BaseColumns, ItemsColumns {
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath("items").build();
 
         public static final String CONTENT_TYPE = CURSOR_DIR_BASE_TYPE + "/vnd.sitecore.items";
         public static final String CONTENT_ITEM_TYPE = CURSOR_ITEM_BASE_TYPE + "/vnd.sitecore.item";
 
-        /**
-         * Builds {@link Uri} to specific item.
-         */
+        /** Builds {@link Uri} to specific item. */
         public static Uri buildItemUri(String itemId) {
             return CONTENT_URI.buildUpon().appendPath(itemId).build();
         }
@@ -72,7 +93,8 @@ public class ScItemsContract {
                     Items.TIMESTAMP,
                     Items.VERSION,
                     Items.DATABASE,
-                    Items.LANGUAGE
+                    Items.LANGUAGE,
+                    Items.TAG
             };
 
             int _ID = 0;
@@ -86,12 +108,11 @@ public class ScItemsContract {
             int VERSION = 8;
             int DATABASE = 9;
             int LANGUAGE = 10;
+            int TAG = 11;
         }
     }
 
-    /**
-     * Defines data model how {@link ScField} are stored in {@link ScItemsProvider}
-     */
+    /** Defines data model how {@link ScField} are stored in {@link ScItemsProvider} */
     public static class Fields implements BaseColumns, FieldsColumns {
 
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath("fields").build();
@@ -99,9 +120,7 @@ public class ScItemsContract {
         public static final String CONTENT_TYPE = CURSOR_DIR_BASE_TYPE + "/vnd.sitecore.fields";
         public static final String CONTENT_ITEM_TYPE = CURSOR_ITEM_BASE_TYPE + "/vnd.sitecore.field";
 
-        /**
-         * Builds {@link Uri} to specific field.
-         */
+        /** Builds {@link Uri} to specific field. */
         public static Uri buildFieldUri(String fieldId) {
             return CONTENT_URI.buildUpon().appendPath(fieldId).build();
         }
@@ -145,6 +164,8 @@ public class ScItemsContract {
         String VERSION = "version";
         String DATABASE = "database";
         String LANGUAGE = "language";
+        /** Sets a tag associated with this item. It can be used to store some request information, e.g. used query. */
+        String TAG = "tag";
     }
 
     interface FieldsColumns {

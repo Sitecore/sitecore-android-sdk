@@ -100,7 +100,9 @@ public class ScItemsProvider extends ContentProvider {
                 throw new UnsupportedOperationException("Not supported query uri: " + uri);
         }
 
-        return builder.where(selection, selectionArgs).query(db, projection, sortOrder);
+        Cursor c = builder.where(selection, selectionArgs).query(db, projection, sortOrder);
+        c.setNotificationUri(getContext().getContentResolver(), uri);
+        return c;
     }
 
     @Override
@@ -156,6 +158,9 @@ public class ScItemsProvider extends ContentProvider {
         }
 
         int result = builder.where(selection, selectionArgs).delete(db);
+        if (match == ITEMS_ID) {
+            getContext().getContentResolver().notifyChange(Items.CONTENT_URI, null);
+        }
         getContext().getContentResolver().notifyChange(uri, null);
         return result;
     }
@@ -185,6 +190,9 @@ public class ScItemsProvider extends ContentProvider {
         }
 
         int result = builder.where(selection, selectionArgs).update(db, values);
+        if (match == ITEMS_ID) {
+            getContext().getContentResolver().notifyChange(Items.CONTENT_URI, null);
+        }
         getContext().getContentResolver().notifyChange(uri, null);
         return result;
     }

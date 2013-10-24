@@ -17,8 +17,6 @@ class ScItemsDatabase extends SQLiteOpenHelper {
     interface Tables {
         String ITEMS = "items";
         String FIELDS = "fields";
-
-        //String FIELDS_JOIN_ITEMS = "fields LEFT OUTER JOIN items ON fields.item_id=items.item_id";
     }
 
 
@@ -40,6 +38,7 @@ class ScItemsDatabase extends SQLiteOpenHelper {
                 + ItemsColumns.VERSION + " TEXT NOT NULL,"
                 + ItemsColumns.DATABASE + " TEXT NOT NULL,"
                 + ItemsColumns.LANGUAGE + " TEXT NOT NULL,"
+                + ItemsColumns.TAG + " TEXT, "
                 + "UNIQUE (" + ItemsColumns.ITEM_ID + ") ON CONFLICT REPLACE)");
 
         db.execSQL("CREATE TABLE " + Tables.FIELDS + " ("
