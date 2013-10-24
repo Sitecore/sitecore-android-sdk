@@ -34,20 +34,4 @@ public class DeleteItemsTest extends MockedServerAndroidTestCase {
         assertEquals(5, response.getDeletedItemsIds().size());
     }
 
-    @Test
-    public void testDelete() throws Exception {
-        ScApiSession session = getApiSession();
-        setMockResponse(TestData._200_delete_5_items);
-
-        RequestFuture<DeleteItemsResponse> future = RequestFuture.newFuture();
-        ScRequest request = session.deleteItems(future, future).build();
-        assertEquals(Request.Method.DELETE, request.getMethod());
-
-        mRequestQueue.add(request);
-
-        DeleteItemsResponse response = future.get(5, TimeUnit.SECONDS);
-        assertEquals(200, response.getStatusCode());
-        assertEquals(5, response.getDeletedItemsIds().size());
-    }
-
 }
