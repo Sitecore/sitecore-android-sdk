@@ -21,7 +21,7 @@ import java.util.concurrent.Executor;
 import net.sitecore.android.sdk.api.provider.ScItemsProvider;
 
 /**
- * Holds singletone instance of {@code RequestQueue} for network operations.
+ * Holds singleton instance of {@code RequestQueue} for network operations.
  *
  * @see RequestQueue
  */
@@ -51,7 +51,7 @@ public class RequestQueueProvider {
      *
      * @return {@code queue}.
      */
-    static RequestQueue newSitecoreRequestQueue(ContentResolver resolver) {
+    public static RequestQueue newSitecoreRequestQueue(ContentResolver resolver) {
         final Handler handler = new Handler(Looper.getMainLooper());
         final Executor executor = new Executor() {
             @Override
