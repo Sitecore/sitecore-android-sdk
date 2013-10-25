@@ -31,8 +31,22 @@ Sitecore Mobile SDK is designed to help the developers create Android applicatio
  * To use Java/Android API add `sitecore-api-android-1.0.jar`, `gson-2.2.4.jar`, `volley.jar` jars as project dependencies.
  * To use QR Code Reader add `sitecore-qr-reader` android library and `libs\core-2.2.jar` jar as project dependencies.
 
+## Links
+TODO: add links
+ * [Javadocs][1]
+ * [Demonstration Package on SDN][2]
+ * [Android Dev Guide on SDN][3]
+ * [JS API reference guide on SDN][4]
+ * [Sample app using Mobile SDK for Android][5]
+
 
 # Licence
 ```
 SITECORE SHARED SOURCE LICENSE
 ```
+
+ [1]: http://sitecore.github.io/sitecore-android-sdk/javadoc
+ [2]: http://SDN/demo/package
+ [3]: http://SDN/guide/android
+ [4]: http://SDN/guide/js
+ [5]: http://github.com/Sitecore/sitecore-android-sdk-sample
