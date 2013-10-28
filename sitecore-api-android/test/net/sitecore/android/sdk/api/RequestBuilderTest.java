@@ -13,8 +13,8 @@ import net.sitecore.android.sdk.api.model.GetRenderingHtmlRequest;
 import net.sitecore.android.sdk.api.model.PayloadType;
 import net.sitecore.android.sdk.api.model.RequestScope;
 
-import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest=Config.NONE)

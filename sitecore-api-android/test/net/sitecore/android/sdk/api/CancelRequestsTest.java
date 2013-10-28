@@ -16,8 +16,8 @@ import org.junit.Before;
 
 import net.sitecore.android.sdk.api.model.ItemsResponse;
 
-import static junit.framework.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
