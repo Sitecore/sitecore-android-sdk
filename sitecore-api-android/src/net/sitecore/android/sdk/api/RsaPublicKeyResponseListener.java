@@ -35,11 +35,13 @@ class RsaPublicKeyResponseListener implements Response.Listener<String> {
         try {
             LOGD("RSA public key received:" + response);
             RSAPublicKey pub = CryptoUtils.getPublicKey(response);
-            ScApiSession scContext = new ScApiSessionImpl(mUrl, pub, mName, mPassword);
-            mOnSuccess.onResponse(scContext);
+            ScApiSession session = new ScApiSessionImpl(mUrl, pub, mName, mPassword);
+            mOnSuccess.onResponse(session);
         } catch (InvalidKeySpecException e) {
             sendError(e);
         } catch (NoSuchAlgorithmException e) {
+            sendError(e);
+        } catch (Exception e) {
             sendError(e);
         }
     }
