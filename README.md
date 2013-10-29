@@ -24,8 +24,8 @@ This enables developers to rapidly develop Android applications (across multiple
     * Access item fields and properties
     * Upload media items
     * Getting html rendering of an item
- * Items & fields cache in database
  * QR Code reader
+ * A local SQLite DB can be used with the SDK for easy access of Sitecore items offline
 
 As a part of the release we have created a sample application that can be used as a starting point to understand the Mobile SDK for Android and the features available. 
 This project can be found [on Github][4]
