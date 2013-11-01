@@ -61,20 +61,40 @@ public class UploadMediaService extends IntentService {
     public static void startUpload(Context context, UploadMediaRequestOptions options,
             final Response.Listener<ItemsResponse> successListener,
             final ErrorListener errorListener) {
-        context.startService(newUploadIntent(context, options, successListener, errorListener));
+        startUpload(context, UploadMediaService.class, options, successListener, errorListener);
+    }
+
+    /**
+     * Starts to upload media content.
+     *
+     * @param context         application context.
+     * @param uploaderClass   class that performs upload. Should be used when {@link UploadMediaService} class is
+     *                        extended.
+     * @param options         {@code UploadMediaRequestOptions} that contains request options.
+     * @param successListener success listener for request
+     * @param errorListener   error listener for request
+     */
+    public static void startUpload(Context context, Class<? extends UploadMediaService> uploaderClass,
+            UploadMediaRequestOptions options,
+            final Response.Listener<ItemsResponse> successListener,
+            final ErrorListener errorListener) {
+        context.startService(newUploadIntent(context, uploaderClass, options, successListener, errorListener));
     }
 
     /**
      * Creates {@code Intent} to upload media content from specified {@code UploadMediaRequestOptions}.
      *
      * @param context         application context.
+     * @param uploaderClass   class that performs upload. Should be used when {@link UploadMediaService} class is
+     *                        extended.
      * @param options         {@code UploadMediaRequestOptions} that contains request options.
      * @param successListener success listener for request
      * @param errorListener   error listener for request
      *
      * @return result {@code Intent}.
      */
-    public static Intent newUploadIntent(Context context, UploadMediaRequestOptions options,
+    public static Intent newUploadIntent(Context context, Class<? extends UploadMediaService> uploaderClass,
+            UploadMediaRequestOptions options,
             final Response.Listener<ItemsResponse> successListener,
             final ErrorListener errorListener) {
         // Converts String response to ItemsResponse
@@ -97,11 +117,28 @@ public class UploadMediaService extends IntentService {
         };
 
         final UpdateResultReceiver resultReceiver = new UpdateResultReceiver(null, listener, errorListener);
-        final Intent intent = new Intent(context, UploadMediaService.class);
+        final Intent intent = new Intent(context, uploaderClass);
         intent.putExtra(EXTRA_UPLOAD_OPTIONS, options);
         intent.putExtra(EXTRA_STATUS_RECEIVER, resultReceiver);
 
         return intent;
+    }
+
+
+    /**
+     * Creates {@code Intent} to upload media content from specified {@code UploadMediaRequestOptions}.
+     *
+     * @param context         application context.
+     * @param options         {@code UploadMediaRequestOptions} that contains request options.
+     * @param successListener success listener for request
+     * @param errorListener   error listener for request
+     *
+     * @return result {@code Intent}.
+     */
+    public static Intent newUploadIntent(Context context, UploadMediaRequestOptions options,
+            final Response.Listener<ItemsResponse> successListener,
+            final ErrorListener errorListener) {
+        return newUploadIntent(context, UploadMediaService.class, options, successListener, errorListener);
     }
 
     private ResultReceiver mResultReceiver;
