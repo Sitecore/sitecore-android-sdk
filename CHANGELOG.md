@@ -6,6 +6,7 @@ Initial release.
 
 ### JavaScript API
  * Show native alert
+ * Toast messages
  * Accelerometer
  * Device information
  * Access to camera and media library
