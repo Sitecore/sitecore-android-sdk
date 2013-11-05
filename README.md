@@ -39,7 +39,7 @@ This repository contains:
 ## Further Information
 
  * [Product page on SDN][1]
- * [Demonstration Package on SDN][2]
+ * [Sitecore Item Web API module page on SDN][2]
  * [Javadocs documentation][3]
  * [Sample App – SDK for Android][4]
 
@@ -49,7 +49,7 @@ SITECORE SHARED SOURCE LICENSE
 ```
 
  [1]: http://sdn.sitecore.net/Products/Sitecore%20Mobile%20SDK/Sitecore%20Mobile%20SDK%20for%20Android/Mobile%20SDK%201,-d-,0%20for%20Android.aspx
- [2]: http://sdn.sitecore.net/downloads/Mobile_SDK_Demonstration_Package_1.2zip.download
+ [2]: http://sdn.sitecore.net/Products/Sitecore%20Item%20Web%20API.aspx
  [3]: http://sitecore.github.io/sitecore-android-sdk/javadoc
  [4]: http://github.com/Sitecore/sitecore-android-sdk-sample
  [5]: https://github.com/Sitecore/sitecore-android-sdk/releases
