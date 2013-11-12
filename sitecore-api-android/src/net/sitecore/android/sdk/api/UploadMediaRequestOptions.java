@@ -76,6 +76,7 @@ public class UploadMediaRequestOptions implements Parcelable {
         mItemName = source.readString();
         mMediaFilePath = source.readString();
         mDatabase = source.readString();
+        mFileName = source.readString();
 
         mAuthOptions = new RequestOptions.AuthOptions();
         mAuthOptions.mIsAnonymous = source.readInt() == 1;
@@ -94,6 +95,7 @@ public class UploadMediaRequestOptions implements Parcelable {
         dest.writeString(mItemName);
         dest.writeString(mMediaFilePath);
         dest.writeString(mDatabase);
+        dest.writeString(mFileName);
 
         dest.writeInt(mAuthOptions.mIsAnonymous ? 1 : 0);
         dest.writeString(mAuthOptions.mEncodedName);
