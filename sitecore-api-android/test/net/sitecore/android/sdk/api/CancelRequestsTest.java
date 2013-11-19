@@ -13,6 +13,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import net.sitecore.android.sdk.api.model.ItemsResponse;
 
@@ -21,6 +25,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+@RunWith(RobolectricTestRunner.class)
+@Config(manifest=Config.NONE)
 public class CancelRequestsTest extends MockedServerAndroidTestCase {
     private ScApiSession mSession;
 
@@ -39,6 +45,7 @@ public class CancelRequestsTest extends MockedServerAndroidTestCase {
         });
     }
 
+    @Test
     public void testCancelRequest() {
         RequestFuture<ItemsResponse> future = RequestFuture.newFuture();
         Request request = mSession.getItems(future, future).build();
@@ -59,6 +66,7 @@ public class CancelRequestsTest extends MockedServerAndroidTestCase {
         }
     }
 
+    @Test
     public void testCancelOneRequest() throws InterruptedException, ExecutionException, TimeoutException {
         RequestFuture<ItemsResponse> future1 = RequestFuture.newFuture();
         Request request1 = mSession.getItems(future1, future1).build();
