@@ -178,7 +178,8 @@ public class ScItemsProvider extends ContentProvider {
                 break;
 
             case ITEMS_ID:
-                builder.table(Tables.ITEMS);
+                String itemId = Items.getItemId(uri);
+                builder.table(Tables.ITEMS).where(Items.ITEM_ID + "=?", itemId);
                 break;
 
             case FIELDS:
