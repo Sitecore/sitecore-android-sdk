@@ -5,7 +5,12 @@ import android.content.ContentProviderOperation;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import net.sitecore.android.sdk.api.ScResponse;
+import net.sitecore.android.sdk.api.ScResponseParser;
 import net.sitecore.android.sdk.api.provider.ScItemsContract.Fields;
 import net.sitecore.android.sdk.api.provider.ScItemsContract.Items;
 
@@ -16,20 +21,17 @@ public class DeleteItemsResponse extends ScResponse {
 
     private int mCount;
 
+    private DeleteItemsResponse(int statusCode) {
+        super(statusCode);
+        mDeletedItemIds = new ArrayList<String>();
+    }
+
     public List<String> getDeletedItemsIds() {
         return mDeletedItemIds;
     }
 
     public int getDeletedCount() {
         return mCount;
-    }
-
-    public void setDeletedItemIds(List<String> deletedItemIds) {
-        mDeletedItemIds = deletedItemIds;
-    }
-
-    public void setCount(int count) {
-        mCount = count;
     }
 
     @Override
@@ -47,5 +49,19 @@ public class DeleteItemsResponse extends ScResponse {
         }
 
         return operations;
+    }
+
+    static class DeleteItemsResponseParser extends ScResponseParser {
+        @Override
+        public ScResponse parseSuccess(int statusCode, JSONObject success) throws JSONException {
+            DeleteItemsResponse response = new DeleteItemsResponse(statusCode);
+            response.mCount = success.getInt("count");
+
+            JSONArray deleteItemIdsJsonArray = success.getJSONArray("itemIds");
+            for (int i = 0; i < deleteItemIdsJsonArray.length(); i++) {
+                response.mDeletedItemIds.add(deleteItemIdsJsonArray.getString(i));
+            }
+            return response;
+        }
     }
 }

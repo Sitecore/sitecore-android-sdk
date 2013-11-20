@@ -33,44 +33,40 @@ public class ScItem implements Parcelable {
         return mDisplayName;
     }
 
-    public void setDatabase(String database) {
+    void setDatabase(String database) {
         mDatabase = database;
     }
 
-    public void setDisplayName(String displayName) {
+    void setDisplayName(String displayName) {
         mDisplayName = displayName;
     }
 
-    public void setHasChildren(boolean hasChildren) {
+    void setHasChildren(boolean hasChildren) {
         mHasChildren = hasChildren;
     }
 
-    public void setId(String id) {
+    void setId(String id) {
         mId = id;
     }
 
-    public void setLanguage(String language) {
+    void setLanguage(String language) {
         mLanguage = language;
     }
 
-    public void setLongId(String longId) {
+    void setLongId(String longId) {
         mLongId = longId;
     }
 
-    public void setPath(String path) {
+    void setPath(String path) {
         mPath = path;
     }
 
-    public void setTemplate(String template) {
+    void setTemplate(String template) {
         mTemplate = template;
     }
 
-    public void setVersion(int version) {
+    void setVersion(int version) {
         mVersion = version;
-    }
-
-    public void setFields(List<ScField> fields) {
-        mFields = fields;
     }
 
     public String getDatabase() {
@@ -113,7 +109,12 @@ public class ScItem implements Parcelable {
         return mFields;
     }
 
-    public ScItem() {
+    ScItem() {
+        mFields = new ArrayList<ScField>();
+    }
+
+    void addField(ScField field) {
+        mFields.add(field);
     }
 
     protected ScItem(Parcel in) {
@@ -249,5 +250,4 @@ public class ScItem implements Parcelable {
             return null;
         }
     }
-
 }

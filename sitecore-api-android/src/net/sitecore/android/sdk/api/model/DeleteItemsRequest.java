@@ -3,9 +3,10 @@ package net.sitecore.android.sdk.api.model;
 import com.android.volley.Request;
 import com.android.volley.Response;
 
-import net.sitecore.android.sdk.api.DeleteItemsResponseParser;
+import org.json.JSONException;
+
 import net.sitecore.android.sdk.api.ScRequest;
-import net.sitecore.android.sdk.api.ScResponseParser;
+import net.sitecore.android.sdk.api.ScResponse;
 
 /**
  * Class represents delete item request.
@@ -29,7 +30,7 @@ public class DeleteItemsRequest extends ScRequest<DeleteItemsResponse> {
     }
 
     @Override
-    public ScResponseParser<DeleteItemsResponse> getResponseParser() {
-        return new DeleteItemsResponseParser();
+    protected ScResponse parseResponse(String response) throws JSONException {
+        return new DeleteItemsResponse.DeleteItemsResponseParser().parseJson(response);
     }
 }

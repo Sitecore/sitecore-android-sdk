@@ -2,9 +2,10 @@ package net.sitecore.android.sdk.api.model;
 
 import com.android.volley.Response;
 
-import net.sitecore.android.sdk.api.GetItemsResponseParser;
+import org.json.JSONException;
+
 import net.sitecore.android.sdk.api.ScRequest;
-import net.sitecore.android.sdk.api.ScResponseParser;
+import net.sitecore.android.sdk.api.ScResponse;
 
 /**
  * Class represents get item request.
@@ -26,7 +27,7 @@ public class GetItemsRequest extends ScRequest<ItemsResponse> {
     }
 
     @Override
-    public ScResponseParser<ItemsResponse> getResponseParser() {
-        return new GetItemsResponseParser();
+    public ScResponse parseResponse(String response) throws JSONException {
+        return new ItemsResponse.GetItemsResponseParser().parseJson(response);
     }
 }

@@ -18,6 +18,7 @@ import java.util.Map;
 import org.json.JSONException;
 
 import net.sitecore.android.sdk.api.model.ScError;
+import net.sitecore.android.sdk.api.model.ScErrorResponse;
 
 import static net.sitecore.android.sdk.api.LogUtils.LOGD;
 
@@ -26,7 +27,7 @@ import static net.sitecore.android.sdk.api.LogUtils.LOGD;
  *
  * @param <T> response type.
  */
-public class ScRequest<T extends ScResponse> extends Request<T> {
+public abstract class ScRequest<T extends ScResponse> extends Request<T> {
 
     private final Listener<T> mListener;
     private final Map<String, String> mHeaders;
@@ -48,6 +49,8 @@ public class ScRequest<T extends ScResponse> extends Request<T> {
 
         mHeaders = new HashMap<String, String>();
     }
+
+    protected abstract ScResponse parseResponse(String response) throws JSONException;
 
     /**
      * Adds header for request.
@@ -92,11 +95,12 @@ public class ScRequest<T extends ScResponse> extends Request<T> {
         try {
             String json = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
             LOGD(json);
-            T scResponse = getResponseParser().parseJson(json);
+            ScResponse scResponse = parseResponse(json);
             if (scResponse.isSuccess()) {
-                return Response.success(scResponse, HttpHeaderParser.parseCacheHeaders(response));
+                return Response.success((T)scResponse, HttpHeaderParser.parseCacheHeaders(response));
             } else {
-                return Response.error(new ScError(scResponse.getStatusCode(), scResponse.getErrorMessage()));
+                return Response.error(new ScError(scResponse.getStatusCode(),
+                        ((ScErrorResponse) scResponse).getErrorMessage()));
             }
         } catch (UnsupportedEncodingException e) {
             return Response.error(new ParseError(e));
@@ -181,9 +185,4 @@ public class ScRequest<T extends ScResponse> extends Request<T> {
 
         return builder.toString();
     }
-
-    public ScResponseParser<T> getResponseParser() {
-        return null;
-    }
-
 }

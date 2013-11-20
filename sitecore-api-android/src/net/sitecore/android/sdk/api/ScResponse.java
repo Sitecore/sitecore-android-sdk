@@ -13,33 +13,23 @@ import net.sitecore.android.sdk.api.model.ItemsResponse;
  * @see ItemsResponse
  * @see DeleteItemsResponse
  */
-public class ScResponse {
+public abstract class ScResponse {
 
     private int mStatusCode;
-
-    private String mErrorMessage;
 
     public int getStatusCode() {
         return mStatusCode;
     }
 
-    public String getErrorMessage() {
-        return mErrorMessage;
-    }
-
     public boolean isSuccess() {
-        return mErrorMessage == null;
+        return mStatusCode == 200;
     }
 
     protected ArrayList<ContentProviderOperation> toContentProviderOperations() {
         return new ArrayList<ContentProviderOperation>();
     }
 
-    public void setStatusCode(int statusCode) {
+    protected ScResponse(int statusCode) {
         mStatusCode = statusCode;
-    }
-
-    public void setErrorMessage(String errorMessage) {
-        mErrorMessage = errorMessage;
     }
 }

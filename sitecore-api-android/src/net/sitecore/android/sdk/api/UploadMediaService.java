@@ -21,6 +21,7 @@ import org.json.JSONException;
 
 import net.sitecore.android.sdk.api.model.ItemsResponse;
 import net.sitecore.android.sdk.api.model.ScError;
+import net.sitecore.android.sdk.api.model.ScErrorResponse;
 
 import static com.android.volley.Response.ErrorListener;
 import static net.sitecore.android.sdk.api.LogUtils.LOGD;
@@ -98,11 +99,12 @@ public class UploadMediaService extends IntentService {
             @Override
             public void onResponse(String response) {
                 try {
-                    ItemsResponse result = new GetItemsResponseParser().parseJson(response);
+                    ScResponse result = new ItemsResponse.GetItemsResponseParser().parseJson(response);
                     if (result.isSuccess()) {
-                        successListener.onResponse(result);
+                        successListener.onResponse((ItemsResponse) result);
                     } else {
-                        errorListener.onErrorResponse(new ScError(result.getStatusCode(), result.getErrorMessage()));
+                        errorListener.onErrorResponse(new ScError(result.getStatusCode(),
+                                ((ScErrorResponse)result).getErrorMessage()));
                     }
                 } catch (JSONException e) {
                     errorListener.onErrorResponse(new ParseError(e));

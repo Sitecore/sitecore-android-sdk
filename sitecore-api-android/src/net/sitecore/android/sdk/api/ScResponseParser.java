@@ -3,20 +3,24 @@ package net.sitecore.android.sdk.api;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public abstract class ScResponseParser<T extends ScResponse> {
+import net.sitecore.android.sdk.api.model.ScErrorResponse;
 
-    public final JSONObject parseResponseTitle(ScResponse response, JSONObject json) throws JSONException {
-        int statusCode = json.getInt("statusCode");
-        response.setStatusCode(statusCode);
+public abstract class ScResponseParser {
 
-        JSONObject error = json.optJSONObject("error");
-        if (error != null) {
-            String message = error.getString("message");
-            response.setErrorMessage(message);
-            return null;
+    public abstract ScResponse parseSuccess(int statusCode, JSONObject success) throws JSONException ;
+
+    public ScResponse parseJson(String json) throws JSONException {
+        JSONObject response = new JSONObject(json);
+        int statusCode = response.getInt("statusCode");
+        if (statusCode != 200) {
+            return parseError(statusCode, response.optJSONObject("error"));
+        } else {
+            return parseSuccess(statusCode, response.getJSONObject("result"));
         }
-        return json.getJSONObject("result");
     }
 
-    public abstract T parseJson(String json) throws JSONException;
+    public ScErrorResponse parseError(int statusCode, JSONObject error) throws JSONException {
+        String message = error.getString("message");
+        return new ScErrorResponse(statusCode, message);
+    }
 }
