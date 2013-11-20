@@ -12,10 +12,10 @@ public abstract class ScResponseParser {
     public ScResponse parseJson(String json) throws JSONException {
         JSONObject response = new JSONObject(json);
         int statusCode = response.getInt("statusCode");
-        if (statusCode != 200) {
-            return parseError(statusCode, response.optJSONObject("error"));
-        } else {
+        if (statusCode >= 200 && statusCode < 300) {
             return parseSuccess(statusCode, response.getJSONObject("result"));
+        } else {
+            return parseError(statusCode, response.optJSONObject("error"));
         }
     }
 
