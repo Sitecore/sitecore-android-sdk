@@ -1,6 +1,7 @@
 package net.sitecore.android.sdk.api.model;
 
 import android.content.ContentProviderOperation;
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
@@ -92,6 +93,32 @@ public class ScItem implements Parcelable {
 
     public List<ScField> getFields() {
         return mFields;
+    }
+
+    public static ScItem from(Cursor c) {
+        final ScItem item = new ScItem();
+
+        item.mId = c.getString(Items.Query.ITEM_ID);
+        item.mDisplayName = c.getString(Items.Query.DISPLAY_NAME);
+        item.mDatabase = c.getString(Items.Query.PATH);
+        item.mDatabase = c.getString(Items.Query.TEMPLATE);
+        item.mLongId = c.getString(Items.Query.LONG_ID);
+
+        //TODO: add mParentItemId field
+        //item.mParentItemId = c.getString(Items.Query.PARENT_ITEM_ID);
+
+        //TODO: add timestamp?
+        //item.mTimestamp = c.getString(Items.Query.TIMESTAMP);
+        item.mVersion = c.getInt(Items.Query.VERSION);
+        item.mDatabase = c.getString(Items.Query.DATABASE);
+        item.mLanguage = c.getString(Items.Query.LANGUAGE);
+
+        //TODO: add hasChildren, tag(?)
+
+        return item;
+    }
+
+    private ScItem() {
     }
 
     protected ScItem(Parcel in) {
