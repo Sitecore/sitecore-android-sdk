@@ -22,7 +22,7 @@ public abstract class ScResponse {
     }
 
     public boolean isSuccess() {
-        return mStatusCode == 200;
+        return mStatusCode >= 200 && mStatusCode < 300;
     }
 
     protected ArrayList<ContentProviderOperation> toContentProviderOperations() {
