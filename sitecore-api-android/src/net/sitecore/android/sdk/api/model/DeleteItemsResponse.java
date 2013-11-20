@@ -2,8 +2,6 @@ package net.sitecore.android.sdk.api.model;
 
 import android.content.ContentProviderOperation;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,24 +12,24 @@ import net.sitecore.android.sdk.api.provider.ScItemsContract.Items;
 /** Class represents response for {@link DeleteItemsRequest}. */
 public class DeleteItemsResponse extends ScResponse {
 
-    @SerializedName("result")
-    private Result mResult;
+    private List<String> mDeletedItemIds;
 
-    private static class Result {
-
-        @SerializedName("itemIds")
-        private List<String> mDeletedItemIds;
-
-        @SerializedName("count")
-        private int mCount;
-    }
+    private int mCount;
 
     public List<String> getDeletedItemsIds() {
-        return mResult.mDeletedItemIds;
+        return mDeletedItemIds;
     }
 
     public int getDeletedCount() {
-        return mResult.mCount;
+        return mCount;
+    }
+
+    public void setDeletedItemIds(List<String> deletedItemIds) {
+        mDeletedItemIds = deletedItemIds;
+    }
+
+    public void setCount(int count) {
+        mCount = count;
     }
 
     @Override
@@ -50,5 +48,4 @@ public class DeleteItemsResponse extends ScResponse {
 
         return operations;
     }
-
 }

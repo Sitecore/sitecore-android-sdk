@@ -2,8 +2,6 @@ package net.sitecore.android.sdk.api.model;
 
 import android.content.ContentProviderOperation;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -13,34 +11,38 @@ import net.sitecore.android.sdk.api.UploadMediaService;
 
 import static net.sitecore.android.sdk.api.provider.ScItemsContract.Fields;
 
-/** Class represents response for {@link CreateItemRequest}, {@link UpdateItemFieldsRequest}, {@link GetItemsRequest}, and response for  {@link UploadMediaService Uploading media item}. */
+/** Class represents response for {@link CreateItemRequest}, {@link UpdateItemFieldsRequest}, {@link GetItemsRequest},
+ * and response for  {@link UploadMediaService Uploading media item}.
+ * */
 public class ItemsResponse extends ScResponse {
 
-    @SerializedName("result")
-    private Result mResult;
+    private int mTotalCount;
+    private int mResultCount;
+
+    private List<ScItem> mItems;
 
     public List<ScItem> getItems() {
-        return mResult == null ? Collections.<ScItem>emptyList() : mResult.mItems;
+        return mItems == null ? Collections.<ScItem>emptyList() : mItems;
     }
 
     public int getTotalCount() {
-        return mResult == null ? 0 : mResult.mTotalCount;
+        return mTotalCount;
     }
 
     public int getResultCount() {
-        return mResult == null ? 0 : mResult.mResultCount;
+        return mResultCount;
     }
 
-    private static class Result {
+    public void setTotalCount(int totalCount) {
+        mTotalCount = totalCount;
+    }
 
-        @SerializedName("totalCount")
-        private int mTotalCount;
+    public void setResultCount(int resultCount) {
+        mResultCount = resultCount;
+    }
 
-        @SerializedName("resultCount")
-        private int mResultCount;
-
-        @SerializedName("items")
-        private List<ScItem> mItems;
+    public void setItems(List<ScItem> items) {
+        mItems = items;
     }
 
     @Override
@@ -63,5 +65,4 @@ public class ItemsResponse extends ScResponse {
 
         return builder.build();
     }
-
 }

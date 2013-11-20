@@ -5,8 +5,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
@@ -19,39 +17,60 @@ public class ScItem implements Parcelable {
 
     public static final String ROOT_ITEM_ID = "{11111111-1111-1111-1111-111111111111}";
 
-    @SerializedName("Database")
     private String mDatabase;
-
-    @SerializedName("DisplayName")
     private String mDisplayName;
-
-    @SerializedName("HasChildren")
     private boolean mHasChildren;
-
-    @SerializedName("ID")
     private String mId;
-
-    @SerializedName("Language")
     private String mLanguage;
-
-    @SerializedName("LongID")
     private String mLongId;
-
-    @SerializedName("Path")
     private String mPath;
-
-    @SerializedName("Template")
     private String mTemplate;
-
-    @SerializedName("Version")
     private int mVersion;
-
-    @SerializedName("Fields")
     private List<ScField> mFields;
 
     @Override
     public String toString() {
         return mDisplayName;
+    }
+
+    public void setDatabase(String database) {
+        mDatabase = database;
+    }
+
+    public void setDisplayName(String displayName) {
+        mDisplayName = displayName;
+    }
+
+    public void setHasChildren(boolean hasChildren) {
+        mHasChildren = hasChildren;
+    }
+
+    public void setId(String id) {
+        mId = id;
+    }
+
+    public void setLanguage(String language) {
+        mLanguage = language;
+    }
+
+    public void setLongId(String longId) {
+        mLongId = longId;
+    }
+
+    public void setPath(String path) {
+        mPath = path;
+    }
+
+    public void setTemplate(String template) {
+        mTemplate = template;
+    }
+
+    public void setVersion(int version) {
+        mVersion = version;
+    }
+
+    public void setFields(List<ScField> fields) {
+        mFields = fields;
     }
 
     public String getDatabase() {
@@ -92,6 +111,9 @@ public class ScItem implements Parcelable {
 
     public List<ScField> getFields() {
         return mFields;
+    }
+
+    public ScItem() {
     }
 
     protected ScItem(Parcel in) {

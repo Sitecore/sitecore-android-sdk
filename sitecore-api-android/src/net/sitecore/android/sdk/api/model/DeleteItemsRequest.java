@@ -3,7 +3,9 @@ package net.sitecore.android.sdk.api.model;
 import com.android.volley.Request;
 import com.android.volley.Response;
 
+import net.sitecore.android.sdk.api.DeleteItemsResponseParser;
 import net.sitecore.android.sdk.api.ScRequest;
+import net.sitecore.android.sdk.api.ScResponseParser;
 
 /**
  * Class represents delete item request.
@@ -23,6 +25,11 @@ public class DeleteItemsRequest extends ScRequest<DeleteItemsResponse> {
     public DeleteItemsRequest(String url,
             Response.Listener<DeleteItemsResponse> successListener,
             Response.ErrorListener errorListener) {
-        super(Request.Method.DELETE, url, DeleteItemsResponse.class, successListener, errorListener);
+        super(Request.Method.DELETE, url, successListener, errorListener);
+    }
+
+    @Override
+    public ScResponseParser<DeleteItemsResponse> getResponseParser() {
+        return new DeleteItemsResponseParser();
     }
 }

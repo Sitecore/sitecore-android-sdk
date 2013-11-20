@@ -4,7 +4,10 @@ import com.android.volley.Response;
 
 import java.util.Map;
 
+import net.sitecore.android.sdk.api.GetItemsResponseParser;
 import net.sitecore.android.sdk.api.ScRequest;
+import net.sitecore.android.sdk.api.ScResponseParser;
+
 /**
  * Class represents create item request.
  * @see UpdateItemFieldsRequest
@@ -23,8 +26,12 @@ public class CreateItemRequest extends ScRequest<ItemsResponse> {
      */
     public CreateItemRequest(String url, Map<String, String> bodyFields,
             Response.Listener<ItemsResponse> successListener, Response.ErrorListener errorListener) {
-        super(Method.POST, url, ItemsResponse.class, successListener, errorListener);
+        super(Method.POST, url, successListener, errorListener);
         mBodyFields = bodyFields;
     }
 
+    @Override
+    public ScResponseParser<ItemsResponse> getResponseParser() {
+        return new GetItemsResponseParser();
+    }
 }
