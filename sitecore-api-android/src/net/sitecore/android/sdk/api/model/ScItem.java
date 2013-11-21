@@ -100,7 +100,7 @@ public class ScItem implements Parcelable {
 
         item.mId = c.getString(Items.Query.ITEM_ID);
         item.mDisplayName = c.getString(Items.Query.DISPLAY_NAME);
-        item.mDatabase = c.getString(Items.Query.PATH);
+        item.mPath = c.getString(Items.Query.PATH);
         item.mTemplate = c.getString(Items.Query.TEMPLATE);
         item.mLongId = c.getString(Items.Query.LONG_ID);
 
@@ -112,8 +112,6 @@ public class ScItem implements Parcelable {
         item.mVersion = c.getInt(Items.Query.VERSION);
         item.mDatabase = c.getString(Items.Query.DATABASE);
         item.mLanguage = c.getString(Items.Query.LANGUAGE);
-
-        //TODO: add hasChildren
         item.mHasChildren = c.getInt(Items.Query.HAS_CHILDREN) == 1;
 
         //TODO: add tag(?)
@@ -258,5 +256,7 @@ public class ScItem implements Parcelable {
             return null;
         }
     }
+
+
 
 }

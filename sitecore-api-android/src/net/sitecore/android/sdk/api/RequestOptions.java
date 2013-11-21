@@ -112,7 +112,7 @@ class RequestOptions {
 
             return TextUtils.isEmpty(builder.toString())
                     ? ""
-                    : "?" + builder.toString().substring(1);
+                    : "?" + builder.toString().substring(1); // replaces first '&' to '?'
         }
     }
 

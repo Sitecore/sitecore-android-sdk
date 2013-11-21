@@ -50,7 +50,7 @@ public class ScItemsAdapter extends ArrayAdapter<ScItem> {
             ViewHolder holder = (ViewHolder) v.getTag();
 
             holder.text1.setText(item.getDisplayName());
-            holder.text2.setText(item.getTemplate());
+            holder.text2.setText(item.getPath());
         }
 
         @Override
