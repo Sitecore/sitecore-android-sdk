@@ -1,5 +1,6 @@
 package net.sitecore.android.sdk.api;
 
+import android.content.ContentProviderOperation;
 import android.net.Uri;
 
 import com.android.volley.AuthFailureError;
@@ -12,6 +13,7 @@ import com.android.volley.Response.Listener;
 import com.android.volley.toolbox.HttpHeaderParser;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,6 +34,8 @@ public abstract class ScRequest<T extends ScResponse> extends Request<T> {
     private final Listener<T> mListener;
     private final Map<String, String> mHeaders;
 
+    private final ArrayList<ContentProviderOperation> mBeforeSaveContentProviderOperations;
+
     protected Map<String, String> mBodyFields;
 
     /**
@@ -48,9 +52,18 @@ public abstract class ScRequest<T extends ScResponse> extends Request<T> {
         mListener = successListener;
 
         mHeaders = new HashMap<String, String>();
+        mBeforeSaveContentProviderOperations = new ArrayList<ContentProviderOperation>();
     }
 
     protected abstract ScResponse parseResponse(String response) throws JSONException;
+
+    public void addBeforeSaveContentProviderOperation(ContentProviderOperation operation) {
+        mBeforeSaveContentProviderOperations.add(operation);
+    }
+
+    public ArrayList<ContentProviderOperation> getBeforeSaveContentProviderOperations() {
+        return mBeforeSaveContentProviderOperations;
+    }
 
     /**
      * Adds header for request.

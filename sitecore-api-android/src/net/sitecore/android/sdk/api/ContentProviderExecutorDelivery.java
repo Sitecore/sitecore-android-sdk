@@ -3,8 +3,6 @@ package net.sitecore.android.sdk.api;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.OperationApplicationException;
-import android.os.Handler;
-import android.os.Looper;
 import android.os.RemoteException;
 
 import com.android.volley.ExecutorDelivery;
@@ -32,12 +30,13 @@ class ContentProviderExecutorDelivery extends ExecutorDelivery {
 
     @Override
     public void postResponse(Request<?> request, Response<?> response) {
-        boolean isCachableRequest = (request instanceof ScRequest) && ((ScRequest)request).shouldCache();
+        boolean isCachableRequest = (request instanceof ScRequest) && ((ScRequest) request).shouldCache();
         boolean isScResult = (response.result != null) && (response.result instanceof ScResponse);
 
         if (isCachableRequest && isScResult) {
             ScResponse scResponse = (ScResponse) response.result;
-            ArrayList <ContentProviderOperation> operations = scResponse.toContentProviderOperations();
+            ArrayList<ContentProviderOperation> operations = ((ScRequest) request).getBeforeSaveContentProviderOperations();
+            operations.addAll(scResponse.toContentProviderOperations());
             if (!operations.isEmpty()) {
                 try {
                     mResolver.applyBatch(ScItemsContract.CONTENT_AUTHORITY, operations);
