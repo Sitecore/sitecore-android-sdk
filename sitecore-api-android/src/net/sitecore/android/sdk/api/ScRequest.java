@@ -57,11 +57,11 @@ public abstract class ScRequest<T extends ScResponse> extends Request<T> {
 
     protected abstract ScResponse parseResponse(String response) throws JSONException;
 
-    public void addBeforeSaveContentProviderOperation(ContentProviderOperation operation) {
+    public void addOperationBeforeSuccessfulResponseSaved(ContentProviderOperation operation) {
         mBeforeSaveContentProviderOperations.add(operation);
     }
 
-    public ArrayList<ContentProviderOperation> getBeforeSaveContentProviderOperations() {
+    ArrayList<ContentProviderOperation> getBeforeSaveContentProviderOperations() {
         return mBeforeSaveContentProviderOperations;
     }
 
