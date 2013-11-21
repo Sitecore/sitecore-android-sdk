@@ -94,6 +94,7 @@ public class ScItemsContract {
                     Items.VERSION,
                     Items.DATABASE,
                     Items.LANGUAGE,
+                    Items.HAS_CHILDREN,
                     Items.TAG
             };
 
@@ -108,7 +109,8 @@ public class ScItemsContract {
             int VERSION = 8;
             int DATABASE = 9;
             int LANGUAGE = 10;
-            int TAG = 11;
+            int HAS_CHILDREN = 11;
+            int TAG = 12;
         }
     }
 
@@ -164,6 +166,8 @@ public class ScItemsContract {
         String VERSION = "version";
         String DATABASE = "database";
         String LANGUAGE = "language";
+        String HAS_CHILDREN = "has_children";
+
         /** Sets a tag associated with this item. It can be used to store some request information, e.g. used query. */
         String TAG = "tag";
     }

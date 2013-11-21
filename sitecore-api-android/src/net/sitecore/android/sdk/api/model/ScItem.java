@@ -101,7 +101,7 @@ public class ScItem implements Parcelable {
         item.mId = c.getString(Items.Query.ITEM_ID);
         item.mDisplayName = c.getString(Items.Query.DISPLAY_NAME);
         item.mDatabase = c.getString(Items.Query.PATH);
-        item.mDatabase = c.getString(Items.Query.TEMPLATE);
+        item.mTemplate = c.getString(Items.Query.TEMPLATE);
         item.mLongId = c.getString(Items.Query.LONG_ID);
 
         //TODO: add mParentItemId field
@@ -113,7 +113,10 @@ public class ScItem implements Parcelable {
         item.mDatabase = c.getString(Items.Query.DATABASE);
         item.mLanguage = c.getString(Items.Query.LANGUAGE);
 
-        //TODO: add hasChildren, tag(?)
+        //TODO: add hasChildren
+        item.mHasChildren = c.getInt(Items.Query.HAS_CHILDREN) == 1;
+
+        //TODO: add tag(?)
 
         return item;
     }
@@ -236,6 +239,7 @@ public class ScItem implements Parcelable {
         builder.withValue(Items.VERSION, mVersion);
         builder.withValue(Items.DATABASE, mDatabase);
         builder.withValue(Items.LANGUAGE, mLanguage);
+        builder.withValue(Items.HAS_CHILDREN, mHasChildren ? 1 : 0);
         builder.withValue(Items.TIMESTAMP, new Date().getTime());
 
         return builder.build();

@@ -12,7 +12,17 @@ class ScItemsDatabase extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "sitecore_items.db";
 
-    private static final int VERSION = 1;
+    /**
+     * Initial release
+     */
+    private static final int V_1_0 = 1;
+
+    /**
+     * Item.HAS_CHILDREN column added;
+     */
+    private static final int V_1_1 = 2;
+
+    private static final int VERSION = V_1_1;
 
     interface Tables {
         String ITEMS = "items";
@@ -38,6 +48,7 @@ class ScItemsDatabase extends SQLiteOpenHelper {
                 + ItemsColumns.VERSION + " TEXT NOT NULL,"
                 + ItemsColumns.DATABASE + " TEXT NOT NULL,"
                 + ItemsColumns.LANGUAGE + " TEXT NOT NULL,"
+                + ItemsColumns.HAS_CHILDREN + " TEXT NOT NULL,"
                 + ItemsColumns.TAG + " TEXT, "
                 + "UNIQUE (" + ItemsColumns.ITEM_ID + ") ON CONFLICT REPLACE)");
 
