@@ -3,6 +3,7 @@ package net.sitecore.android.sdk.widget;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.DialogFragment;
+import android.content.ContentProviderOperation;
 import android.content.Context;
 import android.content.Loader;
 import android.os.Build;
@@ -28,10 +29,10 @@ import net.sitecore.android.sdk.api.ScRequest;
 import net.sitecore.android.sdk.api.model.ItemsResponse;
 import net.sitecore.android.sdk.api.model.RequestScope;
 import net.sitecore.android.sdk.api.model.ScItem;
-import net.sitecore.android.sdk.api.provider.ScItemsContract;
 
 import static android.app.LoaderManager.LoaderCallbacks;
 import static net.sitecore.android.sdk.api.LogUtils.LOGD;
+import static net.sitecore.android.sdk.api.provider.ScItemsContract.Items;
 
 /**
  * Items browser fragment
@@ -39,7 +40,7 @@ import static net.sitecore.android.sdk.api.LogUtils.LOGD;
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class ItemsBrowserFragment extends DialogFragment {
 
-    private static final String BY_ITEM_PARENT_ID = ScItemsContract.Items.PARENT_ITEM_ID + "=?";
+    private static final String BY_ITEM_PARENT_ID = Items.PARENT_ITEM_ID + "=?";
     private static final String EXTRA_ITEM_ID = "item_id";
     private RequestQueue mRequestQueue;
 
@@ -166,7 +167,11 @@ public class ItemsBrowserFragment extends DialogFragment {
                     .withScope(RequestScope.CHILDREN)
                     .build();
             request.setTag(ItemsBrowserFragment.this);
-            //TODO: add remove old children logic
+
+            ContentProviderOperation.Builder builder = ContentProviderOperation.newDelete(Items.CONTENT_URI);
+            builder.withSelection(BY_ITEM_PARENT_ID, new String[] {itemId});
+            request.addOperationBeforeSuccessfulResponseSaved(builder.build());
+
             mRequestQueue.add(request);
         }
     }
