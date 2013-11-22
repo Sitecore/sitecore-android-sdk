@@ -65,7 +65,7 @@ public class ItemsResponse extends ScResponse {
         return builder.build();
     }
 
-    public static class GetItemsResponseParser extends ScResponseParser {
+    public static class ItemsResponseParser extends ScResponseParser {
 
         @Override
         public ScResponse parseSuccess(int statusCode, JSONObject success) throws JSONException {
@@ -94,6 +94,7 @@ public class ItemsResponse extends ScResponse {
             item.setPath(json.optString("Path"));
             item.setTemplate(json.optString("Template"));
             item.setVersion(json.optInt("Version"));
+            item.setHasChildren(json.optBoolean("HasChildren"));
 
             JSONObject fieldsObject = json.optJSONObject("Fields");
 
