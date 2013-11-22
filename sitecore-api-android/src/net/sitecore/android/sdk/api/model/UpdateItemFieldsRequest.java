@@ -4,7 +4,11 @@ import com.android.volley.Response;
 
 import java.util.Map;
 
+import org.json.JSONException;
+
 import net.sitecore.android.sdk.api.ScRequest;
+import net.sitecore.android.sdk.api.ScResponse;
+
 /**
  * Class represents update fields request.
  * @see CreateItemRequest
@@ -22,8 +26,13 @@ public class UpdateItemFieldsRequest extends ScRequest<ItemsResponse> {
      * @param errorListener error listener for request
      */
     public UpdateItemFieldsRequest(String url, Map<String, String> bodyFields, Response.Listener<ItemsResponse> listener, Response.ErrorListener errorListener) {
-        super(Method.PUT, url, ItemsResponse.class, listener, errorListener);
+        super(Method.PUT, url, listener, errorListener);
         mBodyFields = bodyFields;
+    }
+
+    @Override
+    public ScResponse parseResponse(String response) throws JSONException {
+        return new ItemsResponse.GetItemsResponseParser().parseJson(response);
     }
 
 }

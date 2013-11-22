@@ -8,23 +8,20 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
 
+import com.android.volley.ParseError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Type;
 import java.net.URL;
-import java.util.List;
+
+import org.json.JSONException;
 
 import net.sitecore.android.sdk.api.model.ItemsResponse;
 import net.sitecore.android.sdk.api.model.ScError;
-import net.sitecore.android.sdk.api.model.ScField;
+import net.sitecore.android.sdk.api.model.ScErrorResponse;
 
 import static com.android.volley.Response.ErrorListener;
 import static net.sitecore.android.sdk.api.LogUtils.LOGD;
@@ -101,17 +98,16 @@ public class UploadMediaService extends IntentService {
         final Response.Listener<String> listener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Type fieldsType = new TypeToken<List<ScField>>() {
-                }.getType();
-                Gson gson = new GsonBuilder()
-                        .registerTypeAdapter(fieldsType, new ScFieldDeserializer())
-                        .create();
-
-                ScResponse result = gson.fromJson(response, ScResponse.class);
-                if (result.isSuccess()) {
-                    successListener.onResponse(gson.fromJson(response, ItemsResponse.class));
-                } else {
-                    errorListener.onErrorResponse(new ScError(result.getStatusCode(), result.getErrorMessage()));
+                try {
+                    ScResponse result = new ItemsResponse.GetItemsResponseParser().parseJson(response);
+                    if (result.isSuccess()) {
+                        successListener.onResponse((ItemsResponse) result);
+                    } else {
+                        errorListener.onErrorResponse(new ScError(result.getStatusCode(),
+                                ((ScErrorResponse)result).getErrorMessage()));
+                    }
+                } catch (JSONException e) {
+                    errorListener.onErrorResponse(new ParseError(e));
                 }
             }
         };

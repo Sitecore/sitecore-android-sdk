@@ -1,5 +1,6 @@
 package net.sitecore.android.sdk.api;
 
+import android.content.ContentProviderOperation;
 import android.net.Uri;
 
 import com.android.volley.AuthFailureError;
@@ -11,19 +12,15 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.toolbox.HttpHeaderParser;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonSyntaxException;
-import com.google.gson.reflect.TypeToken;
-
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
+import org.json.JSONException;
+
 import net.sitecore.android.sdk.api.model.ScError;
-import net.sitecore.android.sdk.api.model.ScField;
+import net.sitecore.android.sdk.api.model.ScErrorResponse;
 
 import static net.sitecore.android.sdk.api.LogUtils.LOGD;
 
@@ -32,12 +29,12 @@ import static net.sitecore.android.sdk.api.LogUtils.LOGD;
  *
  * @param <T> response type.
  */
-public class ScRequest<T extends ScResponse> extends Request<T> {
+public abstract class ScRequest<T extends ScResponse> extends Request<T> {
 
-    private final Gson mGson;
-    private final Class<T> mClazz;
     private final Listener<T> mListener;
     private final Map<String, String> mHeaders;
+
+    private final ArrayList<ContentProviderOperation> mBeforeSaveContentProviderOperations;
 
     protected Map<String, String> mBodyFields;
 
@@ -46,23 +43,26 @@ public class ScRequest<T extends ScResponse> extends Request<T> {
      *
      * @param method          method type, one of the {@link Method}
      * @param url             endpoint url
-     * @param clazz           response class (subclasses of {@link ScResponse})
      * @param successListener success listener for request
      * @param errorListener   error listener for request
      */
-    protected ScRequest(int method, String url, Class<T> clazz, Listener<T> successListener, ErrorListener errorListener) {
+    protected ScRequest(int method, String url, Listener<T> successListener, ErrorListener errorListener) {
         super(method, url, errorListener);
         setShouldCache(false);
-        mClazz = clazz;
         mListener = successListener;
 
-        Type fieldsType = new TypeToken<List<ScField>>() {
-        }.getType();
-
-        mGson = new GsonBuilder()
-                .registerTypeAdapter(fieldsType, new ScFieldDeserializer())
-                .create();
         mHeaders = new HashMap<String, String>();
+        mBeforeSaveContentProviderOperations = new ArrayList<ContentProviderOperation>();
+    }
+
+    protected abstract ScResponse parseResponse(String response) throws JSONException;
+
+    public void addOperationBeforeSuccessfulResponseSaved(ContentProviderOperation operation) {
+        mBeforeSaveContentProviderOperations.add(operation);
+    }
+
+    ArrayList<ContentProviderOperation> getBeforeSaveContentProviderOperations() {
+        return mBeforeSaveContentProviderOperations;
     }
 
     /**
@@ -108,16 +108,16 @@ public class ScRequest<T extends ScResponse> extends Request<T> {
         try {
             String json = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
             LOGD(json);
-            ScResponse result = mGson.fromJson(json, mClazz);
-            if (result.isSuccess()) {
-                return Response.success(mGson.fromJson(json, mClazz), HttpHeaderParser.parseCacheHeaders(response));
+            ScResponse scResponse = parseResponse(json);
+            if (scResponse.isSuccess()) {
+                return Response.success((T)scResponse, HttpHeaderParser.parseCacheHeaders(response));
             } else {
-                return Response.error(new ScError(result.getStatusCode(), result.getErrorMessage()));
+                return Response.error(new ScError(scResponse.getStatusCode(),
+                        ((ScErrorResponse) scResponse).getErrorMessage()));
             }
-
         } catch (UnsupportedEncodingException e) {
             return Response.error(new ParseError(e));
-        } catch (JsonSyntaxException e) {
+        } catch (JSONException e) {
             return Response.error(new ParseError(e));
         }
     }
@@ -198,5 +198,4 @@ public class ScRequest<T extends ScResponse> extends Request<T> {
 
         return builder.toString();
     }
-
 }

@@ -48,12 +48,12 @@ public class ScFieldTest extends MockedServerAndroidTestCase {
 
     @Test
     public void testDefault() throws Exception {
-        ScField field1 = mItem.getFields().get(0);
+        ScField field1 = mItem.findFieldById("{B6E6C30E-9009-4202-8B56-34F64B19223C}");
         assertEquals("Text", field1.getName());
         assertEquals("Text", field1.getRawValue());
         assertEquals(ScField.Type.SINGLE_LINE_TEXT, field1.getType());
 
-        ScField field19 = mItem.getFields().get(18);
+        ScField field19 = mItem.findFieldById("{9CA6AA92-C670-4B04-B12A-F20EBFAA04BD}");
         assertEquals("NotAllowedItem", field19.getName());
         assertEquals("Not_Allowed_Parent", field19.getRawValue());
         assertEquals(ScField.Type.DROPLIST, field19.getType());
@@ -75,13 +75,13 @@ public class ScFieldTest extends MockedServerAndroidTestCase {
         assertEquals("{2075CBFF-C330-434D-9E1B-937782E0DE49}", checklistfield.getRawValue());
         assertEquals(ScField.Type.CHECKLIST, checklistfield.getType());
 
-        ScBaselistField treelistfield = (ScBaselistField) mItem.getFields().get(6);
+        ScBaselistField treelistfield = (ScBaselistField) mItem.findFieldById("{A07F6A5F-0225-4056-AD6C-BE153B0EF970}");
         assertEquals("TreeListField", treelistfield.getName());
         assertEquals(2, treelistfield.getItemsIds().size());
         assertEquals("{2075CBFF-C330-434D-9E1B-937782E0DE49}|{00CB2AC4-70DB-482C-85B4-B1F3A4CFE643}", treelistfield.getRawValue());
         assertEquals(ScField.Type.TREELIST, treelistfield.getType());
 
-        ScBaselistField droptreeField = (ScBaselistField) mItem.getFields().get(9);
+        ScBaselistField droptreeField = (ScBaselistField) mItem.findFieldById("{2C0DFF71-6FFC-41FC-8C13-B6B85AA308F3}");
         assertEquals("DropTreeFieldNormal", droptreeField.getName());
         assertEquals(1, droptreeField.getItemsIds().size());
         assertEquals("{2075CBFF-C330-434D-9E1B-937782E0DE49}", droptreeField.getRawValue());
@@ -90,7 +90,7 @@ public class ScFieldTest extends MockedServerAndroidTestCase {
 
     @Test
     public void testDateFields() {
-        ScDateField dateField = (ScDateField) mItem.getFields().get(4);
+        ScDateField dateField = (ScDateField) mItem.findFieldById("{B2383801-7FB5-4CF6-A174-522984CFCD0F}");
         assertEquals("DateTimeField", dateField.getName());
         assertEquals(Long.parseLong("1328097600000"), dateField.getDate());
         assertEquals("20120201T120000", dateField.getRawValue());
@@ -99,7 +99,7 @@ public class ScFieldTest extends MockedServerAndroidTestCase {
 
     @Test
     public void testImageField() {
-        ScImageField imageField = (ScImageField) mItem.getFields().get(1);
+        ScImageField imageField = (ScImageField) mItem.findFieldById("{47E89857-EA42-4CC6-9436-34560BDA73ED}");
         assertEquals("Image", imageField.getName());
         assertEquals("/~/media/4F20B519D5654472B01891CB6103C667.ashx", imageField.getImageSrcUrl());
         assertEquals(ScField.Type.IMAGE, imageField.getType());
