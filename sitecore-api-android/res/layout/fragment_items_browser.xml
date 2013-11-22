@@ -27,12 +27,10 @@
         android:visibility="gone"
         android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/button_up"
+        <ViewStub
+            android:id="@+id/view_up_stub"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:text="Up" />
+            android:layout_height="wrap_content" />
 
         <ListView android:id="@android:id/list"
             android:layout_width="match_parent"
