@@ -31,7 +31,7 @@ import net.sitecore.android.sdk.api.ScRequest;
 import net.sitecore.android.sdk.api.model.ItemsResponse;
 import net.sitecore.android.sdk.api.model.RequestScope;
 import net.sitecore.android.sdk.api.model.ScItem;
-import net.sitecore.android.sdk.api.provider.ScItemsLoader;
+import net.sitecore.android.sdk.api.model.ScItemsLoader;
 
 import static android.app.LoaderManager.LoaderCallbacks;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;

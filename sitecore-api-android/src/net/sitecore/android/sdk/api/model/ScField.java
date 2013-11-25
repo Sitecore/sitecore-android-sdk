@@ -100,7 +100,7 @@ public class ScField implements Parcelable {
      * @param type     field type
      * @param rawValue raw value of the field
      */
-    ScField(String name, String id, Type type, String rawValue) {
+    protected ScField(String name, String id, Type type, String rawValue) {
         mId = id;
         mName = name;
         mRawValue = rawValue;

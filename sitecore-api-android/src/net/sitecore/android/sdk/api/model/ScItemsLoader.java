@@ -1,4 +1,4 @@
-package net.sitecore.android.sdk.api.provider;
+package net.sitecore.android.sdk.api.model;
 
 import android.annotation.TargetApi;
 import android.content.AsyncTaskLoader;
@@ -10,7 +10,6 @@ import android.os.Build;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.sitecore.android.sdk.api.model.ScItem;
 import net.sitecore.android.sdk.api.provider.ScItemsContract.Items;
 
 import static net.sitecore.android.sdk.api.LogUtils.LOGV;
@@ -48,9 +47,9 @@ public class ScItemsLoader extends AsyncTaskLoader<List<ScItem>> {
     @Override
     public List<ScItem> loadInBackground() {
         final Cursor c = mContentResolver.query(Items.ITEMS_JOIN_FIELDS_URI,
-                ItemsFieldsQuery.PROJECTION,
+                ItemsQuery.PROJECTION,
                 mSelection, mSelectionArgs,
-                ItemsFieldsQuery.SORT_ORDER);
+                ItemsQuery.SORT_ORDER);
 
         LOGV("ScItemsLoader loading %s [%s]", mSelection, mSelectionArgs);
         if (c != null) {
@@ -61,29 +60,59 @@ public class ScItemsLoader extends AsyncTaskLoader<List<ScItem>> {
     }
 
     private ArrayList<ScItem> parseCursor(Cursor c) {
-        ArrayList<ScItem> result = new ArrayList<ScItem>();
-        if (c.moveToFirst()) {
-            String currentItemId;
-            ScItem currentItem = null;
-            do {
-                //String rowItemId = c.getString(Items.Query.ITEM_ID);
-                //ScField rowField = fieldFrom(c);
-                if (currentItem == null) {
-                    //currentItem.addField(rowField);
-                } else {
-                    //currentItem.addField(rowField);
+        final ArrayList<ScItem> result = new ArrayList<ScItem>();
+        if (!c.moveToFirst()) return result;
 
+        String currentItemId = null;
+        ScItem currentItem = null;
+        do {
+            final String rowItemId = c.getString(ItemsQuery.ITEM_ID);
+            if (currentItemId == null || !currentItemId.equals(rowItemId)) {
+                currentItemId = rowItemId;
 
-                }
-
-                currentItem = ScItem.from(c);
+                currentItem = itemFrom(c);
                 result.add(currentItem);
+            }
 
-
-            } while (c.moveToNext());
-        }
+            ScField rowField = fieldFrom(c);
+            currentItem.addField(rowField);
+        } while (c.moveToNext());
 
         return result;
+    }
+
+    private ScItem itemFrom(Cursor c) {
+        final ScItem item = new ScItem();
+
+        item.setId(c.getString(ItemsQuery.ITEM_ID));
+        item.setDisplayName(c.getString(ItemsQuery.DISPLAY_NAME));
+        item.setPath(c.getString(ItemsQuery.PATH));
+        item.setTemplate(c.getString(ItemsQuery.TEMPLATE));
+        item.setLongId(c.getString(ItemsQuery.LONG_ID));
+
+        //TODO: add mParentItemId field
+        //item.mParentItemId = c.getString(ItemsQuery.PARENT_ITEM_ID);
+
+        //TODO: add timestamp?
+        //item.mTimestamp = c.getString(ItemsQuery.TIMESTAMP);
+        item.setVersion(c.getInt(ItemsQuery.VERSION));
+        item.setDatabase(c.getString(ItemsQuery.DATABASE));
+        item.setLanguage(c.getString(ItemsQuery.LANGUAGE));
+        item.setHasChildren(c.getInt(ItemsQuery.HAS_CHILDREN) == 1);
+
+        //TODO: add tag(?)
+
+        return item;
+    }
+
+    private ScField fieldFrom(Cursor c) {
+        final String fieldId = c.getString(ItemsQuery.FIELD_ID);
+        final String fieldName = c.getString(ItemsQuery.FIELD_NAME);
+        final String fieldValue = c.getString(ItemsQuery.FIELD_VALUE);
+        final ScField.Type type = ScField.Type.getByName(c.getString(ItemsQuery.FIELD_TYPE));
+
+        return ScField.createFieldFromType(type, fieldName, fieldId, fieldValue);
+
     }
 
     @Override
@@ -129,7 +158,7 @@ public class ScItemsLoader extends AsyncTaskLoader<List<ScItem>> {
         LOGV("ScItemsLoader.onContentChanged()");
     }
 
-    interface ItemsFieldsQuery {
+    private interface ItemsQuery {
         String[] PROJECTION = {
                 // Items columns
                 Items._ID,
@@ -147,7 +176,10 @@ public class ScItemsLoader extends AsyncTaskLoader<List<ScItem>> {
                 Items.TAG,
 
                 // Fields columns
-                Fields.FIELD_ID
+                Fields.FIELD_ID,
+                Fields.NAME,
+                Fields.TYPE,
+                Fields.VALUE
         };
 
         int _ID = 0;
@@ -164,6 +196,11 @@ public class ScItemsLoader extends AsyncTaskLoader<List<ScItem>> {
         int HAS_CHILDREN = 11;
         int TAG = 12;
 
-        String SORT_ORDER = Tables.ITEMS + "." + Items.ITEM_ID + " desc";
+        int FIELD_ID = 13;
+        int FIELD_NAME = 14;
+        int FIELD_TYPE = 15;
+        int FIELD_VALUE = 16;
+
+        String SORT_ORDER = Tables.ITEMS + "." + Items.ITEM_ID + " asc, " + Tables.FIELDS + "." + Fields._ID + " asc";
     }
 }
