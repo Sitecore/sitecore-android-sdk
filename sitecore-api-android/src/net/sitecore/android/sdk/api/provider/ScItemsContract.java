@@ -67,6 +67,8 @@ public class ScItemsContract {
     public static class Items implements BaseColumns, ItemsColumns {
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath("items").build();
 
+        public static final Uri ITEMS_JOIN_FIELDS_URI = CONTENT_URI.buildUpon().appendPath("fields").build();
+
         public static final String CONTENT_TYPE = CURSOR_DIR_BASE_TYPE + "/vnd.sitecore.items";
         public static final String CONTENT_ITEM_TYPE = CURSOR_ITEM_BASE_TYPE + "/vnd.sitecore.item";
 

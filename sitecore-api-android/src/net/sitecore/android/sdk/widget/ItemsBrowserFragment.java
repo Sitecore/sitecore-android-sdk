@@ -31,6 +31,7 @@ import net.sitecore.android.sdk.api.ScRequest;
 import net.sitecore.android.sdk.api.model.ItemsResponse;
 import net.sitecore.android.sdk.api.model.RequestScope;
 import net.sitecore.android.sdk.api.model.ScItem;
+import net.sitecore.android.sdk.api.provider.ScItemsLoader;
 
 import static android.app.LoaderManager.LoaderCallbacks;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
@@ -49,8 +50,14 @@ public class ItemsBrowserFragment extends DialogFragment {
 
     public interface ItemViewBinder {
 
+        /**
+         * Bind an existing view to the item.
+         */
         public void bindView(Context context, View v, ScItem item);
 
+        /**
+         * Makes a new view to hold the data of the item.
+         */
         public View newView(Context context, LayoutInflater inflater, ScItem item);
 
     }
@@ -271,7 +278,7 @@ public class ItemsBrowserFragment extends DialogFragment {
 
         @Override
         public void onLoadFinished(Loader<List<ScItem>> loader, List<ScItem> data) {
-            mAdapter = new ScItemsAdapter(getActivity(), data, getItemViewBinder());
+            mAdapter = new ScItemsAdapter(getActivity(), data, onGetItemView());
             mListView.setAdapter(mAdapter);
         }
 
@@ -311,7 +318,7 @@ public class ItemsBrowserFragment extends DialogFragment {
     /**
      * @return
      */
-    protected ItemViewBinder getItemViewBinder() {
+    protected ItemViewBinder onGetItemView() {
         return new DefaultItemViewBinder();
     }
 

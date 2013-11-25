@@ -8,7 +8,10 @@ import android.provider.BaseColumns;
 import net.sitecore.android.sdk.api.provider.ScItemsContract.FieldsColumns;
 import net.sitecore.android.sdk.api.provider.ScItemsContract.ItemsColumns;
 
-class ScItemsDatabase extends SQLiteOpenHelper {
+import static net.sitecore.android.sdk.api.provider.ScItemsContract.Fields;
+import static net.sitecore.android.sdk.api.provider.ScItemsContract.Items;
+
+public class ScItemsDatabase extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "sitecore_items.db";
 
@@ -24,11 +27,14 @@ class ScItemsDatabase extends SQLiteOpenHelper {
 
     private static final int VERSION = V_1_1;
 
-    interface Tables {
+    public interface Tables {
         String ITEMS = "items";
         String FIELDS = "fields";
-    }
 
+        String ITEMS_JOIN_FIELDS = ITEMS + " LEFT OUTER JOIN " + FIELDS + " ON "
+                + ITEMS + "." + Items.ITEM_ID + "=" + FIELDS + "." + Fields.ITEM_ID;
+
+    }
 
     public ScItemsDatabase(Context context) {
         super(context, DB_NAME, null, VERSION);
