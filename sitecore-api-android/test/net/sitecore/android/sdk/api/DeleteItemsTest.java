@@ -20,7 +20,7 @@ public class DeleteItemsTest extends MockedServerAndroidTestCase {
 
     @Test
     public void testAnonymousDelete() throws Exception {
-        ScApiSession session = ScApiSession.getAnonymousSession(getBackendUrl());
+        ScApiSession session = ScApiSession.newAnonymousSession(getBackendUrl());
         setMockResponse(TestData._200_delete_5_items);
 
         RequestFuture<DeleteItemsResponse> future = RequestFuture.newFuture();

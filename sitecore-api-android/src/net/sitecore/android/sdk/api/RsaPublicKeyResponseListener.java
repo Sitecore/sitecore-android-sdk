@@ -15,7 +15,9 @@ class RsaPublicKeyResponseListener implements Response.Listener<String> {
     private String mName;
     private String mPassword;
 
-    private Response.Listener<ScApiSession> mOnSuccess;
+    private boolean mToReturnRsaKey = false;
+
+    private Response.Listener mOnSuccess;
     private Response.ErrorListener mOnError;
 
     RsaPublicKeyResponseListener(final String url,
@@ -30,13 +32,24 @@ class RsaPublicKeyResponseListener implements Response.Listener<String> {
         mOnError = onError;
     }
 
+    RsaPublicKeyResponseListener(String url, Response.Listener<RSAPublicKey> success, Response.ErrorListener onError) {
+        mUrl = url;
+        mOnSuccess = success;
+        mOnError = onError;
+        mToReturnRsaKey = true;
+    }
+
     @Override
     public void onResponse(String response) {
         try {
             LOGD("RSA public key received:" + response);
             RSAPublicKey pub = CryptoUtils.getPublicKey(response);
-            ScApiSession session = new ScApiSessionImpl(mUrl, pub, mName, mPassword);
-            mOnSuccess.onResponse(session);
+            if (mToReturnRsaKey) {
+                mOnSuccess.onResponse(pub);
+            } else {
+                ScApiSession session = new ScApiSessionImpl(mUrl, pub, mName, mPassword);
+                mOnSuccess.onResponse(session);
+            }
         } catch (InvalidKeySpecException e) {
             sendError(e);
         } catch (NoSuchAlgorithmException e) {

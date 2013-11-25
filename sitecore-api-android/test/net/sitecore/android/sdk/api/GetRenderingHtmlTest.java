@@ -17,7 +17,7 @@ public class GetRenderingHtmlTest extends MockedServerAndroidTestCase {
 
     @Test
     public void testUrlBuilder() throws Exception {
-        ScApiSession session = ScApiSession.getAnonymousSession("http://sample.com");
+        ScApiSession session = ScApiSession.newAnonymousSession("http://sample.com");
 
         RequestFuture<String> future = RequestFuture.newFuture();
         GetRenderingHtmlRequest request = session.getRenderingHtml(

@@ -28,7 +28,7 @@ public class ScRichTextFieldTest extends MockedServerAndroidTestCase {
         super.setUp();
         setMockResponse(TestData._200_1_item_rich_text_test);
 
-        ScApiSession session = ScApiSession.getAnonymousSession(getBackendUrl());
+        ScApiSession session = ScApiSession.newAnonymousSession(getBackendUrl());
 
         RequestFuture<ItemsResponse> future = RequestFuture.newFuture();
         mRequestQueue.add(session.getItems(future, future).build());

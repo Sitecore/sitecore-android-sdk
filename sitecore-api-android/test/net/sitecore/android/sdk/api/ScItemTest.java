@@ -28,7 +28,7 @@ public class ScItemTest extends MockedServerAndroidTestCase {
     @Before @Override
     public void setUp() throws Exception {
         super.setUp();
-        ScApiSession session = ScApiSession.getAnonymousSession(getBackendUrl());
+        ScApiSession session = ScApiSession.newAnonymousSession(getBackendUrl());
 
         setMockResponse(TestData._200_simple_response);
 

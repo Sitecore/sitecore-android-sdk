@@ -3,10 +3,12 @@ package net.sitecore.android.sdk.api;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.android.volley.Request;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.toolbox.StringRequest;
 
+import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
 
 import net.sitecore.android.sdk.api.model.CreateItemRequest;
@@ -33,7 +35,7 @@ public abstract class ScApiSession {
      *
      * @return new session.
      */
-    public static ScApiSession getAnonymousSession(String url) {
+    public static ScApiSession newAnonymousSession(String url) {
         if (TextUtils.isEmpty(url)) throw new IllegalArgumentException("Url can't be empty");
         return new ScApiSessionImpl(url);
     }
@@ -44,7 +46,7 @@ public abstract class ScApiSession {
      * @param url       Host url with port
      * @param onSuccess is called immediately.
      *
-     * @see #getAnonymousSession(String)
+     * @see #newAnonymousSession(String)
      */
     public static void getAnonymousSession(String url, final Listener<ScApiSession> onSuccess) {
         onSuccess.onResponse(new ScApiSessionImpl(url));
@@ -63,6 +65,23 @@ public abstract class ScApiSession {
             final String password,
             final Listener<ScApiSession> onSuccess) {
         getSession(context, url, name, password, onSuccess, null);
+    }
+
+    /**
+     * Creates authenticated session based on existing key.
+     *
+     * @param url      Sitecore instance URL / server URL.
+     * @param key      {@link RSAPublicKey} key for authenticated requests.
+     * @param name     User login name.
+     * @param password User password
+     */
+    public static ScApiSession newSession(String url, RSAPublicKey key,
+            final String name,
+            final String password) {
+        if (key == null) throw new IllegalArgumentException("Key can't be null");
+        if (TextUtils.isEmpty(url)) throw new IllegalArgumentException("Url can't be empty");
+
+        return new ScApiSessionImpl(url, key, name, password);
     }
 
     /**
@@ -86,6 +105,27 @@ public abstract class ScApiSession {
         LOGD("Sending GET " + url + RSA_SUFFIX);
 
         RequestQueueProvider.getRequestQueue(context).add(request);
+    }
+
+
+    /**
+     * Creates {@link Request} for retrieving {@link RSAPublicKey}.
+     *
+     * @param url       Sitecore instance URL / server URL.
+     * @param onSuccess Success result callback.
+     * @param onError   Error result callback
+     *
+     * @return {@link Request}.
+     */
+    public static Request buildPublicKeyRequest(String url,
+            final Listener<RSAPublicKey> onSuccess,
+            final ErrorListener onError) {
+        if (TextUtils.isEmpty(url)) throw new IllegalArgumentException("Url can't be empty");
+        if (onSuccess == null) throw new IllegalArgumentException("onSuccess listener can't be null");
+        
+        final RsaPublicKeyResponseListener responseHandler = new RsaPublicKeyResponseListener(url, onSuccess, onError);
+
+        return new StringRequest(url + RSA_SUFFIX, responseHandler, onError);
     }
 
     /**
