@@ -8,7 +8,6 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.toolbox.StringRequest;
 
-import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
 
 import net.sitecore.android.sdk.api.model.CreateItemRequest;
@@ -17,8 +16,6 @@ import net.sitecore.android.sdk.api.model.DeleteItemsResponse;
 import net.sitecore.android.sdk.api.model.GetItemsRequest;
 import net.sitecore.android.sdk.api.model.ItemsResponse;
 import net.sitecore.android.sdk.api.model.UpdateItemFieldsRequest;
-
-import static net.sitecore.android.sdk.api.LogUtils.LOGD;
 
 /**
  * This class holds information about connection properties and user authentication properties.
@@ -71,17 +68,17 @@ public abstract class ScApiSession {
      * Creates authenticated session based on existing key.
      *
      * @param url      Sitecore instance URL / server URL.
-     * @param key      {@link RSAPublicKey} key for authenticated requests.
+     * @param key      {@link ScPublicKey} key for authenticated requests.
      * @param name     User login name.
      * @param password User password
      */
-    public static ScApiSession newSession(String url, RSAPublicKey key,
+    public static ScApiSession newSession(String url, ScPublicKey key,
             final String name,
             final String password) {
         if (key == null) throw new IllegalArgumentException("Key can't be null");
         if (TextUtils.isEmpty(url)) throw new IllegalArgumentException("Url can't be empty");
 
-        return new ScApiSessionImpl(url, key, name, password);
+        return new ScApiSessionImpl(url, key.getKey(), name, password);
     }
 
     /**
@@ -93,23 +90,28 @@ public abstract class ScApiSession {
      * @param onSuccess Success result callback.
      * @param onError   Error result callback
      */
-    public static void getSession(Context context, String url,
+    public static void getSession(Context context, final String url,
             final String name,
             final String password,
             final Listener<ScApiSession> onSuccess,
             final ErrorListener onError) {
         if (TextUtils.isEmpty(url)) throw new IllegalArgumentException("Url can't be empty");
 
-        final RsaPublicKeyResponseListener responseHandler = new RsaPublicKeyResponseListener(url, name, password, onSuccess, onError);
-        final StringRequest request = new StringRequest(url + RSA_SUFFIX, responseHandler, onError);
-        LOGD("Sending GET " + url + RSA_SUFFIX);
+        Listener<ScPublicKey> onKeyRetrieve = new Listener<ScPublicKey>() {
+            @Override
+            public void onResponse(ScPublicKey response) {
+                ScApiSession session = new ScApiSessionImpl(url, response.getKey(), name, password);
+                onSuccess.onResponse(session);
+            }
+        };
 
-        RequestQueueProvider.getRequestQueue(context).add(request);
+        Request keyRequest = buildPublicKeyRequest(url, onKeyRetrieve, onError);
+        RequestQueueProvider.getRequestQueue(context).add(keyRequest);
     }
 
 
     /**
-     * Creates {@link Request} for retrieving {@link RSAPublicKey}.
+     * Creates {@link Request} for retrieving {@link ScPublicKey}.
      *
      * @param url       Sitecore instance URL / server URL.
      * @param onSuccess Success result callback.
@@ -118,12 +120,12 @@ public abstract class ScApiSession {
      * @return {@link Request}.
      */
     public static Request buildPublicKeyRequest(String url,
-            final Listener<RSAPublicKey> onSuccess,
+            final Listener<ScPublicKey> onSuccess,
             final ErrorListener onError) {
         if (TextUtils.isEmpty(url)) throw new IllegalArgumentException("Url can't be empty");
         if (onSuccess == null) throw new IllegalArgumentException("onSuccess listener can't be null");
-        
-        final RsaPublicKeyResponseListener responseHandler = new RsaPublicKeyResponseListener(url, onSuccess, onError);
+
+        final PublicKeyResponseListener responseHandler = new PublicKeyResponseListener(onSuccess, onError);
 
         return new StringRequest(url + RSA_SUFFIX, responseHandler, onError);
     }
