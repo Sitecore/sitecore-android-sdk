@@ -13,7 +13,7 @@ public class ScPublicKey {
         mKey = CryptoUtils.getPublicKey(xmlDsig);
     }
 
-    public String toString() {
+    public String getXmlValue() {
         return mXmlDsig;
     }
 
