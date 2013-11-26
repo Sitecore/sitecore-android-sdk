@@ -5,16 +5,16 @@ import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
 
 public class ScPublicKey {
-    private final String mXmlDsig;
+    private final String mRawValue;
     private final RSAPublicKey mKey;
 
-    public ScPublicKey(String xmlDsig) throws InvalidKeySpecException, NoSuchAlgorithmException {
-        this.mXmlDsig = xmlDsig;
-        mKey = CryptoUtils.getPublicKey(xmlDsig);
+    public ScPublicKey(String rawValue) throws InvalidKeySpecException, NoSuchAlgorithmException {
+        this.mRawValue = rawValue;
+        mKey = CryptoUtils.getPublicKey(rawValue);
     }
 
-    public String getXmlValue() {
-        return mXmlDsig;
+    public String getRawValue() {
+        return mRawValue;
     }
 
     public RSAPublicKey getKey() {

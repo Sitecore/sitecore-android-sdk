@@ -34,7 +34,7 @@ public class CancelRequestsTest extends MockedServerAndroidTestCase {
     public void init() throws Exception {
         super.setUp();
 
-        mSession = SessionFactory.newAnonymousSession(getBackendUrl());
+        mSession = ScApiSessionFactory.newAnonymousSession(getBackendUrl());
 
         mServer.setDispatcher(new Dispatcher() {
             @Override

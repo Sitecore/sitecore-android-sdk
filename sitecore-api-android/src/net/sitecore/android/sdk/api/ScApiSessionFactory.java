@@ -10,7 +10,7 @@ import com.android.volley.toolbox.StringRequest;
 /**
  * Factory class for creation of {@link ScApiSession}.
  */
-public class SessionFactory {
+public class ScApiSessionFactory {
     public static final String RSA_SUFFIX = "/-/item/v1/-/actions/getpublickey";
 
     /**
