@@ -3,6 +3,7 @@ package net.sitecore.android.sdk.web;
 import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +17,7 @@ import android.webkit.WebView;
  *
  * @see ScWebViewSupportFragment
  */
-@TargetApi(14)
+@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class ScWebViewFragment extends Fragment implements ActivityContext {
 
     private ScWebViewFragmentHelper mFragmentHelper;
@@ -41,9 +42,9 @@ public class ScWebViewFragment extends Fragment implements ActivityContext {
     }
 
     @Override
-    public void onViewStateRestored(Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-        mFragmentHelper.onViewStateRestored(savedInstanceState);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) mFragmentHelper.onViewStateRestored(savedInstanceState);
     }
 
     /** Called when the fragment is no longer resumed. Pauses the WebView. */

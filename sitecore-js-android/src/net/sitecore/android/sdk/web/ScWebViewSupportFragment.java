@@ -2,6 +2,7 @@ package net.sitecore.android.sdk.web;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -16,7 +17,7 @@ import android.webkit.WebView;
  *
  * @see ScWebViewFragment
  */
-@TargetApi(8)
+@TargetApi(Build.VERSION_CODES.FROYO)
 public class ScWebViewSupportFragment extends Fragment implements ActivityContext {
 
     private ScWebViewFragmentHelper mFragmentHelper;
