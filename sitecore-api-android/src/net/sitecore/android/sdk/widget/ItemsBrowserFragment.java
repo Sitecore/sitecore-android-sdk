@@ -321,7 +321,7 @@ public class ItemsBrowserFragment extends DialogFragment {
 
         @Override
         public void onLoadFinished(Loader<List<ScItem>> loader, List<ScItem> data) {
-            mAdapter = new ScItemsAdapter(getActivity(), data, onGetItemView());
+            mAdapter = new ScItemsAdapter(getActivity(), data, onGetListItemView());
             mListView.setAdapter(mAdapter);
         }
 
@@ -339,7 +339,7 @@ public class ItemsBrowserFragment extends DialogFragment {
     }
 
     /**
-     * @param item clicked
+     * @param item which received click event.
      */
     public void onScItemClick(ScItem item) {
         if (item.hasChildren()) {
@@ -356,17 +356,16 @@ public class ItemsBrowserFragment extends DialogFragment {
     }
 
     /**
-     * @param item
-     *
-     * @return true if the callback consumed the long click, false otherwise
+     * @param item which received long click.
      */
     public void onScItemLongClick(ScItem item) {
     }
 
     /**
+     * Override this method to change the way ListItem views are created from {@link ScItem}.
      * @return
      */
-    protected ItemViewBinder onGetItemView() {
+    protected ItemViewBinder onGetListItemView() {
         return new DefaultItemViewBinder();
     }
 
