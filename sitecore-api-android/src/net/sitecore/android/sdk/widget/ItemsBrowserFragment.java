@@ -27,6 +27,7 @@ import java.util.List;
 import net.sitecore.android.sdk.api.R;
 import net.sitecore.android.sdk.api.RequestQueueProvider;
 import net.sitecore.android.sdk.api.ScApiSession;
+import net.sitecore.android.sdk.api.ScApiSessionFactory;
 import net.sitecore.android.sdk.api.ScRequest;
 import net.sitecore.android.sdk.api.model.ItemsResponse;
 import net.sitecore.android.sdk.api.model.RequestScope;
@@ -193,7 +194,9 @@ public class ItemsBrowserFragment extends DialogFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        ScApiSession.getSession(getActivity(), "http://scmobileteam.cloudapp.net", "extranet\\creatorex", "creatorex",
+        ScApiSessionFactory.getSession(
+                RequestQueueProvider.getRequestQueue(getActivity()),
+                "http://scmobileteam.cloudapp.net", "extranet\\creatorex", "creatorex",
                 new Response.Listener<ScApiSession>() {
                     @Override
                     public void onResponse(ScApiSession scApiSession) {
