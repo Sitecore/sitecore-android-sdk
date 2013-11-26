@@ -25,7 +25,7 @@ public class RequestBuilderTest extends MockedServerAndroidTestCase {
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        mSession = ScApiSession.newAnonymousSession("http://sample.com");
+        mSession = SessionFactory.newAnonymousSession("http://sample.com");
     }
 
     @Test

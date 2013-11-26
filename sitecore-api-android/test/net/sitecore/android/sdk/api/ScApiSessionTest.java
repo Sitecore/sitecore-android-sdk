@@ -14,7 +14,7 @@ public class ScApiSessionTest extends MockedServerAndroidTestCase {
 
     @Test
     public void testGetAnonymousSession() throws Exception {
-        ScApiSession session = ScApiSession.newAnonymousSession(getBackendUrl());
+        ScApiSession session = SessionFactory.newAnonymousSession(getBackendUrl());
 
         assertNotNull(session);
         assertTrue(session.isAnonymous());
