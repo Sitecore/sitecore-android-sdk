@@ -190,30 +190,19 @@ public class ItemsBrowserFragment extends DialogFragment {
         super.onDetach();
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void setApiSession(ScApiSession session) {
+        mApiSession = session;
+        mApiSession.setShouldCache(true);
 
-        ScApiSessionFactory.getSession(
-                RequestQueueProvider.getRequestQueue(getActivity()),
-                "http://scmobileteam.cloudapp.net", "extranet\\creatorex", "creatorex",
-                new Response.Listener<ScApiSession>() {
-                    @Override
-                    public void onResponse(ScApiSession scApiSession) {
-                        mApiSession = scApiSession;
-                        mApiSession.setShouldCache(true);
+        ScRequest request = mApiSession.getItems(mFirstItemResponseListener, mErrorListener)
+                .withScope(RequestScope.SELF, RequestScope.CHILDREN)
+                .byItemPath("/sitecore/content/Home")
+                .build();
 
-                        ScRequest request = mApiSession.getItems(mFirstItemResponseListener, mErrorListener)
-                                .withScope(RequestScope.SELF, RequestScope.CHILDREN)
-                                .byItemPath("/sitecore/content/Home")
-                                .build();
+        request.setTag(ItemsBrowserFragment.this);
 
-                        request.setTag(ItemsBrowserFragment.this);
-
-                        mRequestQueue.add(request);
-                        setLoading(true);
-                    }
-                });
+        mRequestQueue.add(request);
+        setLoading(true);
     }
 
     private void reloadChildrenFromDatabase(String itemId) {
