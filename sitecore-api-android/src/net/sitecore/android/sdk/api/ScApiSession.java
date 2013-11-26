@@ -1,11 +1,9 @@
 package net.sitecore.android.sdk.api;
 
 import android.content.Context;
-import android.text.TextUtils;
 
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
-import com.android.volley.toolbox.StringRequest;
 
 import java.util.ArrayList;
 
@@ -16,78 +14,11 @@ import net.sitecore.android.sdk.api.model.GetItemsRequest;
 import net.sitecore.android.sdk.api.model.ItemsResponse;
 import net.sitecore.android.sdk.api.model.UpdateItemFieldsRequest;
 
-import static net.sitecore.android.sdk.api.LogUtils.LOGD;
-
 /**
- * This class holds information about connection properties and user authentication properties.
+ * Interface for interaction with Sitecore Item Web API.
  * All requests to Sitecore Item Web API are built using instances of {@link ScApiSession}.
  */
-public abstract class ScApiSession {
-
-    private static final String RSA_SUFFIX = "/-/item/v1/-/actions/getpublickey";
-
-    /**
-     * Creates anonymous session to specified backend url.
-     *
-     * @param url Host url with port
-     *
-     * @return new session.
-     */
-    public static ScApiSession getAnonymousSession(String url) {
-        if (TextUtils.isEmpty(url)) throw new IllegalArgumentException("Url can't be empty");
-        return new ScApiSessionImpl(url);
-    }
-
-    /**
-     * Creates anonymous session to specified backend url in asynchronous way.
-     *
-     * @param url       Host url with port
-     * @param onSuccess is called immediately.
-     *
-     * @see #getAnonymousSession(String)
-     */
-    public static void getAnonymousSession(String url, final Listener<ScApiSession> onSuccess) {
-        onSuccess.onResponse(new ScApiSessionImpl(url));
-    }
-
-    /**
-     * Creates authenticated session.
-     *
-     * @param url       Sitecore instance URL / server URL.
-     * @param name      User login name.
-     * @param password  User password
-     * @param onSuccess Success result callback.
-     */
-    public static void getSession(Context context, String url,
-            final String name,
-            final String password,
-            final Listener<ScApiSession> onSuccess) {
-        getSession(context, url, name, password, onSuccess, null);
-    }
-
-    /**
-     * Creates authenticated session.
-     *
-     * @param url       Sitecore instance URL / server URL.
-     * @param name      User login name.
-     * @param password  User password
-     * @param onSuccess Success result callback.
-     * @param onError   Error result callback
-     */
-    public static void getSession(Context context, String url,
-            final String name,
-            final String password,
-            final Listener<ScApiSession> onSuccess,
-            final ErrorListener onError) {
-        if (TextUtils.isEmpty(url)) throw new IllegalArgumentException("Url can't be empty");
-
-        final RsaPublicKeyResponseListener responseHandler = new RsaPublicKeyResponseListener(url, name, password, onSuccess, onError);
-        final StringRequest request = new StringRequest(url + RSA_SUFFIX, responseHandler, onError);
-        LOGD("Sending GET " + url + RSA_SUFFIX);
-
-        RequestQueueProvider.getRequestQueue(context).add(request);
-    }
-
+public interface ScApiSession {
     /**
      * Creates {@link RequestBuilder} to build the {@link GetItemsRequest}.
      *
@@ -96,7 +27,7 @@ public abstract class ScApiSession {
      *
      * @return {@link RequestBuilder} to build the request.
      */
-    public abstract RequestBuilder getItems(Listener<ItemsResponse> successListener, ErrorListener errorListener);
+    public RequestBuilder getItems(Listener<ItemsResponse> successListener, ErrorListener errorListener);
 
     /**
      * Creates {@link GetItemsRequest} to load list of items with particular IDs.
@@ -107,7 +38,7 @@ public abstract class ScApiSession {
      *
      * @return {@link GetItemsRequest}.
      */
-    public abstract RequestBuilder getItemsByIds(ArrayList<String> itemIds, Listener<ItemsResponse> successListener,
+    public RequestBuilder getItemsByIds(ArrayList<String> itemIds, Listener<ItemsResponse> successListener,
             ErrorListener errorListener);
 
     /**
@@ -122,7 +53,7 @@ public abstract class ScApiSession {
      *
      * @return {@link RequestBuilder} to build the request.
      */
-    public abstract RequestBuilder createItem(String itemName, String template,
+    public RequestBuilder createItem(String itemName, String template,
             Listener<ItemsResponse> successListener,
             ErrorListener errorListener);
 
@@ -135,7 +66,7 @@ public abstract class ScApiSession {
      *
      * @return {@link RequestBuilder} to build the request.
      */
-    public abstract RequestBuilder createItem(String branchId,
+    public RequestBuilder createItem(String branchId,
             Listener<ItemsResponse> successListener,
             ErrorListener errorListener);
 
@@ -147,7 +78,7 @@ public abstract class ScApiSession {
      *
      * @return {@link RequestBuilder} to build the request.
      */
-    public abstract RequestBuilder updateItems(Listener<ItemsResponse> successListener, ErrorListener errorListener);
+    public RequestBuilder updateItems(Listener<ItemsResponse> successListener, ErrorListener errorListener);
 
     /**
      * Creates {@link RequestBuilder} to build the {@link DeleteItemsRequest}.
@@ -157,7 +88,7 @@ public abstract class ScApiSession {
      *
      * @return {@link RequestBuilder} to build the request.
      */
-    public abstract RequestBuilder deleteItems(Listener<DeleteItemsResponse> successListener, ErrorListener errorListener);
+    public RequestBuilder deleteItems(Listener<DeleteItemsResponse> successListener, ErrorListener errorListener);
 
     /**
      * Executes default items request (/-/item/v1/) to check result code.
@@ -166,7 +97,7 @@ public abstract class ScApiSession {
      * @param callback Is called after request is executed with {@code true} if request succeeded (200 <= code <= 300),
      *                 and {@code false} otherwise.
      */
-    public abstract void validate(Context context, final Listener<Boolean> callback);
+    public void validate(Context context, final Listener<Boolean> callback);
 
     /**
      * Creates {@link GetRenderingHtmlRequestBuilder} to build special request to load
@@ -177,7 +108,7 @@ public abstract class ScApiSession {
      * @param successListener Success result callback.
      * @param errorListener   Error result callback
      */
-    public abstract GetRenderingHtmlRequestBuilder getRenderingHtml(String renderingId, String itemId,
+    public GetRenderingHtmlRequestBuilder getRenderingHtml(String renderingId, String itemId,
             Listener<String> successListener, ErrorListener errorListener);
 
     /**
@@ -190,29 +121,29 @@ public abstract class ScApiSession {
      *
      * @return {@link UploadMediaRequestOptions} that describe image upload request.
      */
-    public abstract UploadMediaRequestOptions uploadMedia(String itemPath, String itemName, String mediaFilePath);
+    public UploadMediaRequestOptions uploadMedia(String itemPath, String itemName, String mediaFilePath);
 
     /** @return Backend url with port. */
-    public abstract String getBaseUrl();
+    public String getBaseUrl();
 
-    public abstract boolean isAnonymous();
+    public boolean isAnonymous();
 
     /** @return {@code true} if requests should cache all responses. {@code false} by default. */
-    public abstract boolean shouldCache();
+    public boolean shouldCache();
 
     /** Sets default caching value for all built requests. Setting this value in request have higher priority. */
-    public abstract void setShouldCache(boolean shouldCache);
+    public void setShouldCache(boolean shouldCache);
 
     /**
      * Creates encoded name for auth http header.
      * Returns {@code null} when {@link #isAnonymous()} is true;
      */
-    abstract String createEncodedName();
+    String createEncodedName();
 
     /**
      * Creates encoded password for auth http header.
      * Returns {@code null} when {@link #isAnonymous()} is true;
      */
-    abstract String createEncodedPassword();
+    String createEncodedPassword();
 
 }
