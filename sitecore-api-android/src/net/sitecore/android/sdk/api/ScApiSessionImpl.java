@@ -22,7 +22,7 @@ import net.sitecore.android.sdk.api.model.ItemsResponse;
 
 import static net.sitecore.android.sdk.api.LogUtils.LOGE;
 
-class ScApiSessionImpl extends ScApiSession {
+class ScApiSessionImpl implements ScApiSession {
 
     private final String mBaseUrl;
     private final RSAPublicKey mPublicKey;
@@ -197,7 +197,7 @@ class ScApiSessionImpl extends ScApiSession {
     }
 
     @Override
-    String createEncodedName() {
+    public String createEncodedName() {
         try {
             return CryptoUtils.encodeRsaMessage(mPublicKey, mName);
         } catch (InvalidKeyException e) {
@@ -219,7 +219,7 @@ class ScApiSessionImpl extends ScApiSession {
     }
 
     @Override
-    String createEncodedPassword() {
+    public String createEncodedPassword() {
         try {
             return CryptoUtils.encodeRsaMessage(mPublicKey, mPassword);
         } catch (InvalidKeyException e) {

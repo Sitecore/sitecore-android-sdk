@@ -32,7 +32,7 @@ public class ScFieldTest extends MockedServerAndroidTestCase {
         super.setUp();
         setMockResponse(TestData._200_1_item_20_fields);
 
-        ScApiSession session = ScApiSession.getAnonymousSession(getBackendUrl());
+        ScApiSession session = ScApiSessionFactory.newAnonymousSession(getBackendUrl());
 
         RequestFuture<ItemsResponse> future = RequestFuture.newFuture();
         mRequestQueue.add(session.getItems(future, future).build());
