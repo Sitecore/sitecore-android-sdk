@@ -15,7 +15,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -27,7 +26,6 @@ import java.util.List;
 import net.sitecore.android.sdk.api.R;
 import net.sitecore.android.sdk.api.RequestQueueProvider;
 import net.sitecore.android.sdk.api.ScApiSession;
-import net.sitecore.android.sdk.api.ScApiSessionFactory;
 import net.sitecore.android.sdk.api.ScRequest;
 import net.sitecore.android.sdk.api.model.ItemsResponse;
 import net.sitecore.android.sdk.api.model.RequestScope;
@@ -35,13 +33,14 @@ import net.sitecore.android.sdk.api.model.ScItem;
 import net.sitecore.android.sdk.api.model.ScItemsLoader;
 
 import static android.app.LoaderManager.LoaderCallbacks;
+import static android.view.View.OnClickListener;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static net.sitecore.android.sdk.api.LogUtils.LOGD;
 import static net.sitecore.android.sdk.api.provider.ScItemsContract.Items;
 
 /**
- * Items browser fragment
+ * Items browser fragment.
  */
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class ItemsBrowserFragment extends DialogFragment {
@@ -49,6 +48,11 @@ public class ItemsBrowserFragment extends DialogFragment {
     private static final String BY_ITEM_PARENT_ID = Items.PARENT_ITEM_ID + "=?";
     private static final String EXTRA_ITEM_ID = "item_id";
 
+    private static final String SAVED_ITEMS = "items";
+
+    /**
+     * Defines how to map {@link ScItem} to list item view.
+     */
     public interface ItemViewBinder {
 
         /**
@@ -63,14 +67,24 @@ public class ItemsBrowserFragment extends DialogFragment {
 
     }
 
+    /**
+     * Defines navigation callback methods.
+     */
     public interface NavigationEventsListener {
 
+        /**
+         * @param item Current {@link ScItem} after event finished.
+         */
         public void onGoUp(ScItem item);
 
+        /**
+         *
+         * @param item Current {@link ScItem} after event finished.
+         */
         public void onGoInside(ScItem item);
     }
 
-    private static NavigationEventsListener sEmptyNavigationEventsListener = new NavigationEventsListener() {
+    private static final NavigationEventsListener sEmptyNavigationEventsListener = new NavigationEventsListener() {
         @Override
         public void onGoUp(ScItem item) {
         }
@@ -80,24 +94,43 @@ public class ItemsBrowserFragment extends DialogFragment {
         }
     };
 
+    /**
+     * Defines network events callback methods.
+     */
     public interface NetworkEventsListener {
 
+        /**
+         *
+         */
         public void onUpdateRequestStarted();
 
+        /**
+         *
+         */
         public void onUpdateRequestFinished();
     }
 
+    private static final NetworkEventsListener sEmptyNetworkEventsListener = new NetworkEventsListener() {
+        @Override
+        public void onUpdateRequestStarted() {
+        }
+
+        @Override
+        public void onUpdateRequestFinished() {
+        }
+    };
+
     private NavigationEventsListener mNavigationEventsListener = sEmptyNavigationEventsListener;
+    private NetworkEventsListener mNetworkEventsListener = sEmptyNetworkEventsListener;
 
     private View mContainerProgress;
     private LinearLayout mContainerList;
-
-    private RequestQueue mRequestQueue;
-
     private View mGoUpView;
     private ListView mListView;
+
     private ScItemsAdapter mAdapter;
 
+    private RequestQueue mRequestQueue;
     private ScApiSession mApiSession;
 
     private LinkedList<ScItem> mItems = new LinkedList<ScItem>();
@@ -114,11 +147,12 @@ public class ItemsBrowserFragment extends DialogFragment {
     private final AdapterView.OnItemLongClickListener mOnItemLongClickListener = new AdapterView.OnItemLongClickListener() {
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-            return onScItemLongClick(mAdapter.getItem(position));
+            onScItemLongClick(mAdapter.getItem(position));
+            return true;
         }
     };
 
-    private final View.OnClickListener mOnUpClickListener = new View.OnClickListener() {
+    private final OnClickListener mOnUpClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
             LOGD("UP clicked in: " + mItems.peek().getId());
@@ -139,6 +173,20 @@ public class ItemsBrowserFragment extends DialogFragment {
     };
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            // TODO: load saved state
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        // TODO: save items list, mApiSession(?)
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // TODO: replace inflation with code
         final View v = inflater.inflate(R.layout.fragment_items_browser, container, false);
@@ -147,21 +195,13 @@ public class ItemsBrowserFragment extends DialogFragment {
         return v;
     }
 
-    /**
-     * @return
-     */
-    protected View onCreateUpButtonView() {
-        final Button upButton = new Button(getActivity());
-        upButton.setText("..");
-        return upButton;
-    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         mContainerProgress = view.findViewById(R.id.container_progress);
         mContainerList = (LinearLayout) view.findViewById(R.id.container_list);
 
-        mGoUpView = onCreateUpButtonView();
+        mGoUpView = onCreateUpButtonView(LayoutInflater.from(getActivity()));
         mGoUpView.setVisibility(View.GONE);
         mGoUpView.setOnClickListener(mOnUpClickListener);
 
@@ -170,6 +210,19 @@ public class ItemsBrowserFragment extends DialogFragment {
         mListView = (ListView) view.findViewById(android.R.id.list);
         mListView.setOnItemClickListener(mOnItemClickListener);
         mListView.setOnItemLongClickListener(mOnItemLongClickListener);
+    }
+
+    /**
+     * Creates view, intended for Up navigation through items tree. This view will be added above items browser list.
+     * After creation {@link OnClickListener} will be set to created view, which triggers navigation up.
+     *
+     * @param inflater LayoutInflater object.
+     * @return View, intended for Up navigation through items tree. After creation will have
+     */
+    protected View onCreateUpButtonView(LayoutInflater inflater) {
+        final Button upButton = new Button(getActivity());
+        upButton.setText("..");
+        return upButton;
     }
 
     public void setLoading(boolean isLoading) {
@@ -246,7 +299,6 @@ public class ItemsBrowserFragment extends DialogFragment {
     private final Response.Listener<ItemsResponse> mItemsResponseListener = new Response.Listener<ItemsResponse>() {
         @Override
         public void onResponse(ItemsResponse itemsResponse) {
-            //Toast.makeText(getActivity(), "" + itemsResponse.getResultCount() + " items loaded", Toast.LENGTH_SHORT).show();
         }
     };
 
@@ -254,7 +306,6 @@ public class ItemsBrowserFragment extends DialogFragment {
         @Override
         public void onErrorResponse(VolleyError volleyError) {
             setLoading(false);
-            //Toast.makeText(getActivity(), "get items error", Toast.LENGTH_SHORT).show();
         }
     };
 
@@ -281,6 +332,13 @@ public class ItemsBrowserFragment extends DialogFragment {
     };
 
     /**
+     * @return Current item or null if data wasn't loaded.
+     */
+    public ScItem getCurrentItem() {
+        return mItems.peek();
+    }
+
+    /**
      * @param item clicked
      */
     public void onScItemClick(ScItem item) {
@@ -302,9 +360,7 @@ public class ItemsBrowserFragment extends DialogFragment {
      *
      * @return true if the callback consumed the long click, false otherwise
      */
-    public boolean onScItemLongClick(ScItem item) {
-        Toast.makeText(getActivity(), item.getDisplayName() + " long clicked", Toast.LENGTH_SHORT).show();
-        return true;
+    public void onScItemLongClick(ScItem item) {
     }
 
     /**
@@ -316,5 +372,9 @@ public class ItemsBrowserFragment extends DialogFragment {
 
     public void setNavigationEventsListener(NavigationEventsListener navigationEventsListener) {
         mNavigationEventsListener = navigationEventsListener;
+    }
+
+    public void setNetworkEventsListener(NetworkEventsListener networkEventsListener) {
+        mNetworkEventsListener = networkEventsListener;
     }
 }
