@@ -6,13 +6,18 @@ import android.app.DialogFragment;
 import android.content.ContentProviderOperation;
 import android.content.Context;
 import android.content.Loader;
+import android.content.res.TypedArray;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
@@ -49,6 +54,9 @@ public class ItemsBrowserFragment extends DialogFragment {
     private static final String EXTRA_ITEM_ID = "item_id";
 
     private static final String SAVED_ITEMS = "items";
+
+    public static final int STYLE_LIST = 0;
+    public static final int STYLE_GRID = 1;
 
     /**
      * Defines how to map {@link ScItem} to list item view.
@@ -126,12 +134,15 @@ public class ItemsBrowserFragment extends DialogFragment {
     private View mContainerProgress;
     private LinearLayout mContainerList;
     private View mGoUpView;
-    private ListView mListView;
+    private AbsListView mListView;
 
     private ScItemsAdapter mAdapter;
 
     private RequestQueue mRequestQueue;
     private ScApiSession mApiSession;
+
+    private int mStyle = STYLE_LIST;
+    private int mColumnCount = 2;
 
     private LinkedList<ScItem> mItems = new LinkedList<ScItem>();
 
@@ -195,6 +206,20 @@ public class ItemsBrowserFragment extends DialogFragment {
         return v;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        //Next hack makes dialog MATCH_PARENT
+        /*
+        final Dialog dialog = getDialog();
+        if (dialog != null) {
+            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+            lp.copyFrom(dialog.getWindow().getAttributes());
+            lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+            lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+            dialog.getWindow().setAttributes(lp);
+        }*/
+    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -207,9 +232,30 @@ public class ItemsBrowserFragment extends DialogFragment {
 
         mContainerList.addView(mGoUpView, 0, new LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
 
-        mListView = (ListView) view.findViewById(android.R.id.list);
+        if (mStyle == STYLE_LIST) {
+            mListView = new ListView(getActivity());
+        } else {
+            GridView grid = new GridView(getActivity());
+            grid.setNumColumns(2);
+            mListView = grid;
+        }
+
+        mListView.setDrawSelectorOnTop(false);
+        mContainerList.addView(mListView, new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
         mListView.setOnItemClickListener(mOnItemClickListener);
         mListView.setOnItemLongClickListener(mOnItemLongClickListener);
+    }
+
+    @Override
+    public void onInflate(Activity activity, AttributeSet attrs, Bundle savedInstanceState) {
+        super.onInflate(activity, attrs, savedInstanceState);
+        TypedArray a = activity.obtainStyledAttributes(attrs,R.styleable.ItemsBrowserFragment);
+
+        mStyle = a.getInt(R.styleable.ItemsBrowserFragment_style, STYLE_LIST);
+
+        a.recycle();
     }
 
     /**
@@ -256,6 +302,10 @@ public class ItemsBrowserFragment extends DialogFragment {
 
         mRequestQueue.add(request);
         setLoading(true);
+    }
+
+    public void update() {
+
     }
 
     private void reloadChildrenFromDatabase(String itemId) {
@@ -330,6 +380,15 @@ public class ItemsBrowserFragment extends DialogFragment {
             mAdapter.clear();
         }
     };
+
+    public void setListStyle() {
+        mStyle = STYLE_LIST;
+    }
+
+    public void setGridStyle(int columnCount) {
+        mStyle = STYLE_GRID;
+        mColumnCount = columnCount;
+    }
 
     /**
      * @return Current item or null if data wasn't loaded.

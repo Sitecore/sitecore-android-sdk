@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ItemsBrowserFragment">
+        <attr name="style" format="enum">
+            <enum name="LIST" value="0" />
+            <enum name="GRID" value="1" />
+        </attr>
+
+        <attr name="columnCount" format="integer" />
+    </declare-styleable>
+</resources>
