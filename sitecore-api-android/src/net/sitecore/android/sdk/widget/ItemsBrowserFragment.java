@@ -50,13 +50,17 @@ import static net.sitecore.android.sdk.api.provider.ScItemsContract.Items;
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class ItemsBrowserFragment extends DialogFragment {
 
+    public static final String DEFAULT_ROOT_FOLDER = "/sitecore/content/Home";
+    public static final int DEFAULT_GRID_COLUMNS_COUNT = 2;
+
     private static final String BY_ITEM_PARENT_ID = Items.PARENT_ITEM_ID + "=?";
     private static final String EXTRA_ITEM_ID = "item_id";
 
     private static final String SAVED_ITEMS = "items";
 
-    public static final int STYLE_LIST = 0;
-    public static final int STYLE_GRID = 1;
+    private static final int STYLE_LIST = 0;
+    private static final int STYLE_GRID = 1;
+
 
     /**
      * Defines how to map {@link ScItem} to list item view.
@@ -71,7 +75,7 @@ public class ItemsBrowserFragment extends DialogFragment {
         /**
          * Makes a new view to hold the data of the item.
          */
-        public View newView(Context context, LayoutInflater inflater, ScItem item);
+        public View newView(Context context, ViewGroup parent, LayoutInflater inflater, ScItem item);
 
     }
 
@@ -150,6 +154,7 @@ public class ItemsBrowserFragment extends DialogFragment {
 
     private int mStyle = STYLE_LIST;
     private int mColumnCount = 2;
+    private String mRootFolder = DEFAULT_ROOT_FOLDER;
 
     private LinkedList<ScItem> mItems = new LinkedList<ScItem>();
 
@@ -193,6 +198,7 @@ public class ItemsBrowserFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mRequestQueue = RequestQueueProvider.getRequestQueue(getActivity());
         if (savedInstanceState != null) {
             // TODO: load saved state
         }
@@ -243,7 +249,7 @@ public class ItemsBrowserFragment extends DialogFragment {
             mListView = new ListView(getActivity());
         } else {
             GridView grid = new GridView(getActivity());
-            grid.setNumColumns(2);
+            grid.setNumColumns(mColumnCount);
             mListView = grid;
         }
 
@@ -261,6 +267,7 @@ public class ItemsBrowserFragment extends DialogFragment {
         TypedArray a = activity.obtainStyledAttributes(attrs,R.styleable.ItemsBrowserFragment);
 
         mStyle = a.getInt(R.styleable.ItemsBrowserFragment_style, STYLE_LIST);
+        mColumnCount = a.getInt(R.styleable.ItemsBrowserFragment_columnCount, DEFAULT_GRID_COLUMNS_COUNT);
 
         a.recycle();
     }
@@ -285,12 +292,6 @@ public class ItemsBrowserFragment extends DialogFragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        mRequestQueue = RequestQueueProvider.getRequestQueue(getActivity());
-    }
-
-    @Override
     public void onDetach() {
         mRequestQueue.cancelAll(this);
         super.onDetach();
@@ -304,9 +305,10 @@ public class ItemsBrowserFragment extends DialogFragment {
         mApiSession = session;
         mApiSession.setShouldCache(true);
 
+        mNetworkEventsListener.onUpdateRequestStarted();
         ScRequest request = mApiSession.getItems(mFirstItemResponseListener, mErrorListener)
                 .withScope(RequestScope.SELF, RequestScope.CHILDREN)
-                .byItemPath("/sitecore/content/Home")
+                .byItemPath(mRootFolder)
                 .build();
 
         request.setTag(ItemsBrowserFragment.this);
@@ -315,8 +317,13 @@ public class ItemsBrowserFragment extends DialogFragment {
         setLoading(true);
     }
 
-    public void update() {
+    public void setRootFolder(String rootFolder) {
+        mRootFolder = rootFolder;
+    }
 
+    public void update() {
+        final ScItem item = mItems.peek();
+        sendUpdateChildrenRequest(item.getId());
     }
 
     private void reloadChildrenFromDatabase(String itemId) {
@@ -330,6 +337,7 @@ public class ItemsBrowserFragment extends DialogFragment {
     private void sendUpdateChildrenRequest(String itemId) {
         LOGD("getChildren: " + itemId);
         if (mApiSession != null) {
+            mNetworkEventsListener.onUpdateRequestStarted();
             ScRequest request = mApiSession.getItems(mItemsResponseListener, mErrorListener)
                     .byItemId(itemId)
                     .withScope(RequestScope.CHILDREN)
@@ -352,6 +360,7 @@ public class ItemsBrowserFragment extends DialogFragment {
             mItems.push(item);
 
             mNavigationEventsListener.onInitialized(item);
+            mNetworkEventsListener.onUpdateRequestFinished();
 
             final Bundle bundle = new Bundle();
             bundle.putString(EXTRA_ITEM_ID, item.getId());
@@ -362,6 +371,7 @@ public class ItemsBrowserFragment extends DialogFragment {
     private final Response.Listener<ItemsResponse> mItemsResponseListener = new Response.Listener<ItemsResponse>() {
         @Override
         public void onResponse(ItemsResponse itemsResponse) {
+            mNetworkEventsListener.onUpdateRequestFinished();
         }
     };
 
@@ -369,6 +379,7 @@ public class ItemsBrowserFragment extends DialogFragment {
         @Override
         public void onErrorResponse(VolleyError volleyError) {
             setLoading(false);
+            mNetworkEventsListener.onUpdateRequestFinished();
         }
     };
 
@@ -435,7 +446,7 @@ public class ItemsBrowserFragment extends DialogFragment {
 
     /**
      * Override this method to change the way ListItem views are created from {@link ScItem}.
-     * @return
+     * @return {@link ItemViewBinder}
      */
     protected ItemViewBinder onGetListItemView() {
         return new DefaultItemViewBinder();

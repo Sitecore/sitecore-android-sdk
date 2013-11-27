@@ -30,7 +30,7 @@ public class ScItemsAdapter extends ArrayAdapter<ScItem> {
         ScItem item = getItem(position);
         View v;
         if (convertView == null) {
-            v = mViewBinder.newView(getContext(), LayoutInflater.from(getContext()), item);
+            v = mViewBinder.newView(getContext(), parent, LayoutInflater.from(getContext()), item);
         } else {
             v = convertView;
         }
