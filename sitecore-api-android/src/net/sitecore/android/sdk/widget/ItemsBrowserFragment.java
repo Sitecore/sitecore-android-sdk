@@ -81,6 +81,7 @@ public class ItemsBrowserFragment extends DialogFragment {
     public interface NavigationEventsListener {
 
         /**
+         *
          * @param item Current {@link ScItem} after event finished.
          */
         public void onGoUp(ScItem item);
@@ -90,6 +91,8 @@ public class ItemsBrowserFragment extends DialogFragment {
          * @param item Current {@link ScItem} after event finished.
          */
         public void onGoInside(ScItem item);
+
+        public void onInitialized(ScItem item);
     }
 
     private static final NavigationEventsListener sEmptyNavigationEventsListener = new NavigationEventsListener() {
@@ -99,6 +102,10 @@ public class ItemsBrowserFragment extends DialogFragment {
 
         @Override
         public void onGoInside(ScItem item) {
+        }
+
+        @Override
+        public void onInitialized(ScItem item) {
         }
     };
 
@@ -271,7 +278,7 @@ public class ItemsBrowserFragment extends DialogFragment {
         return upButton;
     }
 
-    public void setLoading(boolean isLoading) {
+    private void setLoading(boolean isLoading) {
         mIsLoading = isLoading;
         mContainerProgress.setVisibility(isLoading ? View.VISIBLE : View.GONE);
         mContainerList.setVisibility(isLoading ? View.GONE : View.VISIBLE);
@@ -289,6 +296,10 @@ public class ItemsBrowserFragment extends DialogFragment {
         super.onDetach();
     }
 
+    /**
+     *
+     * @param session
+     */
     public void setApiSession(ScApiSession session) {
         mApiSession = session;
         mApiSession.setShouldCache(true);
@@ -340,6 +351,8 @@ public class ItemsBrowserFragment extends DialogFragment {
             ScItem item = itemsResponse.getItems().get(0);
             mItems.push(item);
 
+            mNavigationEventsListener.onInitialized(item);
+
             final Bundle bundle = new Bundle();
             bundle.putString(EXTRA_ITEM_ID, item.getId());
             getLoaderManager().initLoader(0, bundle, mLoaderCallbacks);
@@ -365,7 +378,7 @@ public class ItemsBrowserFragment extends DialogFragment {
         public Loader<List<ScItem>> onCreateLoader(int id, Bundle args) {
             if (args == null) return new ScItemsLoader(getActivity(), null, null);
 
-            final String currentItemId = args.getString("item_id");
+            final String currentItemId = args.getString(EXTRA_ITEM_ID);
             return new ScItemsLoader(getActivity(), BY_ITEM_PARENT_ID, new String[]{currentItemId});
         }
 
