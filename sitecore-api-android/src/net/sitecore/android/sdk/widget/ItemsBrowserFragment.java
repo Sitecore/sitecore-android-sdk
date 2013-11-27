@@ -9,6 +9,7 @@ import android.content.Loader;
 import android.content.res.TypedArray;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -268,6 +269,8 @@ public class ItemsBrowserFragment extends DialogFragment {
 
         mStyle = a.getInt(R.styleable.ItemsBrowserFragment_style, STYLE_LIST);
         mColumnCount = a.getInt(R.styleable.ItemsBrowserFragment_columnCount, DEFAULT_GRID_COLUMNS_COUNT);
+        String root = a.getString(R.styleable.ItemsBrowserFragment_rootFolder);
+        if (!TextUtils.isEmpty(root)) mRootFolder = root;
 
         a.recycle();
     }

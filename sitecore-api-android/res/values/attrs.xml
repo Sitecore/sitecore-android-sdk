@@ -7,5 +7,6 @@
         </attr>
 
         <attr name="columnCount" format="integer" />
+        <attr name="rootFolder" format="string" />
     </declare-styleable>
 </resources>
