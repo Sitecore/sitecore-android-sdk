@@ -212,7 +212,6 @@ public class ItemsBrowserFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mRequestQueue = RequestQueueProvider.getRequestQueue(getActivity());
         if (savedInstanceState != null) {
             // TODO: load saved state
         }
@@ -341,13 +340,20 @@ public class ItemsBrowserFragment extends DialogFragment {
     }
 
     /**
-     * @param session Sets {@link ScApiSession} to perform the requests.
+     * Sets {@link ScApiSession} to create the requests.
      */
     public void setApiSession(ScApiSession session) {
         mApiSession = session;
         mApiSession.setShouldCache(true);
 
         loadCurrentFolder();
+    }
+
+    /**
+     * Sets {@link RequestQueue} which will execute all requests.
+     */
+    public void setRequestQueue(RequestQueue requestQueue) {
+        mRequestQueue = requestQueue;
     }
 
     public void loadCurrentFolder() {
@@ -363,6 +369,10 @@ public class ItemsBrowserFragment extends DialogFragment {
         setLoading(true);
     }
 
+    /**
+     *
+     * @param rootFolder
+     */
     public void setRootFolder(String rootFolder) {
         mRootFolder = rootFolder;
     }
