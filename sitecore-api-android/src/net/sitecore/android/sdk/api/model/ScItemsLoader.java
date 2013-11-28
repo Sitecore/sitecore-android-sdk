@@ -51,7 +51,7 @@ public class ScItemsLoader extends AsyncTaskLoader<List<ScItem>> {
                 mSelection, mSelectionArgs,
                 ItemsQuery.SORT_ORDER);
 
-        LOGV("ScItemsLoader loading %s [%s]", mSelection, mSelectionArgs);
+        LOGV("ScItemsLoader selection: " + String.format(mSelection, mSelectionArgs));
         if (c != null) {
             c.registerContentObserver(mObserver);
         }
@@ -89,17 +89,13 @@ public class ScItemsLoader extends AsyncTaskLoader<List<ScItem>> {
         item.setPath(c.getString(ItemsQuery.PATH));
         item.setTemplate(c.getString(ItemsQuery.TEMPLATE));
         item.setLongId(c.getString(ItemsQuery.LONG_ID));
-
-        //TODO: add mParentItemId field
-        //item.mParentItemId = c.getString(ItemsQuery.PARENT_ITEM_ID);
-
-        //TODO: add timestamp?
-        //item.mTimestamp = c.getString(ItemsQuery.TIMESTAMP);
         item.setVersion(c.getInt(ItemsQuery.VERSION));
         item.setDatabase(c.getString(ItemsQuery.DATABASE));
         item.setLanguage(c.getString(ItemsQuery.LANGUAGE));
         item.setHasChildren(c.getInt(ItemsQuery.HAS_CHILDREN) == 1);
 
+        //TODO: add timestamp?
+        //item.mTimestamp = c.getString(ItemsQuery.TIMESTAMP);
         //TODO: add tag(?)
 
         return item;
@@ -117,6 +113,7 @@ public class ScItemsLoader extends AsyncTaskLoader<List<ScItem>> {
 
     @Override
     public void deliverResult(List<ScItem> data) {
+        LOGV("ScItemsLoader loaded %s items.", data.size());
         if (isReset()) {
             return;
         }

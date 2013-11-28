@@ -113,6 +113,9 @@ public class ScItemsContract {
             int LANGUAGE = 10;
             int HAS_CHILDREN = 11;
             int TAG = 12;
+
+            String BY_ITEM_ID = Items.ITEM_ID + "=?";
+            String BY_ITEM_PARENT_ID = Items.PARENT_ITEM_ID + "=?";
         }
     }
 

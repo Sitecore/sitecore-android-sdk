@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -54,14 +53,13 @@ public class ItemsBrowserFragment extends DialogFragment {
     public static final String DEFAULT_ROOT_FOLDER = "/sitecore/content/Home";
     public static final int DEFAULT_GRID_COLUMNS_COUNT = 2;
 
-    private static final String BY_ITEM_PARENT_ID = Items.PARENT_ITEM_ID + "=?";
     private static final String EXTRA_ITEM_ID = "item_id";
 
     private static final String SAVED_ITEMS = "items";
+    private static final String SAVED_ROOT_FOLDER = "root_folder";
 
     private static final int STYLE_LIST = 0;
     private static final int STYLE_GRID = 1;
-
 
     /**
      * Defines how to map {@link ScItem} to list item view.
@@ -83,10 +81,10 @@ public class ItemsBrowserFragment extends DialogFragment {
     /**
      * Defines navigation callback methods.
      */
-    public interface NavigationEventsListener {
+    public interface ContentChangedListener {
 
         /**
-         *
+         * Notifies that
          * @param item Current {@link ScItem} after event finished.
          */
         public void onGoUp(ScItem item);
@@ -97,10 +95,14 @@ public class ItemsBrowserFragment extends DialogFragment {
          */
         public void onGoInside(ScItem item);
 
+        /**
+         *
+         * @param item Current {@link ScItem} after initialization.
+         */
         public void onInitialized(ScItem item);
     }
 
-    private static final NavigationEventsListener sEmptyNavigationEventsListener = new NavigationEventsListener() {
+    private static final ContentChangedListener sEmptyContentChangedListener = new ContentChangedListener() {
         @Override
         public void onGoUp(ScItem item) {
         }
@@ -120,14 +122,21 @@ public class ItemsBrowserFragment extends DialogFragment {
     public interface NetworkEventsListener {
 
         /**
-         *
+         * Notifies that
          */
         public void onUpdateRequestStarted();
 
         /**
          *
+         * @param itemsResponse
          */
-        public void onUpdateRequestFinished();
+        public void onUpdateSuccess(ItemsResponse itemsResponse);
+
+        /**
+         *
+         * @param error
+         */
+        public void onUpdateError(VolleyError error);
     }
 
     private static final NetworkEventsListener sEmptyNetworkEventsListener = new NetworkEventsListener() {
@@ -136,11 +145,15 @@ public class ItemsBrowserFragment extends DialogFragment {
         }
 
         @Override
-        public void onUpdateRequestFinished() {
+        public void onUpdateSuccess(ItemsResponse itemsResponse) {
+        }
+
+        @Override
+        public void onUpdateError(VolleyError error) {
         }
     };
 
-    private NavigationEventsListener mNavigationEventsListener = sEmptyNavigationEventsListener;
+    private ContentChangedListener mNavigationEventsListener = sEmptyContentChangedListener;
     private NetworkEventsListener mNetworkEventsListener = sEmptyNetworkEventsListener;
 
     private View mContainerProgress;
@@ -215,10 +228,74 @@ public class ItemsBrowserFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // TODO: replace inflation with code
         final View v = inflater.inflate(R.layout.fragment_items_browser, container, false);
-
-        if (getDialog() != null) getDialog().setTitle("Items Browser");
         return v;
     }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        final LayoutInflater inflater = LayoutInflater.from(getActivity());
+
+        mContainerProgress = view.findViewById(R.id.container_progress);
+        mContainerList = (LinearLayout) view.findViewById(R.id.container_list);
+
+        // Add header view if exists
+        final View header = onCreateHeaderView(inflater);
+        if (header != null) {
+            mContainerList.addView(header, new LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
+        }
+
+        // Add up button
+        mGoUpView = onCreateUpButtonView(inflater);
+        mGoUpView.setVisibility(View.GONE);
+        mGoUpView.setOnClickListener(mOnUpClickListener);
+        mContainerList.addView(mGoUpView, new LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
+
+        // Add ListView/GridView
+        if (mStyle == STYLE_LIST) {
+            mListView = new ListView(getActivity());
+        } else {
+            GridView grid = new GridView(getActivity());
+            grid.setNumColumns(mColumnCount);
+            mListView = grid;
+        }
+
+        mListView.setDrawSelectorOnTop(false);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0);
+        params.weight = 1;
+        mContainerList.addView(mListView, params);
+
+        // Add footer view if exists
+        final View footer = onCreateFooterView(inflater);
+        if (footer != null) {
+            mContainerList.addView(footer, new LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
+        }
+
+        // Set callbacks
+        mListView.setOnItemClickListener(mOnItemClickListener);
+        mListView.setOnItemLongClickListener(mOnItemLongClickListener);
+    }
+
+    protected View onCreateHeaderView(LayoutInflater inflater) {
+        return null;
+    }
+
+    protected View onCreateFooterView(LayoutInflater inflater) {
+        return null;
+    }
+
+    /**
+     * Creates view, intended for Up navigation through items tree. This view will be added above items browser list.
+     * After creation {@link OnClickListener} will be set to created view, which triggers navigation up.
+     *
+     * @param inflater LayoutInflater object.
+     * @return View, intended for Up navigation through items tree. After creation will have
+     */
+    protected View onCreateUpButtonView(LayoutInflater inflater) {
+        final Button upButton = new Button(getActivity());
+        upButton.setText("..");
+        return upButton;
+    }
+
 
     @Override
     public void onStart() {
@@ -235,32 +312,6 @@ public class ItemsBrowserFragment extends DialogFragment {
         }*/
     }
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        mContainerProgress = view.findViewById(R.id.container_progress);
-        mContainerList = (LinearLayout) view.findViewById(R.id.container_list);
-
-        mGoUpView = onCreateUpButtonView(LayoutInflater.from(getActivity()));
-        mGoUpView.setVisibility(View.GONE);
-        mGoUpView.setOnClickListener(mOnUpClickListener);
-
-        mContainerList.addView(mGoUpView, 0, new LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
-
-        if (mStyle == STYLE_LIST) {
-            mListView = new ListView(getActivity());
-        } else {
-            GridView grid = new GridView(getActivity());
-            grid.setNumColumns(mColumnCount);
-            mListView = grid;
-        }
-
-        mListView.setDrawSelectorOnTop(false);
-        mContainerList.addView(mListView, new FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-
-        mListView.setOnItemClickListener(mOnItemClickListener);
-        mListView.setOnItemLongClickListener(mOnItemLongClickListener);
-    }
 
     @Override
     public void onInflate(Activity activity, AttributeSet attrs, Bundle savedInstanceState) {
@@ -275,18 +326,7 @@ public class ItemsBrowserFragment extends DialogFragment {
         a.recycle();
     }
 
-    /**
-     * Creates view, intended for Up navigation through items tree. This view will be added above items browser list.
-     * After creation {@link OnClickListener} will be set to created view, which triggers navigation up.
-     *
-     * @param inflater LayoutInflater object.
-     * @return View, intended for Up navigation through items tree. After creation will have
-     */
-    protected View onCreateUpButtonView(LayoutInflater inflater) {
-        final Button upButton = new Button(getActivity());
-        upButton.setText("..");
-        return upButton;
-    }
+
 
     private void setLoading(boolean isLoading) {
         mIsLoading = isLoading;
@@ -301,13 +341,16 @@ public class ItemsBrowserFragment extends DialogFragment {
     }
 
     /**
-     *
-     * @param session
+     * @param session Sets {@link ScApiSession} to perform the requests.
      */
     public void setApiSession(ScApiSession session) {
         mApiSession = session;
         mApiSession.setShouldCache(true);
 
+        loadCurrentFolder();
+    }
+
+    public void loadCurrentFolder() {
         mNetworkEventsListener.onUpdateRequestStarted();
         ScRequest request = mApiSession.getItems(mFirstItemResponseListener, mErrorListener)
                 .withScope(RequestScope.SELF, RequestScope.CHILDREN)
@@ -348,7 +391,7 @@ public class ItemsBrowserFragment extends DialogFragment {
             request.setTag(ItemsBrowserFragment.this);
 
             ContentProviderOperation.Builder builder = ContentProviderOperation.newDelete(Items.CONTENT_URI);
-            builder.withSelection(BY_ITEM_PARENT_ID, new String[]{itemId});
+            builder.withSelection(Items.Query.BY_ITEM_PARENT_ID, new String[]{itemId});
             request.addOperationBeforeSuccessfulResponseSaved(builder.build());
 
             mRequestQueue.add(request);
@@ -363,7 +406,7 @@ public class ItemsBrowserFragment extends DialogFragment {
             mItems.push(item);
 
             mNavigationEventsListener.onInitialized(item);
-            mNetworkEventsListener.onUpdateRequestFinished();
+            mNetworkEventsListener.onUpdateSuccess(itemsResponse);
 
             final Bundle bundle = new Bundle();
             bundle.putString(EXTRA_ITEM_ID, item.getId());
@@ -374,15 +417,15 @@ public class ItemsBrowserFragment extends DialogFragment {
     private final Response.Listener<ItemsResponse> mItemsResponseListener = new Response.Listener<ItemsResponse>() {
         @Override
         public void onResponse(ItemsResponse itemsResponse) {
-            mNetworkEventsListener.onUpdateRequestFinished();
+            mNetworkEventsListener.onUpdateSuccess(itemsResponse);
         }
     };
 
     private Response.ErrorListener mErrorListener = new Response.ErrorListener() {
         @Override
-        public void onErrorResponse(VolleyError volleyError) {
+        public void onErrorResponse(VolleyError error) {
             setLoading(false);
-            mNetworkEventsListener.onUpdateRequestFinished();
+            mNetworkEventsListener.onUpdateError(error);
         }
     };
 
@@ -393,12 +436,12 @@ public class ItemsBrowserFragment extends DialogFragment {
             if (args == null) return new ScItemsLoader(getActivity(), null, null);
 
             final String currentItemId = args.getString(EXTRA_ITEM_ID);
-            return new ScItemsLoader(getActivity(), BY_ITEM_PARENT_ID, new String[]{currentItemId});
+            return new ScItemsLoader(getActivity(), Items.Query.BY_ITEM_PARENT_ID, new String[]{currentItemId});
         }
 
         @Override
         public void onLoadFinished(Loader<List<ScItem>> loader, List<ScItem> data) {
-            mAdapter = new ScItemsAdapter(getActivity(), data, onGetListItemView());
+            mAdapter = new ScItemsAdapter(getActivity(), data, getItemViewBinder());
             mListView.setAdapter(mAdapter);
         }
 
@@ -449,16 +492,24 @@ public class ItemsBrowserFragment extends DialogFragment {
 
     /**
      * Override this method to change the way ListItem views are created from {@link ScItem}.
-     * @return {@link ItemViewBinder}
+     * @return {@link net.sitecore.android.sdk.widget.ItemsBrowserFragment.ItemViewBinder}
      */
-    protected ItemViewBinder onGetListItemView() {
+    protected ItemViewBinder getItemViewBinder() {
         return new DefaultItemViewBinder();
     }
 
-    public void setNavigationEventsListener(NavigationEventsListener navigationEventsListener) {
+    /**
+     * Register a callback to be invoked when content state changes.
+     * @param navigationEventsListener
+     */
+    public void setNavigationEventsListener(ContentChangedListener navigationEventsListener) {
         mNavigationEventsListener = navigationEventsListener;
     }
 
+    /**
+     * Register a callback to be invoked when network operations state changes.
+     * @param networkEventsListener
+     */
     public void setNetworkEventsListener(NetworkEventsListener networkEventsListener) {
         mNetworkEventsListener = networkEventsListener;
     }
