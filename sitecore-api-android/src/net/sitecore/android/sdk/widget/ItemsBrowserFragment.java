@@ -4,13 +4,13 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.ContentProviderOperation;
-import android.content.Context;
 import android.content.Loader;
 import android.content.res.TypedArray;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -29,7 +30,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.sitecore.android.sdk.api.R;
-import net.sitecore.android.sdk.api.RequestQueueProvider;
 import net.sitecore.android.sdk.api.ScApiSession;
 import net.sitecore.android.sdk.api.ScRequest;
 import net.sitecore.android.sdk.api.model.ItemsResponse;
@@ -61,22 +61,8 @@ public class ItemsBrowserFragment extends DialogFragment {
     private static final int STYLE_LIST = 0;
     private static final int STYLE_GRID = 1;
 
-    /**
-     * Defines how to map {@link ScItem} to list item view.
-     */
-    public interface ItemViewBinder {
-
-        /**
-         * Bind an existing view to the item.
-         */
-        public void bindView(Context context, View v, ScItem item);
-
-        /**
-         * Makes a new view to hold the data of the item.
-         */
-        public View newView(Context context, ViewGroup parent, LayoutInflater inflater, ScItem item);
-
-    }
+    private static final int LOADER_CHILD_ITEMS = 0;
+    private static final int LOADER_ROOT_ITEM = 1;
 
     /**
      * Defines navigation callback methods.
@@ -85,21 +71,41 @@ public class ItemsBrowserFragment extends DialogFragment {
 
         /**
          * Notifies that
+         *
          * @param item Current {@link ScItem} after event finished.
          */
         public void onGoUp(ScItem item);
 
         /**
-         *
          * @param item Current {@link ScItem} after event finished.
          */
         public void onGoInside(ScItem item);
 
         /**
-         *
          * @param item Current {@link ScItem} after initialization.
          */
         public void onInitialized(ScItem item);
+    }
+
+    /**
+     * Defines network events callback methods.
+     */
+    public interface NetworkEventsListener {
+
+        /**
+         * Notifies that
+         */
+        public void onUpdateRequestStarted();
+
+        /**
+         * @param itemsResponse
+         */
+        public void onUpdateSuccess(ItemsResponse itemsResponse);
+
+        /**
+         * @param error
+         */
+        public void onUpdateError(VolleyError error);
     }
 
     private static final ContentChangedListener sEmptyContentChangedListener = new ContentChangedListener() {
@@ -116,28 +122,6 @@ public class ItemsBrowserFragment extends DialogFragment {
         }
     };
 
-    /**
-     * Defines network events callback methods.
-     */
-    public interface NetworkEventsListener {
-
-        /**
-         * Notifies that
-         */
-        public void onUpdateRequestStarted();
-
-        /**
-         *
-         * @param itemsResponse
-         */
-        public void onUpdateSuccess(ItemsResponse itemsResponse);
-
-        /**
-         *
-         * @param error
-         */
-        public void onUpdateError(VolleyError error);
-    }
 
     private static final NetworkEventsListener sEmptyNetworkEventsListener = new NetworkEventsListener() {
         @Override
@@ -162,6 +146,7 @@ public class ItemsBrowserFragment extends DialogFragment {
     private AbsListView mListView;
 
     private ScItemsAdapter mAdapter;
+    private ItemViewBinder mItemViewBinder = new DefaultItemViewBinder();
 
     private RequestQueue mRequestQueue;
     private ScApiSession mApiSession;
@@ -259,9 +244,16 @@ public class ItemsBrowserFragment extends DialogFragment {
         }
 
         mListView.setDrawSelectorOnTop(false);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0);
-        params.weight = 1;
-        mContainerList.addView(mListView, params);
+        LinearLayout.LayoutParams listParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0);
+        listParams.weight = 1;
+        mContainerList.addView(mListView, listParams);
+
+        final View empty = onCreateEmptyView(inflater);
+        empty.setVisibility(View.GONE);
+        final LinearLayout.LayoutParams emptyParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0);
+        emptyParams.weight = 1;
+        mContainerList.addView(empty, emptyParams);
+        mListView.setEmptyView(empty);
 
         // Add footer view if exists
         final View footer = onCreateFooterView(inflater);
@@ -287,6 +279,7 @@ public class ItemsBrowserFragment extends DialogFragment {
      * After creation {@link OnClickListener} will be set to created view, which triggers navigation up.
      *
      * @param inflater LayoutInflater object.
+     *
      * @return View, intended for Up navigation through items tree. After creation will have
      */
     protected View onCreateUpButtonView(LayoutInflater inflater) {
@@ -295,27 +288,27 @@ public class ItemsBrowserFragment extends DialogFragment {
         return upButton;
     }
 
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        //Next hack makes dialog MATCH_PARENT
-        /*
-        final Dialog dialog = getDialog();
-        if (dialog != null) {
-            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-            lp.copyFrom(dialog.getWindow().getAttributes());
-            lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-            lp.height = WindowManager.LayoutParams.MATCH_PARENT;
-            dialog.getWindow().setAttributes(lp);
-        }*/
+    protected View onCreateEmptyView(LayoutInflater inflater) {
+        final TextView empty = new TextView(getActivity());
+        empty.setText("Empty");
+        empty.setGravity(Gravity.CENTER);
+        empty.setMinimumHeight(120);
+        return empty;
     }
 
+    /**
+     * Override this method to change the way ListItem views are created from {@link ScItem}.
+     *
+     * @return {@link ItemViewBinder}
+     */
+    protected ItemViewBinder onCreateItemViewBinder() {
+        return mItemViewBinder;
+    }
 
     @Override
     public void onInflate(Activity activity, AttributeSet attrs, Bundle savedInstanceState) {
         super.onInflate(activity, attrs, savedInstanceState);
-        TypedArray a = activity.obtainStyledAttributes(attrs,R.styleable.ItemsBrowserFragment);
+        TypedArray a = activity.obtainStyledAttributes(attrs, R.styleable.ItemsBrowserFragment);
 
         mStyle = a.getInt(R.styleable.ItemsBrowserFragment_style, STYLE_LIST);
         mColumnCount = a.getInt(R.styleable.ItemsBrowserFragment_columnCount, DEFAULT_GRID_COLUMNS_COUNT);
@@ -325,8 +318,6 @@ public class ItemsBrowserFragment extends DialogFragment {
         a.recycle();
     }
 
-
-
     private void setLoading(boolean isLoading) {
         mIsLoading = isLoading;
         mContainerProgress.setVisibility(isLoading ? View.VISIBLE : View.GONE);
@@ -335,8 +326,18 @@ public class ItemsBrowserFragment extends DialogFragment {
 
     @Override
     public void onDetach() {
-        mRequestQueue.cancelAll(this);
+        if (mRequestQueue != null) {
+            mRequestQueue.cancelAll(this);
+        }
         super.onDetach();
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (mApiSession != null && mRequestQueue != null) {
+            loadContent();
+        }
     }
 
     /**
@@ -345,18 +346,19 @@ public class ItemsBrowserFragment extends DialogFragment {
     public void setApiSession(ScApiSession session) {
         mApiSession = session;
         mApiSession.setShouldCache(true);
-
-        loadCurrentFolder();
     }
 
     /**
-     * Sets {@link RequestQueue} which will execute all requests.
+     * Sets {@link RequestQueue} which will execute the requests.
      */
     public void setRequestQueue(RequestQueue requestQueue) {
         mRequestQueue = requestQueue;
     }
 
-    public void loadCurrentFolder() {
+    /**
+     *
+     */
+    public void loadContent() {
         mNetworkEventsListener.onUpdateRequestStarted();
         ScRequest request = mApiSession.getItems(mFirstItemResponseListener, mErrorListener)
                 .withScope(RequestScope.SELF, RequestScope.CHILDREN)
@@ -371,6 +373,12 @@ public class ItemsBrowserFragment extends DialogFragment {
 
     /**
      *
+     */
+    public void loadContentWithoutApiSession() {
+    }
+
+
+    /**
      * @param rootFolder
      */
     public void setRootFolder(String rootFolder) {
@@ -386,7 +394,7 @@ public class ItemsBrowserFragment extends DialogFragment {
         LOGD("Reload db children of: " + itemId);
         final Bundle bundle = new Bundle();
         bundle.putString(EXTRA_ITEM_ID, itemId);
-        getLoaderManager().restartLoader(0, bundle, mLoaderCallbacks);
+        getLoaderManager().restartLoader(LOADER_CHILD_ITEMS, bundle, mLoaderCallbacks);
     }
 
 
@@ -411,6 +419,10 @@ public class ItemsBrowserFragment extends DialogFragment {
     private final Response.Listener<ItemsResponse> mFirstItemResponseListener = new Response.Listener<ItemsResponse>() {
         @Override
         public void onResponse(ItemsResponse itemsResponse) {
+            if (itemsResponse.getItems().size() == 0) {
+                // TODO: handle empty root view;
+                return;
+            }
             setLoading(false);
             ScItem item = itemsResponse.getItems().get(0);
             mItems.push(item);
@@ -420,7 +432,7 @@ public class ItemsBrowserFragment extends DialogFragment {
 
             final Bundle bundle = new Bundle();
             bundle.putString(EXTRA_ITEM_ID, item.getId());
-            getLoaderManager().initLoader(0, bundle, mLoaderCallbacks);
+            getLoaderManager().initLoader(LOADER_CHILD_ITEMS, bundle, mLoaderCallbacks);
         }
     };
 
@@ -451,7 +463,7 @@ public class ItemsBrowserFragment extends DialogFragment {
 
         @Override
         public void onLoadFinished(Loader<List<ScItem>> loader, List<ScItem> data) {
-            mAdapter = new ScItemsAdapter(getActivity(), data, getItemViewBinder());
+            mAdapter = new ScItemsAdapter(getActivity(), data, onCreateItemViewBinder());
             mListView.setAdapter(mAdapter);
         }
 
@@ -481,18 +493,17 @@ public class ItemsBrowserFragment extends DialogFragment {
      * @param item which received click event.
      */
     public void onScItemClick(ScItem item) {
-        if (item.hasChildren()) {
-            LOGD("New folder item id: " + item.getId());
-            mItems.push(item);
+        LOGD("New folder item id: " + item.getId());
+        mItems.push(item);
 
-            if (mGoUpView.getVisibility() == View.GONE) mGoUpView.setVisibility(View.VISIBLE);
+        if (mGoUpView.getVisibility() == View.GONE) mGoUpView.setVisibility(View.VISIBLE);
 
-            String itemId = item.getId();
-            sendUpdateChildrenRequest(itemId);
-            reloadChildrenFromDatabase(itemId);
-            mNavigationEventsListener.onGoInside(item);
-        }
+        String itemId = item.getId();
+        sendUpdateChildrenRequest(itemId);
+        reloadChildrenFromDatabase(itemId);
+        mNavigationEventsListener.onGoInside(item);
     }
+
 
     /**
      * @param item which received long click.
@@ -501,23 +512,17 @@ public class ItemsBrowserFragment extends DialogFragment {
     }
 
     /**
-     * Override this method to change the way ListItem views are created from {@link ScItem}.
-     * @return {@link net.sitecore.android.sdk.widget.ItemsBrowserFragment.ItemViewBinder}
-     */
-    protected ItemViewBinder getItemViewBinder() {
-        return new DefaultItemViewBinder();
-    }
-
-    /**
      * Register a callback to be invoked when content state changes.
+     *
      * @param navigationEventsListener
      */
-    public void setNavigationEventsListener(ContentChangedListener navigationEventsListener) {
+    public void setContentEventsListener(ContentChangedListener navigationEventsListener) {
         mNavigationEventsListener = navigationEventsListener;
     }
 
     /**
      * Register a callback to be invoked when network operations state changes.
+     *
      * @param networkEventsListener
      */
     public void setNetworkEventsListener(NetworkEventsListener networkEventsListener) {

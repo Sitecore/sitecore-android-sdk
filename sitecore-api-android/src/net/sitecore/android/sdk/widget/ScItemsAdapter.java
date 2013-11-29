@@ -12,14 +12,10 @@ import net.sitecore.android.sdk.api.model.ScItem;
 
 public class ScItemsAdapter extends ArrayAdapter<ScItem> {
 
-    private ItemsBrowserFragment.ItemViewBinder mViewBinder;
+    private final ItemViewBinder mViewBinder;
 
-    public ScItemsAdapter(Context context, List<ScItem> objects, ItemsBrowserFragment.ItemViewBinder viewBinder) {
+    public ScItemsAdapter(Context context, List<ScItem> objects, ItemViewBinder viewBinder) {
         super(context, android.R.layout.simple_list_item_1, android.R.id.text1, objects);
-        mViewBinder = viewBinder;
-    }
-
-    public void setItemViewBinder(ItemsBrowserFragment.ItemViewBinder viewBinder) {
         mViewBinder = viewBinder;
     }
 

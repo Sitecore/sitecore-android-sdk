@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import net.sitecore.android.sdk.api.model.ScItem;
 
-public class DefaultItemViewBinder implements ItemsBrowserFragment.ItemViewBinder {
+public class DefaultItemViewBinder implements ItemViewBinder {
 
     @Override
     public void bindView(Context context, View v, ScItem item) {
