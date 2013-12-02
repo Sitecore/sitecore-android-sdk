@@ -51,7 +51,7 @@ public class ScItemsLoader extends AsyncTaskLoader<List<ScItem>> {
                 mSelection, mSelectionArgs,
                 ItemsQuery.SORT_ORDER);
 
-        LOGV("ScItemsLoader selection: " + String.format(mSelection, mSelectionArgs));
+        //LOGV("ScItemsLoader selection: " + mSelection + ", args: " + mSelectionArgs);
         if (c != null) {
             c.registerContentObserver(mObserver);
         }

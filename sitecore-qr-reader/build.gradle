@@ -8,15 +8,22 @@ buildscript {
     }
 }
 
-apply plugin: 'android-library'
+// tmp
+//apply plugin: 'android-library'
+apply plugin: 'android'
 
 dependencies {
     compile files('libs/core-2.2.jar')
 }
 
 android {
-  compileSdkVersion 18
-  buildToolsVersion '18.0.1'
+    compileSdkVersion 19
+    buildToolsVersion '19'
+
+    defaultConfig {
+        minSdkVersion 8
+        targetSdkVersion 19
+    }
 
   sourceSets {
     main {
