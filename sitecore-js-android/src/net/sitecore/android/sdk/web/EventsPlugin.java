@@ -1,6 +1,7 @@
 package net.sitecore.android.sdk.web;
 
 import android.content.Intent;
+import android.os.Build;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
@@ -30,6 +31,10 @@ public class EventsPlugin extends ScPlugin {
     public void exec(String method, ScParams params, ScCallbackContext callbackContext) throws JSONException {
         mCallbackContext = callbackContext;
 
+        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            mCallbackContext.sendError("Creating calendar events is only supported in Android 4.0 or later!");
+            return;
+        }
         if (method.equalsIgnoreCase("save")) {
             String startDate = params.getString("startDate");
             String endDate = params.getString("endDate");
