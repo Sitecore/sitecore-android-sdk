@@ -8,6 +8,7 @@ import java.util.Calendar;
 import org.json.JSONException;
 
 import static android.provider.CalendarContract.EXTRA_EVENT_BEGIN_TIME;
+import static android.provider.CalendarContract.EXTRA_EVENT_END_TIME;
 import static android.provider.CalendarContract.Events;
 
 public class EventsPlugin extends ScPlugin {
@@ -51,7 +52,7 @@ public class EventsPlugin extends ScPlugin {
             if (endDate != null) {
                 try {
                     Calendar endTime = parseTime(endDate);
-                    intent.putExtra(EXTRA_EVENT_BEGIN_TIME, endTime.getTimeInMillis());
+                    intent.putExtra(EXTRA_EVENT_END_TIME, endTime.getTimeInMillis());
                 } catch (NumberFormatException exception) {
 //                    In case of exception we simply don't set it to the intent.
                 }
