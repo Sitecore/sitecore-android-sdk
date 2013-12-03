@@ -1,16 +1,14 @@
 package net.sitecore.android.sdk.api;
 
-import com.android.volley.Request;
-import com.android.volley.toolbox.RequestFuture;
-
 import java.util.concurrent.TimeUnit;
 
+import com.android.volley.Request;
+import com.android.volley.toolbox.RequestFuture;
+import net.sitecore.android.sdk.api.model.DeleteItemsResponse;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
-
-import net.sitecore.android.sdk.api.model.DeleteItemsResponse;
 
 import static org.junit.Assert.assertEquals;
 
