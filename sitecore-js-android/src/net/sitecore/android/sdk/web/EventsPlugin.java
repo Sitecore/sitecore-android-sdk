@@ -1,5 +1,6 @@
 package net.sitecore.android.sdk.web;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Build;
 
@@ -12,6 +13,7 @@ import static android.provider.CalendarContract.EXTRA_EVENT_BEGIN_TIME;
 import static android.provider.CalendarContract.EXTRA_EVENT_END_TIME;
 import static android.provider.CalendarContract.Events;
 
+@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class EventsPlugin extends ScPlugin {
     private static final int REQUEST_NEW_EVENT = 2;
 
