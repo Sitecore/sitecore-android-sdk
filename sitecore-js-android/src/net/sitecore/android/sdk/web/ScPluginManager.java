@@ -59,6 +59,7 @@ class ScPluginManager {
         addPlugin(new ToastPlugin());
         addPlugin(new AlertPlugin());
         addPlugin(new DevicePlugin());
+        addPlugin(new EventsPlugin());
         addPlugin(new SharePlugin());
         addPlugin(new AccelerometerPlugin());
         addPlugin(new CameraPlugin());

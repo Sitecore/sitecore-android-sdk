@@ -8,7 +8,7 @@ buildscript {
     }
 }
 
-apply plugin: 'android-library'
+apply plugin: 'android'
 
 dependencies {
     compile files('libs/core-2.2.jar')
