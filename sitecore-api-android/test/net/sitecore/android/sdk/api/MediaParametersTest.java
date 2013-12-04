@@ -43,17 +43,17 @@ public class MediaParametersTest extends MockedServerAndroidTestCase {
     @Test
     public void testFullParams() {
         MediaParameters.Builder builder = new MediaParameters.Builder();
-        builder.allowStretch(true);
-        builder.backgroundColor("black");
-        builder.database("web");
-        builder.disableMediaCaching(true);
-        builder.height(100);
-        builder.width(100);
-        builder.language("en");
-        builder.maxHeight(100);
-        builder.maxWidth(100);
-        builder.scale(0.3f);
-        builder.thumbnail(true);
+        builder.allowStretch(true)
+                .backgroundColor("black")
+                .database("web")
+                .disableMediaCaching(true)
+                .height(100)
+                .width(100)
+                .language("en")
+                .maxHeight(100)
+                .maxWidth(100)
+                .scale(0.3f)
+                .thumbnail(true);
 
         assertNotNull(builder.build());
 
@@ -73,10 +73,10 @@ public class MediaParametersTest extends MockedServerAndroidTestCase {
     @Test
     public void testNotModifiableParams() {
         MediaParameters.Builder builder = new MediaParameters.Builder();
-        builder.maxHeight(100);
-        builder.maxHeight(200);
-        builder.maxHeight(300);
-        builder.maxHeight(400);
+        builder.maxHeight(100)
+                .maxHeight(200)
+                .maxHeight(300)
+                .maxHeight(400);
 
         assertNotNull(builder.build());
 

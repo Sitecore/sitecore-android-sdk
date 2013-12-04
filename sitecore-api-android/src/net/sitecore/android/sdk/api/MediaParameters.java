@@ -69,9 +69,12 @@ public class MediaParameters {
          * original size.
          *
          * @param width image width.
+         *
+         * @return this builder.
          */
-        public void width(int width) {
+        public Builder width(int width) {
             params.put(WIDTH_KEY, String.valueOf(width));
+            return this;
         }
 
         /**
@@ -79,54 +82,72 @@ public class MediaParameters {
          * original size.
          *
          * @param height image height.
+         *
+         * @return this builder.
          */
-        public void height(int height) {
+        public Builder height(int height) {
             params.put(HEIGHT_KEY, String.valueOf(height));
+            return this;
         }
 
         /**
          * Maximum width of the image to display.  Scale the image down to this size if necessary.
          *
          * @param maxWidth maximum image width.
+         *
+         * @return this builder.
          */
-        public void maxWidth(int maxWidth) {
+        public Builder maxWidth(int maxWidth) {
             params.put(MAXIMUM_WIDTH_KEY, String.valueOf(maxWidth));
+            return this;
         }
 
         /**
          * Maximum height of the image to display.  Scale the image down to this size if necessary.
          *
          * @param maxHeight maximum image height.
+         *
+         * @return this builder.
          */
-        public void maxHeight(int maxHeight) {
+        public Builder maxHeight(int maxHeight) {
             params.put(MAXIMUM_HEIGHT_KEY, String.valueOf(maxHeight));
+            return this;
         }
 
         /**
          * Retrieve the image from a specific language version of the item.
          *
          * @param language language.
+         *
+         * @return this builder.
          */
-        public void language(String language) {
+        public Builder language(String language) {
             params.put(LANGUAGE_KEY, language);
+            return this;
         }
 
         /**
          * Retrieve the image from a specific version of the item.
          *
          * @param version version number.
+         *
+         * @return this builder.
          */
-        public void version(int version) {
+        public Builder version(int version) {
             params.put(VERSION_KEY, String.valueOf(version));
+            return this;
         }
 
         /**
          * The name of the Sitecore to pull the image from.
          *
          * @param database database name.
+         *
+         * @return this builder.
          */
-        public void database(String database) {
+        public Builder database(String database) {
             params.put(DATABASE_NAME_KEY, database);
+            return this;
         }
 
         /**
@@ -134,18 +155,24 @@ public class MediaParameters {
          * and {@link #allowStretch}=false.
          *
          * @param color color.
+         *
+         * @return this builder.
          */
-        public void backgroundColor(String color) {
+        public Builder backgroundColor(String color) {
             params.put(BACKGROUND_COLOR_KEY, color);
+            return this;
         }
 
         /**
          * Allow stretching the image beyond its original size.
          *
          * @param allowStretch whether to allow stretch.
+         *
+         * @return this builder.
          */
-        public void allowStretch(boolean allowStretch) {
+        public Builder allowStretch(boolean allowStretch) {
             params.put(ALLOW_STRETCH_KEY, String.valueOf(allowStretch ? 1 : 0));
+            return this;
         }
 
         /**
@@ -154,9 +181,12 @@ public class MediaParameters {
          * Any positive floating point number using a dot such as 1.5, which corresponds to 150%.
          *
          * @param scale scale.
+         *
+         * @return this builder.
          */
-        public void scale(float scale) {
+        public Builder scale(float scale) {
             params.put(SCALE_KEY, String.valueOf(scale));
+            return this;
         }
 
         /**
@@ -164,9 +194,12 @@ public class MediaParameters {
          * flash, and so on.
          *
          * @param thumbnail whether to show thumbnail.
+         *
+         * @return this builder.
          */
-        public void thumbnail(boolean thumbnail) {
+        public Builder thumbnail(boolean thumbnail) {
             params.put(THUMBNAIL_KEY, String.valueOf(thumbnail ? 1 : 0));
+            return this;
         }
 
         /**
@@ -174,9 +207,12 @@ public class MediaParameters {
          * bypassing the media cache.
          *
          * @param disable whether to use media cache for request.
+         *
+         * @return this builder.
          */
-        public void disableMediaCaching(boolean disable) {
+        public Builder disableMediaCaching(boolean disable) {
             params.put(DISABLE_MEDIA_CACHING_KEY, String.valueOf(disable ? 1 : 0));
+            return this;
         }
 
         /**
