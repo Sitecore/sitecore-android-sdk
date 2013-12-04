@@ -18,8 +18,7 @@ public interface TestData {
     String _200_delete_5_items = "{ \"statusCode\":200, \"result\":{ \"count\":5, \"itemIds\":[ \"{110D559F-DEA5-42EA-9C1C-8A5DF7E70EF9}\", \"{2075CBFF-C330-434D-9E1B-937782E0DE49}\", \"{3DED3442-D502-4852-A5AA-8707CF66781A}\", \"{BD86BD6C-071A-4B5F-ABEA-71913A775DA7}\", \"{00CB2AC4-70DB-482C-85B4-B1F3A4CFE643}\" ] } }";
     String _200_1_media_item = "{\"statusCode\":200,\"result\":{\"totalCount\":1,\"resultCount\":1,\"items\":[{\"Category\":\"Images\",\"Database\":\"web\",\"DisplayName\":\"green_mineraly1\",\"HasChildren\":false,\"Icon\":\"/sitecore/shell/themes/standard/~/media/3B0C644CA3824DA2BA55CFE82C88C724.ashx?h=16\\u0026thn=1\\u0026w=16\\u0026db=web\",\"ID\":\"{3B0C644C-A382-4DA2-BA55-CFE82C88C724}\",\"Language\":\"en\",\"LongID\":\"/{11111111-1111-1111-1111-111111111111}/{3D6658D8-A0BF-4E75-B3E2-D050FABCF4E1}/{15451229-7534-44EF-815D-D93D6170BFCB}/{3B0C644C-A382-4DA2-BA55-CFE82C88C724}\",\"MediaUrl\":\"/~/media/Images/green_mineraly1.ashx?bc=Transparent\\u0026db=web\\u0026h=130\\u0026thn=1\\u0026w=130\",\"Name\":\"green_mineraly1\",\"Path\":\"/sitecore/media library/Images/green_mineraly1\",\"Template\":\"System/Media/Unversioned/Jpeg\",\"TemplateId\":\"{DAF085E8-602E-43A6-8299-038FF171349F}\",\"TemplateName\":\"Jpeg\",\"Url\":\"~/link.aspx?_id=3B0C644CA3824DA2BA55CFE82C88C724\\u0026amp;_z=z\",\"Version\":1,\"Fields\":{}}]}}";
 
-    String media_url_with_all_params = "/~/media/3B0C644CA3824DA2BA55CFE82C88C724.ashx?w=100&thn=1&db=web&dmc=1&la=en&as=1&mh=100&sc=0.3&mw=100&bc=black&h=100";
-    String media_url_with_no_params = "/~/media/3B0C644CA3824DA2BA55CFE82C88C724.ashx";
+    String media_url_with_all_params = "?w=100&thn=1&db=web&dmc=1&la=en&as=1&mh=100&sc=0.3&mw=100&bc=black&h=100";
 
     interface Content {
         interface Home {

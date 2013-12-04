@@ -1,7 +1,7 @@
 package net.sitecore.android.sdk.api;
 
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.Set;
 
 import net.sitecore.android.sdk.api.model.ScItem;
 
@@ -26,17 +26,17 @@ public class MediaParameters {
     public String buildUrlFromParams() {
         StringBuilder builder = new StringBuilder();
 
-        if (this.params.size() != 0) {
-            builder.append("?");
-        }
-
-        Iterator<String> keyIterator = params.keySet().iterator();
-        while (keyIterator.hasNext()) {
-            String key = keyIterator.next();
+        boolean firstTime = true;
+        Set<String> keys = params.keySet();
+        for (String key : keys) {
+            if (firstTime) {
+                firstTime = false;
+                builder.append("?");
+            } else {
+                builder.append("&");
+            }
             String value = params.get(key);
-
             builder.append(key).append("=").append(value);
-            if (keyIterator.hasNext()) builder.append("&");
         }
         return builder.toString();
     }
