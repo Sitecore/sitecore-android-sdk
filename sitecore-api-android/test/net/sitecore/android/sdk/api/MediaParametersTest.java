@@ -31,7 +31,7 @@ public class MediaParametersTest {
         assertNotNull(builder.build());
 
         String finalURL = builder.build().buildUrlFromParams();
-        assertEquals(TestData.media_url_with_all_params, finalURL);
+        assertEquals("?w=100&thn=1&db=web&dmc=1&la=en&as=1&mh=100&sc=0.3&mw=100&bc=black&h=100", finalURL);
     }
 
     @Test

@@ -27,14 +27,9 @@ public class MediaParameters {
         StringBuilder builder = new StringBuilder();
 
         boolean firstTime = true;
-        Set<String> keys = params.keySet();
-        for (String key : keys) {
-            if (firstTime) {
-                firstTime = false;
-                builder.append("?");
-            } else {
-                builder.append("&");
-            }
+        for (String key : params.keySet()) {
+            builder.append(firstTime ? "?" : "&");
+            if (firstTime) firstTime = false;
             String value = params.get(key);
             builder.append(key).append("=").append(value);
         }
