@@ -15,6 +15,7 @@ import net.sitecore.android.sdk.api.model.ScItem;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE)
@@ -41,7 +42,7 @@ public class MediaParametersTest extends MockedServerAndroidTestCase {
 
     @Test
     public void testFullParams() {
-        MediaParameters.MediaParametersBuilder builder = new MediaParameters.MediaParametersBuilder();
+        MediaParameters.Builder builder = new MediaParameters.Builder();
         builder.allowStretch(true);
         builder.backgroundColor("black");
         builder.database("web");
@@ -62,10 +63,25 @@ public class MediaParametersTest extends MockedServerAndroidTestCase {
 
     @Test
     public void testEmptyParams() {
-        MediaParameters.MediaParametersBuilder builder = new MediaParameters.MediaParametersBuilder();
+        MediaParameters.Builder builder = new MediaParameters.Builder();
         assertNotNull(builder.build());
 
         String finalURL = mScItem.getMediaDownloadUrl(builder.build());
         assertEquals(TestData.media_url_with_no_params, finalURL);
+    }
+
+    @Test
+    public void testNotModifiableParams() {
+        MediaParameters.Builder builder = new MediaParameters.Builder();
+        builder.maxHeight(100);
+        builder.maxHeight(200);
+        builder.maxHeight(300);
+        builder.maxHeight(400);
+
+        assertNotNull(builder.build());
+
+        String finalURL = mScItem.getMediaDownloadUrl(builder.build());
+        assertTrue(finalURL.contains("mh"));
+        assertEquals(2, finalURL.split("mh").length);
     }
 }

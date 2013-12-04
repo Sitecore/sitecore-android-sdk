@@ -44,7 +44,7 @@ public class MediaParameters {
     /**
      * Helper class for building {@link MediaParameters}.
      */
-    static class MediaParametersBuilder {
+    public static class Builder {
         private static final String WIDTH_KEY = "w";
         private static final String HEIGHT_KEY = "h";
         private static final String MAXIMUM_WIDTH_KEY = "mw";
@@ -60,7 +60,7 @@ public class MediaParameters {
 
         private HashMap<String, String> params;
 
-        public MediaParametersBuilder() {
+        public Builder() {
             params = new HashMap<String, String>();
         }
 
