@@ -28,6 +28,6 @@ public class GetItemsRequest extends ScRequest<ItemsResponse> {
 
     @Override
     public ScResponse parseResponse(String response) throws JSONException {
-        return new ItemsResponse.GetItemsResponseParser().parseJson(response);
+        return new ItemsResponse.ItemsResponseParser().parseJson(response);
     }
 }

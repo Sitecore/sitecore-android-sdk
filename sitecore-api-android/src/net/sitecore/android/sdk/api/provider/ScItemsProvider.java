@@ -23,6 +23,8 @@ public class ScItemsProvider extends ContentProvider {
     private static final int ITEMS = 100;
     private static final int ITEMS_ID = 101;
 
+    private static final int ITEMS_FIELDS = 110;
+
     private static final int FIELDS = 200;
     private static final int FIELDS_ID = 201;
 
@@ -35,6 +37,7 @@ public class ScItemsProvider extends ContentProvider {
         final String authority = ScItemsContract.CONTENT_AUTHORITY;
 
         matcher.addURI(authority, "items", ITEMS);
+        matcher.addURI(authority, "items/fields", ITEMS_FIELDS);
         matcher.addURI(authority, "items/*", ITEMS_ID);
 
         matcher.addURI(authority, "fields", FIELDS);
@@ -66,6 +69,9 @@ public class ScItemsProvider extends ContentProvider {
             case FIELDS_ID:
                 return Fields.CONTENT_ITEM_TYPE;
 
+            case ITEMS_FIELDS:
+                return Items.CONTENT_TYPE;
+
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -94,6 +100,12 @@ public class ScItemsProvider extends ContentProvider {
             case FIELDS_ID: {
                 String fieldId = Fields.getFieldId(uri);
                 builder.table(Tables.FIELDS).where(Fields.FIELD_ID + "=?", fieldId);
+                break;
+            }
+            case ITEMS_FIELDS: {
+                builder.table(Tables.ITEMS_JOIN_FIELDS)
+                        .mapToTable(Items._ID, Tables.ITEMS)
+                        .mapToTable(Items.ITEM_ID, Tables.ITEMS);
                 break;
             }
             default:
@@ -127,7 +139,7 @@ public class ScItemsProvider extends ContentProvider {
             }
 
             default:
-                throw new UnsupportedOperationException("Unknown insert uri: " + uri);
+                throw new UnsupportedOperationException("Not supported insert uri: " + uri);
         }
 
     }
@@ -154,7 +166,7 @@ public class ScItemsProvider extends ContentProvider {
 
 
             default:
-                throw new UnsupportedOperationException("Unknown delete uri: " + uri);
+                throw new UnsupportedOperationException("Not supported delete uri: " + uri);
         }
 
         int result = builder.where(selection, selectionArgs).delete(db);
@@ -187,7 +199,7 @@ public class ScItemsProvider extends ContentProvider {
                 break;
 
             default:
-                throw new UnsupportedOperationException("Unknown update uri: " + uri);
+                throw new UnsupportedOperationException("Not supported update uri: " + uri);
         }
 
         int result = builder.where(selection, selectionArgs).update(db, values);

@@ -33,9 +33,16 @@ public class LogUtils {
         }
     }
 
+    public static void LOGV(String text) {
+        if (sLogEnabled) {
+            Log.v(TAG, text);
+        }
+    }
+
     public static void LOGV(String text, Object... args) {
         if (sLogEnabled) {
-            Log.v(TAG, args == null ? text : String.format(text, args));
+            boolean noArgs = args == null || args.length == 0;
+            Log.v(TAG, noArgs ? text : String.format(text, args));
         }
     }
 

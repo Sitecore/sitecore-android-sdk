@@ -67,6 +67,8 @@ public class ScItemsContract {
     public static class Items implements BaseColumns, ItemsColumns {
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath("items").build();
 
+        public static final Uri ITEMS_JOIN_FIELDS_URI = CONTENT_URI.buildUpon().appendPath("fields").build();
+
         public static final String CONTENT_TYPE = CURSOR_DIR_BASE_TYPE + "/vnd.sitecore.items";
         public static final String CONTENT_ITEM_TYPE = CURSOR_ITEM_BASE_TYPE + "/vnd.sitecore.item";
 
@@ -94,6 +96,7 @@ public class ScItemsContract {
                     Items.VERSION,
                     Items.DATABASE,
                     Items.LANGUAGE,
+                    Items.HAS_CHILDREN,
                     Items.TAG
             };
 
@@ -108,7 +111,11 @@ public class ScItemsContract {
             int VERSION = 8;
             int DATABASE = 9;
             int LANGUAGE = 10;
-            int TAG = 11;
+            int HAS_CHILDREN = 11;
+            int TAG = 12;
+
+            String BY_ITEM_ID = Items.ITEM_ID + "=?";
+            String BY_ITEM_PARENT_ID = Items.PARENT_ITEM_ID + "=?";
         }
     }
 
@@ -164,6 +171,8 @@ public class ScItemsContract {
         String VERSION = "version";
         String DATABASE = "database";
         String LANGUAGE = "language";
+        String HAS_CHILDREN = "has_children";
+
         /** Sets a tag associated with this item. It can be used to store some request information, e.g. used query. */
         String TAG = "tag";
     }

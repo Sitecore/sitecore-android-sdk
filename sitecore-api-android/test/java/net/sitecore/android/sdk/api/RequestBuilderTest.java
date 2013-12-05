@@ -158,6 +158,8 @@ public class RequestBuilderTest extends MockedServerAndroidTestCase {
                 .addRenderingParameter("p1", "value1")
                 .addRenderingParameter("p2", "value2")
                 .build();
-        assertEquals("http://sample.com/-/item/v1/sitecore/shell/-/actions/GetRenderingHtml?renderingId=%7B5FAC342C-AC30-4F74-8B61-6C38B527CF32%7D&sc_itemid=%7B7272BE8E-8C4C-4F2A-8EC8-F04F512B04CB%7D&sc_database=master&language=da&p1=value1&p2=value2", request.getUrl());
+        assertEquals(
+                "http://sample.com/-/item/v1/sitecore/shell/-/actions/GetRenderingHtml?renderingId=%7B5FAC342C-AC30-4F74-8B61-6C38B527CF32%7D&sc_itemid=%7B7272BE8E-8C4C-4F2A-8EC8-F04F512B04CB%7D&sc_database=master&language=da&p1=value1&p2=value2",
+                request.getUrl());
     }
 }

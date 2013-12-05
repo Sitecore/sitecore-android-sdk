@@ -1,24 +1,21 @@
 package net.sitecore.android.sdk.api;
 
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
-import com.android.volley.toolbox.RequestFuture;
-
-import com.google.mockwebserver.Dispatcher;
-import com.google.mockwebserver.MockResponse;
-import com.google.mockwebserver.RecordedRequest;
-
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.toolbox.RequestFuture;
+import com.google.mockwebserver.Dispatcher;
+import com.google.mockwebserver.MockResponse;
+import com.google.mockwebserver.RecordedRequest;
+import net.sitecore.android.sdk.api.model.ItemsResponse;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
-
-import net.sitecore.android.sdk.api.model.ItemsResponse;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

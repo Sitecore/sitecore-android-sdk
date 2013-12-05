@@ -99,7 +99,7 @@ public class UploadMediaService extends IntentService {
             @Override
             public void onResponse(String response) {
                 try {
-                    ScResponse result = new ItemsResponse.GetItemsResponseParser().parseJson(response);
+                    ScResponse result = new ItemsResponse.ItemsResponseParser().parseJson(response);
                     if (result.isSuccess()) {
                         successListener.onResponse((ItemsResponse) result);
                     } else {

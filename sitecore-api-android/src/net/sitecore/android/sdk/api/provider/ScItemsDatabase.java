@@ -8,17 +8,33 @@ import android.provider.BaseColumns;
 import net.sitecore.android.sdk.api.provider.ScItemsContract.FieldsColumns;
 import net.sitecore.android.sdk.api.provider.ScItemsContract.ItemsColumns;
 
-class ScItemsDatabase extends SQLiteOpenHelper {
+import static net.sitecore.android.sdk.api.provider.ScItemsContract.Fields;
+import static net.sitecore.android.sdk.api.provider.ScItemsContract.Items;
+
+public class ScItemsDatabase extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "sitecore_items.db";
 
-    private static final int VERSION = 1;
+    /**
+     * Initial release
+     */
+    private static final int V_1_0 = 1;
 
-    interface Tables {
+    /**
+     * Item.HAS_CHILDREN column added;
+     */
+    private static final int V_1_1 = 2;
+
+    private static final int VERSION = V_1_1;
+
+    public interface Tables {
         String ITEMS = "items";
         String FIELDS = "fields";
-    }
 
+        String ITEMS_JOIN_FIELDS = ITEMS + " LEFT OUTER JOIN " + FIELDS + " ON "
+                + ITEMS + "." + Items.ITEM_ID + "=" + FIELDS + "." + Fields.ITEM_ID;
+
+    }
 
     public ScItemsDatabase(Context context) {
         super(context, DB_NAME, null, VERSION);
@@ -38,6 +54,7 @@ class ScItemsDatabase extends SQLiteOpenHelper {
                 + ItemsColumns.VERSION + " TEXT NOT NULL,"
                 + ItemsColumns.DATABASE + " TEXT NOT NULL,"
                 + ItemsColumns.LANGUAGE + " TEXT NOT NULL,"
+                + ItemsColumns.HAS_CHILDREN + " TEXT NOT NULL,"
                 + ItemsColumns.TAG + " TEXT, "
                 + "UNIQUE (" + ItemsColumns.ITEM_ID + ") ON CONFLICT REPLACE)");
 

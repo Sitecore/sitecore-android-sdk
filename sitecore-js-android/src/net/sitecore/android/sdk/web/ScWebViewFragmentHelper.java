@@ -64,12 +64,10 @@ class ScWebViewFragmentHelper {
     }
 
     public void onPause() {
-        mWebView.onPause();
         mScPluginManager.onPause();
     }
 
     public void onResume() {
-        mWebView.onResume();
         mScPluginManager.onResume();
     }
 

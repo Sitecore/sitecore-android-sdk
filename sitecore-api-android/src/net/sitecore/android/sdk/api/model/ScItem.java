@@ -233,6 +233,7 @@ public class ScItem implements Parcelable {
         builder.withValue(Items.VERSION, mVersion);
         builder.withValue(Items.DATABASE, mDatabase);
         builder.withValue(Items.LANGUAGE, mLanguage);
+        builder.withValue(Items.HAS_CHILDREN, mHasChildren ? 1 : 0);
         builder.withValue(Items.TIMESTAMP, new Date().getTime());
 
         return builder.build();
@@ -251,6 +252,8 @@ public class ScItem implements Parcelable {
             return null;
         }
     }
+
+
 
     public String getMediaDownloadUrl(MediaParameters params) {
         if (mPath.contains("/sitecore/media library/")) {
