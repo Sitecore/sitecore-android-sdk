@@ -146,6 +146,7 @@ public class ScItemsProvider extends ContentProvider {
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
+        LOGV("Delete: " + uri);
         final SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
 
         final SelectionBuilder builder = new SelectionBuilder();
@@ -164,12 +165,13 @@ public class ScItemsProvider extends ContentProvider {
                 builder.table(Tables.FIELDS);
                 break;
 
-
             default:
                 throw new UnsupportedOperationException("Not supported delete uri: " + uri);
         }
 
         int result = builder.where(selection, selectionArgs).delete(db);
+        LOGV("Deleted " + result + " rows.");
+
         if (match == ITEMS_ID) {
             getContext().getContentResolver().notifyChange(Items.CONTENT_URI, null);
         }

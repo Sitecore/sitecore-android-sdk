@@ -65,7 +65,7 @@ public class ScItemsDatabase extends SQLiteOpenHelper {
                 + FieldsColumns.TYPE + " TEXT NOT NULL,"
                 + FieldsColumns.VALUE + " TEXT NOT NULL,"
                 + FieldsColumns.ITEM_ID + " TEXT NOT NULL,"
-                + "UNIQUE (" + FieldsColumns.FIELD_ID + ") ON CONFLICT REPLACE)");
+                + "UNIQUE (" + FieldsColumns.FIELD_ID + ", " + Fields.ITEM_ID + ") ON CONFLICT REPLACE)");
     }
 
     @Override
