@@ -122,7 +122,6 @@ public class ItemsBrowserFragment extends DialogFragment {
         }
     };
 
-
     private static final NetworkEventsListener sEmptyNetworkEventsListener = new NetworkEventsListener() {
         @Override
         public void onUpdateRequestStarted() {
@@ -288,11 +287,15 @@ public class ItemsBrowserFragment extends DialogFragment {
         return upButton;
     }
 
+    /**
+     * @param inflater
+     *
+     * @return
+     */
     protected View onCreateEmptyView(LayoutInflater inflater) {
         final TextView empty = new TextView(getActivity());
         empty.setText("Empty");
         empty.setGravity(Gravity.CENTER);
-        empty.setMinimumHeight(120);
         return empty;
     }
 
@@ -377,7 +380,6 @@ public class ItemsBrowserFragment extends DialogFragment {
     public void loadContentWithoutApiSession() {
     }
 
-
     /**
      * @param rootFolder
      */
@@ -396,7 +398,6 @@ public class ItemsBrowserFragment extends DialogFragment {
         bundle.putString(EXTRA_ITEM_ID, itemId);
         getLoaderManager().restartLoader(LOADER_CHILD_ITEMS, bundle, mLoaderCallbacks);
     }
-
 
     private void sendUpdateChildrenRequest(String itemId) {
         LOGD("getChildren: " + itemId);
@@ -503,7 +504,6 @@ public class ItemsBrowserFragment extends DialogFragment {
         reloadChildrenFromDatabase(itemId);
         mNavigationEventsListener.onGoInside(item);
     }
-
 
     /**
      * @param item which received long click.
