@@ -6,6 +6,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Build;
+import android.text.TextUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,8 +74,11 @@ public class ScItemsLoader extends AsyncTaskLoader<List<ScItem>> {
                 result.add(currentItem);
             }
 
-            ScField rowField = fieldFrom(c);
-            currentItem.addField(rowField);
+            final String fieldId = c.getString(ItemsQuery.FIELD_ID);
+            if (!TextUtils.isEmpty(fieldId)) {
+                ScField rowField = fieldFrom(c);
+                currentItem.addField(rowField);
+            }
         } while (c.moveToNext());
 
         return result;
