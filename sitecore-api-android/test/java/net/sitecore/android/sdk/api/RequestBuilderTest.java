@@ -36,7 +36,7 @@ public class RequestBuilderTest extends MockedServerAndroidTestCase {
 
     @Test
     public void testAllParamsAreUsed() {
-        LinkedHashSet fields = new LinkedHashSet<String>();
+        LinkedHashSet<String> fields = new LinkedHashSet<String>();
         fields.add("Field1");
         fields.add("{A60ACD61-A6DB-4182-8329-C957982CEC74}");
 

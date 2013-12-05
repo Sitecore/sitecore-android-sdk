@@ -16,10 +16,9 @@ repositories {
 }
 
 dependencies {
-    instrumentTestCompile 'junit:junit:4.10'
-    instrumentTestCompile 'org.robolectric:robolectric:2.3-SNAPSHOT'
-    instrumentTestCompile 'com.google.mockwebserver:mockwebserver:20130706'
-    instrumentTestCompile 'com.google.android:android:4.1.1.4'
+    //instrumentTestCompile 'junit:junit:4.10'
+    //instrumentTestCompile 'org.robolectric:robolectric:2.3-SNAPSHOT'
+    //instrumentTestCompile 'com.google.mockwebserver:mockwebserver:20130706'
 }
 
 android {
@@ -39,6 +38,6 @@ android {
             assets.srcDirs = ['assets']
         }
 
-        instrumentTest.setRoot('test')
+        //instrumentTest.setRoot('test')
     }
 }
