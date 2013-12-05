@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.sitecore.android.sdk.api.MediaParameters;
 import net.sitecore.android.sdk.api.provider.ScItemsContract.Items;
 
 /** Represents Sitecore item. */
@@ -253,4 +254,13 @@ public class ScItem implements Parcelable {
     }
 
 
+
+    public String getMediaDownloadUrl(MediaParameters params) {
+        if (mPath.contains("/sitecore/media library/")) {
+            String id = mId.replace("{", "").replace("}", "").replace("-", "");
+            return String.format("/~/media/%s.ashx%s", id, params.buildUrlFromParams());
+        } else {
+            return null;
+        }
+    }
 }
