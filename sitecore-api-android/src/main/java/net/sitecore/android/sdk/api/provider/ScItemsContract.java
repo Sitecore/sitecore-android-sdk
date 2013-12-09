@@ -116,6 +116,7 @@ public class ScItemsContract {
 
             String BY_ITEM_ID = Items.ITEM_ID + "=?";
             String BY_ITEM_PARENT_ID = Items.PARENT_ITEM_ID + "=?";
+            String BY_ITEM_PATH = Items.PATH + "=?";
         }
     }
 

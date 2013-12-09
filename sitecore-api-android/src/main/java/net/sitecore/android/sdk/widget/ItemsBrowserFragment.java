@@ -42,6 +42,7 @@ import static android.view.View.OnClickListener;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static net.sitecore.android.sdk.api.LogUtils.LOGD;
+import static net.sitecore.android.sdk.api.LogUtils.LOGV;
 import static net.sitecore.android.sdk.api.provider.ScItemsContract.Items;
 
 /**
@@ -50,13 +51,18 @@ import static net.sitecore.android.sdk.api.provider.ScItemsContract.Items;
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class ItemsBrowserFragment extends DialogFragment {
 
+    /**
+     * Default root folder.
+     *
+     * @see #setRootFolder(String)
+     */
     public static final String DEFAULT_ROOT_FOLDER = "/sitecore/content/Home";
+
+    /** Default number of columns in grid mode. */
     public static final int DEFAULT_GRID_COLUMNS_COUNT = 2;
 
     private static final String EXTRA_ITEM_ID = "item_id";
-
-    private static final String SAVED_ITEMS = "items";
-    private static final String SAVED_ROOT_FOLDER = "root_folder";
+    private static final String EXTRA_ITEM_PATH = "item_path";
 
     private static final int STYLE_LIST = 0;
     private static final int STYLE_GRID = 1;
@@ -103,7 +109,7 @@ public class ItemsBrowserFragment extends DialogFragment {
         public void onUpdateSuccess(ItemsResponse itemsResponse);
 
         /**
-         * @param error
+         * @param error describing
          */
         public void onUpdateError(VolleyError error);
     }
@@ -156,7 +162,14 @@ public class ItemsBrowserFragment extends DialogFragment {
 
     private LinkedList<ScItem> mItems = new LinkedList<ScItem>();
 
+    private boolean mLoadContentWithoutConnection = false;
     private boolean mIsLoading = true;
+
+    private boolean mFirstLoad = true;
+
+    public boolean isLoading() {
+        return mIsLoading;
+    }
 
     private final AdapterView.OnItemClickListener mOnItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
@@ -196,30 +209,17 @@ public class ItemsBrowserFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (savedInstanceState != null) {
-            // TODO: load saved state
-        }
-    }
+        setRetainInstance(true);
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        // TODO: save items list, mApiSession(?)
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // TODO: replace inflation with code
         final View v = inflater.inflate(R.layout.fragment_items_browser, container, false);
-        return v;
-    }
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        final LayoutInflater inflater = LayoutInflater.from(getActivity());
-
-        mContainerProgress = view.findViewById(R.id.container_progress);
-        mContainerList = (LinearLayout) view.findViewById(R.id.container_list);
+        mContainerProgress = v.findViewById(R.id.container_progress);
+        mContainerList = (LinearLayout) v.findViewById(R.id.container_list);
 
         // Add header view if exists
         final View header = onCreateHeaderView(inflater);
@@ -229,7 +229,7 @@ public class ItemsBrowserFragment extends DialogFragment {
 
         // Add up button
         mGoUpView = onCreateUpButtonView(inflater);
-        mGoUpView.setVisibility(View.GONE);
+        if (mItems.size() < 2) mGoUpView.setVisibility(View.GONE);
         mGoUpView.setOnClickListener(mOnUpClickListener);
         mContainerList.addView(mGoUpView, new LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
 
@@ -260,15 +260,53 @@ public class ItemsBrowserFragment extends DialogFragment {
             mContainerList.addView(footer, new LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
         }
 
-        // Set callbacks
-        mListView.setOnItemClickListener(mOnItemClickListener);
-        mListView.setOnItemLongClickListener(mOnItemLongClickListener);
+        return v;
     }
 
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        logState();
+        LOGV("state:" + savedInstanceState);
+        setLoading(mIsLoading);
+
+        // Return if fragment is restored
+        //if (savedInstanceState != null) return;
+
+        mListView.setOnItemClickListener(mOnItemClickListener);
+        mListView.setOnItemLongClickListener(mOnItemLongClickListener);
+
+        if (mFirstLoad) {
+            if (mLoadContentWithoutConnection) {
+                final Bundle bundle = new Bundle();
+                bundle.putString(EXTRA_ITEM_PATH, mRootFolder);
+                getLoaderManager().initLoader(LOADER_ROOT_ITEM, bundle, mCachedRootItemLoader);
+                setLoading(false);
+            } else if (mApiSession != null && mRequestQueue != null) {
+                loadContent();
+            }
+
+            mFirstLoad = false;
+        } else {
+            final Bundle bundle = new Bundle();
+            bundle.putString(EXTRA_ITEM_ID, mItems.peek().getId());
+            getLoaderManager().initLoader(LOADER_CHILD_ITEMS, bundle, mChildrenLoader);
+        }
+    }
+
+    /**
+     * @param inflater {@link @LayoutInflater} object that can be used to inflate any views.
+     *
+     * @return Created header view. {@code null} is returned by default.
+     */
     protected View onCreateHeaderView(LayoutInflater inflater) {
         return null;
     }
 
+    /**
+     * @param inflater {@link @LayoutInflater} object that can be used to inflate any views.
+     *
+     * @return Created footer view. {@code null} is returned by default.
+     */
     protected View onCreateFooterView(LayoutInflater inflater) {
         return null;
     }
@@ -277,7 +315,7 @@ public class ItemsBrowserFragment extends DialogFragment {
      * Creates view, intended for Up navigation through items tree. This view will be added above items browser list.
      * After creation {@link OnClickListener} will be set to created view, which triggers navigation up.
      *
-     * @param inflater LayoutInflater object.
+     * @param inflater {@link @LayoutInflater} object that can be used to inflate any views.
      *
      * @return View, intended for Up navigation through items tree. After creation will have
      */
@@ -288,9 +326,9 @@ public class ItemsBrowserFragment extends DialogFragment {
     }
 
     /**
-     * @param inflater
+     * @param inflater {@link @LayoutInflater} object that can be used to inflate any views.
      *
-     * @return
+     * @return Created view.
      */
     protected View onCreateEmptyView(LayoutInflater inflater) {
         final TextView empty = new TextView(getActivity());
@@ -335,14 +373,6 @@ public class ItemsBrowserFragment extends DialogFragment {
         super.onDetach();
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        if (mApiSession != null && mRequestQueue != null) {
-            loadContent();
-        }
-    }
-
     /**
      * Sets {@link ScApiSession} to create the requests.
      */
@@ -377,7 +407,8 @@ public class ItemsBrowserFragment extends DialogFragment {
     /**
      *
      */
-    public void loadContentWithoutApiSession() {
+    public void setLoadContentWithoutConnection(boolean loadContentWithoutConnection) {
+        mLoadContentWithoutConnection = true;
     }
 
     /**
@@ -396,7 +427,7 @@ public class ItemsBrowserFragment extends DialogFragment {
         LOGD("Reload db children of: " + itemId);
         final Bundle bundle = new Bundle();
         bundle.putString(EXTRA_ITEM_ID, itemId);
-        getLoaderManager().restartLoader(LOADER_CHILD_ITEMS, bundle, mLoaderCallbacks);
+        getLoaderManager().restartLoader(LOADER_CHILD_ITEMS, bundle, mChildrenLoader);
     }
 
     private void sendUpdateChildrenRequest(String itemId) {
@@ -433,7 +464,7 @@ public class ItemsBrowserFragment extends DialogFragment {
 
             final Bundle bundle = new Bundle();
             bundle.putString(EXTRA_ITEM_ID, item.getId());
-            getLoaderManager().initLoader(LOADER_CHILD_ITEMS, bundle, mLoaderCallbacks);
+            getLoaderManager().initLoader(LOADER_CHILD_ITEMS, bundle, mChildrenLoader);
         }
     };
 
@@ -452,11 +483,36 @@ public class ItemsBrowserFragment extends DialogFragment {
         }
     };
 
-    private final LoaderCallbacks<List<ScItem>> mLoaderCallbacks = new LoaderCallbacks<List<ScItem>>() {
+    private final LoaderCallbacks<List<ScItem>> mCachedRootItemLoader = new LoaderCallbacks<List<ScItem>>() {
 
         @Override
         public Loader<List<ScItem>> onCreateLoader(int id, Bundle args) {
-            if (args == null) return new ScItemsLoader(getActivity(), null, null);
+            final String path = args.getString(EXTRA_ITEM_PATH);
+            return new ScItemsLoader(getActivity(), Items.Query.BY_ITEM_PATH, new String[]{path});
+        }
+
+        @Override
+        public void onLoadFinished(Loader<List<ScItem>> loader, List<ScItem> data) {
+            final ScItem item = data.get(0);
+            if (item != null) mItems.push(item);
+
+            final Bundle bundle = new Bundle();
+            bundle.putString(EXTRA_ITEM_ID, item.getId());
+            getLoaderManager().initLoader(LOADER_CHILD_ITEMS, bundle, mChildrenLoader);
+        }
+
+        @Override
+        public void onLoaderReset(Loader<List<ScItem>> loader) {
+        }
+    };
+
+    private final LoaderCallbacks<List<ScItem>> mChildrenLoader = new LoaderCallbacks<List<ScItem>>() {
+
+        @Override
+        public Loader<List<ScItem>> onCreateLoader(int id, Bundle args) {
+            if (args == null) {
+                return new ScItemsLoader(getActivity(), null, null);
+            }
 
             final String currentItemId = args.getString(EXTRA_ITEM_ID);
             return new ScItemsLoader(getActivity(), Items.Query.BY_ITEM_PARENT_ID, new String[]{currentItemId});
@@ -474,10 +530,18 @@ public class ItemsBrowserFragment extends DialogFragment {
         }
     };
 
+    /**
+     * Show items as list.
+     */
     public void setListStyle() {
         mStyle = STYLE_LIST;
     }
 
+    /**
+     * Show items as grid.
+     *
+     * @param columnCount Number of culumns. Default value is {@link #DEFAULT_GRID_COLUMNS_COUNT}
+     */
     public void setGridStyle(int columnCount) {
         mStyle = STYLE_GRID;
         mColumnCount = columnCount;
@@ -514,7 +578,7 @@ public class ItemsBrowserFragment extends DialogFragment {
     /**
      * Register a callback to be invoked when content state changes.
      *
-     * @param navigationEventsListener
+     * @param navigationEventsListener the callback to be invoked.
      */
     public void setContentEventsListener(ContentChangedListener navigationEventsListener) {
         mNavigationEventsListener = navigationEventsListener;
@@ -523,9 +587,20 @@ public class ItemsBrowserFragment extends DialogFragment {
     /**
      * Register a callback to be invoked when network operations state changes.
      *
-     * @param networkEventsListener
+     * @param networkEventsListener the callback to be invoked.
      */
     public void setNetworkEventsListener(NetworkEventsListener networkEventsListener) {
         mNetworkEventsListener = networkEventsListener;
+    }
+
+    private void logState() {
+        LOGV("ItemsBrowserFragment{" +
+                "mStyle=" + mStyle +
+                ", mColumnCount=" + mColumnCount +
+                ", mRootFolder='" + mRootFolder + '\'' +
+                ", mItems=" + mItems +
+                ", mIsLoading=" + mIsLoading +
+                ", mLoadContentWithoutConnection=" + mLoadContentWithoutConnection +
+                '}');
     }
 }
