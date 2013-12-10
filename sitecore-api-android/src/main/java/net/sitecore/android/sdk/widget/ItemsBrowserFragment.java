@@ -269,7 +269,7 @@ public class ItemsBrowserFragment extends DialogFragment {
         mListView.setOnItemClickListener(mOnItemClickListener);
         mListView.setOnItemLongClickListener(mOnItemLongClickListener);
 
-        if (mFirstLoad) {
+        if (mFirstLoad || mItems.size() == 0) {
             if (mLoadContentWithoutConnection) {
                 loadRootFromCache();
                 setInitialized(false);
