@@ -23,6 +23,7 @@ public class AlertPlugin extends ScPlugin {
 
     private ScParams mParams;
     private boolean mIsAlertVisible = false;
+    private AlertDialog mAlertDialog;
 
     @Override
     public String getPluginName() {
@@ -100,8 +101,17 @@ public class AlertPlugin extends ScPlugin {
             LOGE("Only first 3 buttons are supported by AlertPlugin, but %d buttons declared.", buttonNames.length);
         }
 
-        builder.create().show();
+        mAlertDialog = builder.create();
+        mAlertDialog.show();
         mIsAlertVisible = true;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mAlertDialog != null && mIsAlertVisible) {
+            mAlertDialog.dismiss();
+        }
     }
 
     /**
