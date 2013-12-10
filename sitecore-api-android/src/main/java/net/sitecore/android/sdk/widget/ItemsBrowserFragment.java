@@ -42,7 +42,6 @@ import static android.view.View.OnClickListener;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static net.sitecore.android.sdk.api.LogUtils.LOGD;
-import static net.sitecore.android.sdk.api.LogUtils.LOGV;
 import static net.sitecore.android.sdk.api.provider.ScItemsContract.Items;
 
 /**
@@ -163,12 +162,12 @@ public class ItemsBrowserFragment extends DialogFragment {
     private LinkedList<ScItem> mItems = new LinkedList<ScItem>();
 
     private boolean mLoadContentWithoutConnection = false;
-    private boolean mIsLoading = true;
+    private boolean mIsInitialized = true;
 
     private boolean mFirstLoad = true;
 
-    public boolean isLoading() {
-        return mIsLoading;
+    public boolean isInitialized() {
+        return mIsInitialized;
     }
 
     private final AdapterView.OnItemClickListener mOnItemClickListener = new AdapterView.OnItemClickListener() {
@@ -196,7 +195,7 @@ public class ItemsBrowserFragment extends DialogFragment {
             String newCurrentItemId = newCurrentItem.getId();
             LOGD("New folder item id: " + newCurrentItemId);
 
-            sendUpdateChildrenRequest(newCurrentItemId);
+            reloadChildrenFromNetwork(newCurrentItemId);
             reloadChildrenFromDatabase(newCurrentItemId);
 
             if (mItems.size() == 1) {
@@ -265,28 +264,23 @@ public class ItemsBrowserFragment extends DialogFragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        logState();
-        LOGV("state:" + savedInstanceState);
-        setLoading(mIsLoading);
-
-        // Return if fragment is restored
-        //if (savedInstanceState != null) return;
+        setInitialized(mIsInitialized);
 
         mListView.setOnItemClickListener(mOnItemClickListener);
         mListView.setOnItemLongClickListener(mOnItemLongClickListener);
 
         if (mFirstLoad) {
             if (mLoadContentWithoutConnection) {
-                final Bundle bundle = new Bundle();
-                bundle.putString(EXTRA_ITEM_PATH, mRootFolder);
-                getLoaderManager().initLoader(LOADER_ROOT_ITEM, bundle, mCachedRootItemLoader);
-                setLoading(false);
+                loadRootFromCache();
+                setInitialized(false);
             } else if (mApiSession != null && mRequestQueue != null) {
-                loadContent();
+                loadRootFromNetwork();
+                setInitialized(true);
             }
 
             mFirstLoad = false;
         } else {
+            // Deliver already loaded results.
             final Bundle bundle = new Bundle();
             bundle.putString(EXTRA_ITEM_ID, mItems.peek().getId());
             getLoaderManager().initLoader(LOADER_CHILD_ITEMS, bundle, mChildrenLoader);
@@ -359,10 +353,10 @@ public class ItemsBrowserFragment extends DialogFragment {
         a.recycle();
     }
 
-    private void setLoading(boolean isLoading) {
-        mIsLoading = isLoading;
-        mContainerProgress.setVisibility(isLoading ? View.VISIBLE : View.GONE);
-        mContainerList.setVisibility(isLoading ? View.GONE : View.VISIBLE);
+    private void setInitialized(boolean isInitialized) {
+        mIsInitialized = isInitialized;
+        mContainerProgress.setVisibility(isInitialized ? View.VISIBLE : View.GONE);
+        mContainerList.setVisibility(isInitialized ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -373,35 +367,25 @@ public class ItemsBrowserFragment extends DialogFragment {
         super.onDetach();
     }
 
-    /**
-     * Sets {@link ScApiSession} to create the requests.
-     */
-    public void setApiSession(ScApiSession session) {
-        mApiSession = session;
-        mApiSession.setShouldCache(true);
-    }
-
-    /**
-     * Sets {@link RequestQueue} which will execute the requests.
-     */
-    public void setRequestQueue(RequestQueue requestQueue) {
-        mRequestQueue = requestQueue;
+    @Override
+    public void onDestroyView() {
+        if (getDialog() != null && getRetainInstance())
+            getDialog().setDismissMessage(null);
+        super.onDestroyView();
     }
 
     /**
      *
+     * @param requestQueue {@link RequestQueue} which will execute the requests.
+     * @param session {@link ScApiSession} to create the requests.
      */
-    public void loadContent() {
-        mNetworkEventsListener.onUpdateRequestStarted();
-        ScRequest request = mApiSession.getItems(mFirstItemResponseListener, mErrorListener)
-                .withScope(RequestScope.SELF, RequestScope.CHILDREN)
-                .byItemPath(mRootFolder)
-                .build();
+    public void setApiProperties(RequestQueue requestQueue, ScApiSession session) {
+        mRequestQueue = requestQueue;
 
-        request.setTag(ItemsBrowserFragment.this);
+        mApiSession = session;
+        mApiSession.setShouldCache(true);
 
-        mRequestQueue.add(request);
-        setLoading(true);
+        loadRootFromNetwork();
     }
 
     /**
@@ -409,6 +393,7 @@ public class ItemsBrowserFragment extends DialogFragment {
      */
     public void setLoadContentWithoutConnection(boolean loadContentWithoutConnection) {
         mLoadContentWithoutConnection = true;
+        if (getView() != null) loadRootFromNetwork();
     }
 
     /**
@@ -418,9 +403,29 @@ public class ItemsBrowserFragment extends DialogFragment {
         mRootFolder = rootFolder;
     }
 
+    /**
+     * Trigger manual update of current folder.
+     */
     public void update() {
         final ScItem item = mItems.peek();
-        sendUpdateChildrenRequest(item.getId());
+        reloadChildrenFromNetwork(item.getId());
+    }
+
+    private void loadRootFromCache() {
+        final Bundle bundle = new Bundle();
+        bundle.putString(EXTRA_ITEM_PATH, mRootFolder);
+        getLoaderManager().initLoader(LOADER_ROOT_ITEM, bundle, mCachedRootItemLoader);
+    }
+
+    private void loadRootFromNetwork() {
+        mNetworkEventsListener.onUpdateRequestStarted();
+        ScRequest request = mApiSession.getItems(mFirstItemResponseListener, mErrorListener)
+                .withScope(RequestScope.SELF, RequestScope.CHILDREN)
+                .byItemPath(mRootFolder)
+                .build();
+        request.setTag(ItemsBrowserFragment.this);
+
+        mRequestQueue.add(request);
     }
 
     private void reloadChildrenFromDatabase(String itemId) {
@@ -430,7 +435,7 @@ public class ItemsBrowserFragment extends DialogFragment {
         getLoaderManager().restartLoader(LOADER_CHILD_ITEMS, bundle, mChildrenLoader);
     }
 
-    private void sendUpdateChildrenRequest(String itemId) {
+    private void reloadChildrenFromNetwork(String itemId) {
         LOGD("getChildren: " + itemId);
         if (mApiSession != null) {
             mNetworkEventsListener.onUpdateRequestStarted();
@@ -455,7 +460,7 @@ public class ItemsBrowserFragment extends DialogFragment {
                 // TODO: handle empty root view;
                 return;
             }
-            setLoading(false);
+            setInitialized(false);
             ScItem item = itemsResponse.getItems().get(0);
             mItems.push(item);
 
@@ -478,7 +483,7 @@ public class ItemsBrowserFragment extends DialogFragment {
     private Response.ErrorListener mErrorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
-            setLoading(false);
+            setInitialized(false);
             mNetworkEventsListener.onUpdateError(error);
         }
     };
@@ -493,11 +498,13 @@ public class ItemsBrowserFragment extends DialogFragment {
 
         @Override
         public void onLoadFinished(Loader<List<ScItem>> loader, List<ScItem> data) {
-            // Dont load items when root item is not in cache
+            // Don't load items when root item is not in cache
             if (data == null || data.size() == 0) return;
 
             final ScItem item = data.get(0);
             if (item != null) mItems.push(item);
+
+            mNavigationEventsListener.onInitialized(item);
 
             final Bundle bundle = new Bundle();
             bundle.putString(EXTRA_ITEM_ID, item.getId());
@@ -567,7 +574,7 @@ public class ItemsBrowserFragment extends DialogFragment {
         if (mGoUpView.getVisibility() == View.GONE) mGoUpView.setVisibility(View.VISIBLE);
 
         String itemId = item.getId();
-        sendUpdateChildrenRequest(itemId);
+        reloadChildrenFromNetwork(itemId);
         reloadChildrenFromDatabase(itemId);
         mNavigationEventsListener.onGoInside(item);
     }
@@ -596,14 +603,4 @@ public class ItemsBrowserFragment extends DialogFragment {
         mNetworkEventsListener = networkEventsListener;
     }
 
-    private void logState() {
-        LOGV("ItemsBrowserFragment{" +
-                "mStyle=" + mStyle +
-                ", mColumnCount=" + mColumnCount +
-                ", mRootFolder='" + mRootFolder + '\'' +
-                ", mItems=" + mItems +
-                ", mIsLoading=" + mIsLoading +
-                ", mLoadContentWithoutConnection=" + mLoadContentWithoutConnection +
-                '}');
-    }
 }
