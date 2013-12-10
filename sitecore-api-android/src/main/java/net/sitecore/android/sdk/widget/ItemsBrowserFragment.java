@@ -493,6 +493,9 @@ public class ItemsBrowserFragment extends DialogFragment {
 
         @Override
         public void onLoadFinished(Loader<List<ScItem>> loader, List<ScItem> data) {
+            // Dont load items when root item is not in cache
+            if (data == null || data.size() == 0) return;
+
             final ScItem item = data.get(0);
             if (item != null) mItems.push(item);
 
