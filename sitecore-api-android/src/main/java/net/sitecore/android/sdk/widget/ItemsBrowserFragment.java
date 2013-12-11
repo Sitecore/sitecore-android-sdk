@@ -36,22 +36,43 @@ import net.sitecore.android.sdk.api.model.ItemsResponse;
 import net.sitecore.android.sdk.api.model.RequestScope;
 import net.sitecore.android.sdk.api.model.ScItem;
 import net.sitecore.android.sdk.api.model.ScItemsLoader;
+import net.sitecore.android.sdk.api.provider.ScItemsProvider;
 
 import static android.app.LoaderManager.LoaderCallbacks;
 import static android.view.View.OnClickListener;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static net.sitecore.android.sdk.api.LogUtils.LOGD;
+import static net.sitecore.android.sdk.api.LogUtils.LOGE;
+import static net.sitecore.android.sdk.api.LogUtils.LOGV;
 import static net.sitecore.android.sdk.api.provider.ScItemsContract.Items;
 
 /**
- * Items browser fragment.
+ * A fragment that allows to browse through content tree.
+ * <p/>
+ * Fragment provides default UI, and it can be fully customized.
+ * <p/>
+ * <strong>UI customization</strong>
+ * <p/>
+ * Since fragment extends {@link DialogFragment}, it can be used as modal dialog as well.
+ * <p/>
+ * <p><strong>Listening to events</strong></p>
+ * <p>
+ * Custom logic can be added to next events:
+ * </p>
+ * <ul>
+ * <li> method1
+ * <li> method2
+ * </ul>
+ * <p/>
+ * Under the hood items are loaded using {@link ScApiSession}
+ * and cached in database using {@link ScItemsProvider}.
  */
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class ItemsBrowserFragment extends DialogFragment {
 
     /**
-     * Default root folder.
+     * Default root items browser folder.
      *
      * @see #setRootFolder(String)
      */
@@ -70,24 +91,31 @@ public class ItemsBrowserFragment extends DialogFragment {
     private static final int LOADER_ROOT_ITEM = 1;
 
     /**
-     * Defines navigation callback methods.
+     * Defines content tree position change callback methods.
      */
-    public interface ContentChangedListener {
+    public interface ContentTreePositionListener {
 
         /**
-         * Notifies that
+         * Notifies that content tree position changed to ancestor item.
          *
          * @param item Current {@link ScItem} after event finished.
          */
         public void onGoUp(ScItem item);
 
         /**
+         * Notifies that content tree position changed to descendant item.
+         *
          * @param item Current {@link ScItem} after event finished.
          */
         public void onGoInside(ScItem item);
 
         /**
+         * Notifies that content tree loaded using root item.
+         *
          * @param item Current {@link ScItem} after initialization.
+         *
+         * @see #DEFAULT_ROOT_FOLDER
+         * @see #setRootFolder(String)
          */
         public void onInitialized(ScItem item);
     }
@@ -98,22 +126,26 @@ public class ItemsBrowserFragment extends DialogFragment {
     public interface NetworkEventsListener {
 
         /**
-         * Notifies that
+         * Notifies that items update request has started.
          */
         public void onUpdateRequestStarted();
 
         /**
-         * @param itemsResponse
+         * Notifies that items update request has finished successfully.
+         *
+         * @param itemsResponse List of {@link ScItem} received by update operation.
          */
         public void onUpdateSuccess(ItemsResponse itemsResponse);
 
         /**
-         * @param error describing
+         * Notifies that items update request has finished with error.
+         *
+         * @param error describes error details.
          */
         public void onUpdateError(VolleyError error);
     }
 
-    private static final ContentChangedListener sEmptyContentChangedListener = new ContentChangedListener() {
+    private static final ContentTreePositionListener sEmptyContentTreePositionListener = new ContentTreePositionListener() {
         @Override
         public void onGoUp(ScItem item) {
         }
@@ -141,9 +173,10 @@ public class ItemsBrowserFragment extends DialogFragment {
         }
     };
 
-    private ContentChangedListener mNavigationEventsListener = sEmptyContentChangedListener;
+    private ContentTreePositionListener mContentTreePositionListener = sEmptyContentTreePositionListener;
     private NetworkEventsListener mNetworkEventsListener = sEmptyNetworkEventsListener;
 
+    private View mContainerEmpty;
     private View mContainerProgress;
     private LinearLayout mContainerList;
     private View mGoUpView;
@@ -162,13 +195,13 @@ public class ItemsBrowserFragment extends DialogFragment {
     private LinkedList<ScItem> mItems = new LinkedList<ScItem>();
 
     private boolean mLoadContentWithoutConnection = false;
-    private boolean mIsInitialized = true;
 
+    private boolean mIsInitialized = false;
+
+    /**
+     * Describes whether fragment is created for the first time, or recreated from retained instance.
+     */
     private boolean mFirstLoad = true;
-
-    public boolean isInitialized() {
-        return mIsInitialized;
-    }
 
     private final AdapterView.OnItemClickListener mOnItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
@@ -188,12 +221,12 @@ public class ItemsBrowserFragment extends DialogFragment {
     private final OnClickListener mOnUpClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
-            LOGD("UP clicked in: " + mItems.peek().getId());
+            LOGV("UP clicked in: " + mItems.peek().getId());
             mItems.pop();
 
             final ScItem newCurrentItem = mItems.peek();
             String newCurrentItemId = newCurrentItem.getId();
-            LOGD("New folder item id: " + newCurrentItemId);
+            LOGV("New folder item id: " + newCurrentItemId);
 
             reloadChildrenFromNetwork(newCurrentItemId);
             reloadChildrenFromDatabase(newCurrentItemId);
@@ -201,7 +234,7 @@ public class ItemsBrowserFragment extends DialogFragment {
             if (mItems.size() == 1) {
                 mGoUpView.setVisibility(View.GONE);
             }
-            mNavigationEventsListener.onGoUp(newCurrentItem);
+            mContentTreePositionListener.onGoUp(newCurrentItem);
         }
     };
 
@@ -209,12 +242,10 @@ public class ItemsBrowserFragment extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // TODO: replace inflation with code
         final View v = inflater.inflate(R.layout.fragment_items_browser, container, false);
 
         mContainerProgress = v.findViewById(R.id.container_progress);
@@ -246,12 +277,12 @@ public class ItemsBrowserFragment extends DialogFragment {
         listParams.weight = 1;
         mContainerList.addView(mListView, listParams);
 
-        final View empty = onCreateEmptyView(inflater);
-        empty.setVisibility(View.GONE);
+        mContainerEmpty = onCreateEmptyView(inflater);
+        mContainerEmpty.setVisibility(View.GONE);
         final LinearLayout.LayoutParams emptyParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0);
         emptyParams.weight = 1;
-        mContainerList.addView(empty, emptyParams);
-        mListView.setEmptyView(empty);
+        mContainerList.addView(mContainerEmpty, emptyParams);
+        mListView.setEmptyView(mContainerEmpty);
 
         // Add footer view if exists
         final View footer = onCreateFooterView(inflater);
@@ -264,7 +295,7 @@ public class ItemsBrowserFragment extends DialogFragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        setInitialized(mIsInitialized);
+        changeProgressVisibility(mIsInitialized);
 
         mListView.setOnItemClickListener(mOnItemClickListener);
         mListView.setOnItemLongClickListener(mOnItemLongClickListener);
@@ -272,10 +303,14 @@ public class ItemsBrowserFragment extends DialogFragment {
         if (mFirstLoad || mItems.size() == 0) {
             if (mLoadContentWithoutConnection) {
                 loadRootFromCache();
-                setInitialized(false);
+
+                mIsInitialized = true;
+                changeProgressVisibility(mIsInitialized);
             } else if (mApiSession != null && mRequestQueue != null) {
                 loadRootFromNetwork();
-                setInitialized(true);
+
+                mIsInitialized = false;
+                changeProgressVisibility(mIsInitialized);
             }
 
             mFirstLoad = false;
@@ -326,7 +361,6 @@ public class ItemsBrowserFragment extends DialogFragment {
      */
     protected View onCreateEmptyView(LayoutInflater inflater) {
         final TextView empty = new TextView(getActivity());
-        empty.setText("Empty");
         empty.setGravity(Gravity.CENTER);
         return empty;
     }
@@ -353,10 +387,9 @@ public class ItemsBrowserFragment extends DialogFragment {
         a.recycle();
     }
 
-    private void setInitialized(boolean isInitialized) {
-        mIsInitialized = isInitialized;
-        mContainerProgress.setVisibility(isInitialized ? View.VISIBLE : View.GONE);
-        mContainerList.setVisibility(isInitialized ? View.GONE : View.VISIBLE);
+    private void changeProgressVisibility(boolean isInitialized) {
+        mContainerProgress.setVisibility(isInitialized ? View.GONE : View.VISIBLE);
+        mContainerList.setVisibility(isInitialized ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -375,9 +408,8 @@ public class ItemsBrowserFragment extends DialogFragment {
     }
 
     /**
-     *
      * @param requestQueue {@link RequestQueue} which will execute the requests.
-     * @param session {@link ScApiSession} to create the requests.
+     * @param session      {@link ScApiSession} to create the requests.
      */
     public void setApiProperties(RequestQueue requestQueue, ScApiSession session) {
         mRequestQueue = requestQueue;
@@ -389,7 +421,7 @@ public class ItemsBrowserFragment extends DialogFragment {
     }
 
     /**
-     *
+     * TODO
      */
     public void setLoadContentWithoutConnection(boolean loadContentWithoutConnection) {
         mLoadContentWithoutConnection = true;
@@ -397,6 +429,8 @@ public class ItemsBrowserFragment extends DialogFragment {
     }
 
     /**
+     * TODO
+     *
      * @param rootFolder
      */
     public void setRootFolder(String rootFolder) {
@@ -456,15 +490,17 @@ public class ItemsBrowserFragment extends DialogFragment {
     private final Response.Listener<ItemsResponse> mFirstItemResponseListener = new Response.Listener<ItemsResponse>() {
         @Override
         public void onResponse(ItemsResponse itemsResponse) {
+            mIsInitialized = true;
+            changeProgressVisibility(mIsInitialized);
+
             if (itemsResponse.getItems().size() == 0) {
-                // TODO: handle empty root view;
                 return;
             }
-            setInitialized(false);
+
             ScItem item = itemsResponse.getItems().get(0);
             mItems.push(item);
 
-            mNavigationEventsListener.onInitialized(item);
+            mContentTreePositionListener.onInitialized(item);
             mNetworkEventsListener.onUpdateSuccess(itemsResponse);
 
             final Bundle bundle = new Bundle();
@@ -483,7 +519,12 @@ public class ItemsBrowserFragment extends DialogFragment {
     private Response.ErrorListener mErrorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
-            setInitialized(false);
+            LOGE("Error response: " + error);
+
+            if (!mIsInitialized) {
+                mIsInitialized = true;
+                changeProgressVisibility(mIsInitialized);
+            }
             mNetworkEventsListener.onUpdateError(error);
         }
     };
@@ -504,7 +545,7 @@ public class ItemsBrowserFragment extends DialogFragment {
             final ScItem item = data.get(0);
             if (item != null) mItems.push(item);
 
-            mNavigationEventsListener.onInitialized(item);
+            mContentTreePositionListener.onInitialized(item);
 
             final Bundle bundle = new Bundle();
             bundle.putString(EXTRA_ITEM_ID, item.getId());
@@ -541,6 +582,26 @@ public class ItemsBrowserFragment extends DialogFragment {
     };
 
     /**
+     * @param text
+     */
+    public void setEmptyText(String text) {
+        if (mContainerEmpty instanceof TextView) {
+            final TextView tv = (TextView) mContainerEmpty;
+            tv.setText(text);
+        }
+    }
+
+    /**
+     * @param textResourceId
+     */
+    public void setEmptyText(int textResourceId) {
+        if (mContainerEmpty instanceof TextView) {
+            final TextView tv = (TextView) mContainerEmpty;
+            tv.setText(textResourceId);
+        }
+    }
+
+    /**
      * Show items as list.
      */
     public void setListStyle() {
@@ -550,7 +611,7 @@ public class ItemsBrowserFragment extends DialogFragment {
     /**
      * Show items as grid.
      *
-     * @param columnCount Number of culumns. Default value is {@link #DEFAULT_GRID_COLUMNS_COUNT}
+     * @param columnCount Number of columns. Default value is {@link #DEFAULT_GRID_COLUMNS_COUNT}
      */
     public void setGridStyle(int columnCount) {
         mStyle = STYLE_GRID;
@@ -576,7 +637,7 @@ public class ItemsBrowserFragment extends DialogFragment {
         String itemId = item.getId();
         reloadChildrenFromNetwork(itemId);
         reloadChildrenFromDatabase(itemId);
-        mNavigationEventsListener.onGoInside(item);
+        mContentTreePositionListener.onGoInside(item);
     }
 
     /**
@@ -588,10 +649,10 @@ public class ItemsBrowserFragment extends DialogFragment {
     /**
      * Register a callback to be invoked when content state changes.
      *
-     * @param navigationEventsListener the callback to be invoked.
+     * @param contentTreePositionListener the callback to be invoked.
      */
-    public void setContentEventsListener(ContentChangedListener navigationEventsListener) {
-        mNavigationEventsListener = navigationEventsListener;
+    public void setContentTreePositionListener(ContentTreePositionListener contentTreePositionListener) {
+        mContentTreePositionListener = contentTreePositionListener;
     }
 
     /**

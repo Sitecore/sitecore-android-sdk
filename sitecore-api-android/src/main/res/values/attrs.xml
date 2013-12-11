@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="ItemsBrowserFragment">
+        <!-- Styles define should we use either ListView or GridView for content -->
         <attr name="style" format="enum">
             <enum name="LIST" value="0" />
             <enum name="GRID" value="1" />
         </attr>
 
+        <!-- Column count for GRID style -->
         <attr name="columnCount" format="integer" />
+
+        <!-- Root folder in content tree. Default value is '/sitecore/content/Home' -->
         <attr name="rootFolder" format="string" />
+
+        <!-- Set to true to show content from cache without setting apiSession -->
+        <attr name="loadContentWithoutConnection" format="boolean" />
     </declare-styleable>
 </resources>
