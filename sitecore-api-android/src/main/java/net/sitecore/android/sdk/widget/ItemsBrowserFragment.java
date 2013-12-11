@@ -42,31 +42,40 @@ import static android.app.LoaderManager.LoaderCallbacks;
 import static android.view.View.OnClickListener;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
-import static net.sitecore.android.sdk.api.LogUtils.LOGD;
 import static net.sitecore.android.sdk.api.LogUtils.LOGE;
 import static net.sitecore.android.sdk.api.LogUtils.LOGV;
 import static net.sitecore.android.sdk.api.provider.ScItemsContract.Items;
 
 /**
- * A fragment that allows to browse through content tree.
- * <p/>
- * Fragment provides default UI, and it can be fully customized.
- * <p/>
- * <strong>UI customization</strong>
- * <p/>
- * Since fragment extends {@link DialogFragment}, it can be used as modal dialog as well.
- * <p/>
- * <p><strong>Listening to events</strong></p>
  * <p>
- * Custom logic can be added to next events:
+ * A fragment that allows to browse through Sitecore content tree. It manages all network events
+ * and caches successful responses using {@link ScItemsProvider} content provider.
+ * Under the hood items are loaded using {@link ScApiSession} and cached in database using {@link ScItemsProvider}.
  * </p>
+ * Since fragment extends {@link DialogFragment}, it can be used as modal dialog as well.
+ * <p><strong>UI customization</strong></p>
+ * Fragment provides default UI, and it can be fully customized. By default content is represented by {@link ListView},
+ * and it can be changed to {@link GridView} using {@link #setGridStyle(int)} method.
+ * Next methods also can be overridden:
  * <ul>
- * <li> method1
- * <li> method2
+ * <li> {@link #onCreateHeaderView} creates view, which is shown above the content and always visible.
+ * <li> {@link #onCreateFooterView} creates view, which is shown below the content and always visible.
+ * <li> {@link #onCreateUpButtonView} creates 'up' navigation button.
+ * <li> {@link #onCreateEmptyView} creates view, which will be shown if there's no content on current level.
+ * By default empty {@link TextView} is created, and it's value can be set using {@link #setEmptyText}.
+ * <li> {@link #onCreateItemViewBinder} returns instance of {@link ItemViewBinder} interface,
+ * which defines how {@link View} will be create from {@link ScItem}.
  * </ul>
- * <p/>
- * Under the hood items are loaded using {@link ScApiSession}
- * and cached in database using {@link ScItemsProvider}.
+ * <p>
+ * <strong>Listening to events</strong>
+ * </p>
+ * Next methods can be used for listening various events:
+ * <ul>
+ * <li> {@link #onScItemClick(ScItem)}
+ * <li> {@link #onScItemLongClick(ScItem)}
+ * <li> {@link #setContentTreePositionListener}
+ * <li> {@link #setNetworkEventsListener}
+ * </ul>
  */
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class ItemsBrowserFragment extends DialogFragment {
@@ -323,7 +332,7 @@ public class ItemsBrowserFragment extends DialogFragment {
     }
 
     /**
-     * @param inflater {@link @LayoutInflater} object that can be used to inflate any views.
+     * @param inflater {@link LayoutInflater} object that can be used to inflate any views.
      *
      * @return Created header view. {@code null} is returned by default.
      */
@@ -332,7 +341,7 @@ public class ItemsBrowserFragment extends DialogFragment {
     }
 
     /**
-     * @param inflater {@link @LayoutInflater} object that can be used to inflate any views.
+     * @param inflater {@link LayoutInflater} object that can be used to inflate any views.
      *
      * @return Created footer view. {@code null} is returned by default.
      */
@@ -344,9 +353,9 @@ public class ItemsBrowserFragment extends DialogFragment {
      * Creates view, intended for Up navigation through items tree. This view will be added above items browser list.
      * After creation {@link OnClickListener} will be set to created view, which triggers navigation up.
      *
-     * @param inflater {@link @LayoutInflater} object that can be used to inflate any views.
+     * @param inflater {@link LayoutInflater} object that can be used to inflate any views.
      *
-     * @return View, intended for Up navigation through items tree. After creation will have
+     * @return View, intended for Up navigation through items tree.
      */
     protected View onCreateUpButtonView(LayoutInflater inflater) {
         final Button upButton = new Button(getActivity());
@@ -355,7 +364,7 @@ public class ItemsBrowserFragment extends DialogFragment {
     }
 
     /**
-     * @param inflater {@link @LayoutInflater} object that can be used to inflate any views.
+     * @param inflater {@link LayoutInflater} object that can be used to inflate any views.
      *
      * @return Created view.
      */
@@ -366,9 +375,10 @@ public class ItemsBrowserFragment extends DialogFragment {
     }
 
     /**
-     * Override this method to change the way ListItem views are created from {@link ScItem}.
+     * Override this method to change the way content views are created from {@link ScItem}.
      *
      * @return {@link ItemViewBinder}
+     * @see ScItemsAdapter
      */
     protected ItemViewBinder onCreateItemViewBinder() {
         return mItemViewBinder;
@@ -383,6 +393,8 @@ public class ItemsBrowserFragment extends DialogFragment {
         mColumnCount = a.getInt(R.styleable.ItemsBrowserFragment_columnCount, DEFAULT_GRID_COLUMNS_COUNT);
         String root = a.getString(R.styleable.ItemsBrowserFragment_rootFolder);
         if (!TextUtils.isEmpty(root)) mRootFolder = root;
+
+        mLoadContentWithoutConnection = a.getBoolean(R.styleable.ItemsBrowserFragment_loadContentWithoutConnection, false);
 
         a.recycle();
     }
@@ -421,17 +433,20 @@ public class ItemsBrowserFragment extends DialogFragment {
     }
 
     /**
-     * TODO
+     * @param loadContentWithoutConnection Use {@code true} to show cached content without setting {@link #setApiProperties}.
      */
     public void setLoadContentWithoutConnection(boolean loadContentWithoutConnection) {
         mLoadContentWithoutConnection = true;
-        if (getView() != null) loadRootFromNetwork();
+        if (getView() != null) {
+            loadRootFromCache();
+
+            mIsInitialized = true;
+            changeProgressVisibility(mIsInitialized);
+        }
     }
 
     /**
-     * TODO
-     *
-     * @param rootFolder
+     * @param rootFolder Top-level content tree folder. Fragment will be initialized using it as current folder.
      */
     public void setRootFolder(String rootFolder) {
         mRootFolder = rootFolder;
@@ -463,14 +478,14 @@ public class ItemsBrowserFragment extends DialogFragment {
     }
 
     private void reloadChildrenFromDatabase(String itemId) {
-        LOGD("Reload db children of: " + itemId);
+        LOGV("Reload db children of: " + itemId);
         final Bundle bundle = new Bundle();
         bundle.putString(EXTRA_ITEM_ID, itemId);
         getLoaderManager().restartLoader(LOADER_CHILD_ITEMS, bundle, mChildrenLoader);
     }
 
     private void reloadChildrenFromNetwork(String itemId) {
-        LOGD("getChildren: " + itemId);
+        LOGV("getChildren: " + itemId);
         if (mApiSession != null) {
             mNetworkEventsListener.onUpdateRequestStarted();
             ScRequest request = mApiSession.getItems(mItemsResponseListener, mErrorListener)
@@ -582,7 +597,7 @@ public class ItemsBrowserFragment extends DialogFragment {
     };
 
     /**
-     * @param text
+     * @param text Text to set.
      */
     public void setEmptyText(String text) {
         if (mContainerEmpty instanceof TextView) {
@@ -592,7 +607,7 @@ public class ItemsBrowserFragment extends DialogFragment {
     }
 
     /**
-     * @param textResourceId
+     * @param textResourceId String resource id.
      */
     public void setEmptyText(int textResourceId) {
         if (mContainerEmpty instanceof TextView) {
@@ -629,7 +644,7 @@ public class ItemsBrowserFragment extends DialogFragment {
      * @param item which received click event.
      */
     public void onScItemClick(ScItem item) {
-        LOGD("New folder item id: " + item.getId());
+        LOGV("New folder item id: " + item.getId());
         mItems.push(item);
 
         if (mGoUpView.getVisibility() == View.GONE) mGoUpView.setVisibility(View.VISIBLE);
