@@ -33,7 +33,7 @@ public class EventsPlugin extends ScPlugin {
     public void exec(String method, ScParams params, ScCallbackContext callbackContext) throws JSONException {
         mCallbackContext = callbackContext;
 
-        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+        if (!VersionUtils.isIceCreamSandwichOrLater()) {
             mCallbackContext.sendError("Creating calendar events is only supported in Android 4.0 or later!");
             return;
         }

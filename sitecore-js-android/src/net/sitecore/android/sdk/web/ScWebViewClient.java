@@ -1,7 +1,7 @@
 package net.sitecore.android.sdk.web;
 
+import android.annotation.TargetApi;
 import android.net.Uri;
-import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.WebView;
@@ -31,10 +31,11 @@ class ScWebViewClient extends WebViewClient {
         mPluginManager = pluginManager;
     }
 
+    @TargetApi(19)
     @Override
     public void onPageFinished(WebView view, String url) {
         super.onPageFinished(view, url);
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        if (VersionUtils.isKitKatOrLater()) {
             view.evaluateJavascript(mPluginManager.getInjectableJs(), null);
             view.evaluateJavascript("javascript: scmobile.utils.sendScmobileReadyEvent()", null);
         } else {

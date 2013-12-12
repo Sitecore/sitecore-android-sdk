@@ -1,7 +1,6 @@
 package net.sitecore.android.sdk.web;
 
 import android.net.Uri;
-import android.os.Build;
 import android.webkit.WebView;
 
 import static net.sitecore.android.sdk.web.LogUtils.LOGD;
@@ -74,7 +73,7 @@ class ScCallbackContext {
         mWebView.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                if (VersionUtils.isKitKatOrLater()) {
                     mWebView.evaluateJavascript("javascript: " + message, null);
                 } else {
                     mWebView.loadUrl("javascript: " + message);
