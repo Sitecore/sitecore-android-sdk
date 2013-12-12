@@ -1,7 +1,6 @@
 package net.sitecore.android.sdk.api;
 
 import java.util.HashMap;
-import java.util.Set;
 
 import net.sitecore.android.sdk.api.model.ScItem;
 

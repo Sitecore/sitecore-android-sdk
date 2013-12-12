@@ -1,6 +1,9 @@
 package net.sitecore.android.sdk.api.model;
+
+import net.sitecore.android.sdk.api.ScRequest;
+
 /**
- * Represents Scope parameter of {@code ScRequest}.
+ * Represents Scope parameter of {@link ScRequest}.
  */
 public enum RequestScope {
     SELF("s"), PARENT("p"), CHILDREN("c");

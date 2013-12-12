@@ -8,8 +8,6 @@ import com.android.volley.Response;
 
 import java.util.ArrayList;
 
-import net.sitecore.android.sdk.api.model.GetRenderingHtmlRequest;
-
 import static net.sitecore.android.sdk.api.LogUtils.LOGD;
 import static net.sitecore.android.sdk.api.RequestOptions.AuthOptions;
 

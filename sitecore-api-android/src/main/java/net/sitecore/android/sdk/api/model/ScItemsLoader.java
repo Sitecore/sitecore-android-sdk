@@ -153,12 +153,6 @@ public class ScItemsLoader extends AsyncTaskLoader<List<ScItem>> {
         super.onForceLoad();
     }
 
-    @Override
-    public void onContentChanged() {
-        super.onContentChanged();
-        LOGV("ScItemsLoader.onContentChanged()");
-    }
-
     private interface ItemsQuery {
         String[] PROJECTION = {
                 // Items columns

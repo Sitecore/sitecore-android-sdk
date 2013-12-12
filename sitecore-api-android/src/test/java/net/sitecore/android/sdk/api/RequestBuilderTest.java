@@ -9,7 +9,6 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-import net.sitecore.android.sdk.api.model.GetRenderingHtmlRequest;
 import net.sitecore.android.sdk.api.model.PayloadType;
 import net.sitecore.android.sdk.api.model.RequestScope;
 

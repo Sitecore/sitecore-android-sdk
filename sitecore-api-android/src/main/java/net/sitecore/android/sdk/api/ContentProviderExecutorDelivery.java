@@ -13,11 +13,12 @@ import java.util.ArrayList;
 import java.util.concurrent.Executor;
 
 import net.sitecore.android.sdk.api.provider.ScItemsContract;
+import net.sitecore.android.sdk.api.provider.ScItemsProvider;
 
 import static net.sitecore.android.sdk.api.LogUtils.LOGE;
 
 /**
- * Stores successful results in {@link net.sitecore.android.sdk.api.provider.ScItemsProvider} and delivers response
+ * Stores successful results in {@link ScItemsProvider} and delivers response.
  */
 class ContentProviderExecutorDelivery extends ExecutorDelivery {
 

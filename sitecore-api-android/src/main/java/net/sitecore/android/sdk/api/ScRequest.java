@@ -20,7 +20,6 @@ import java.util.Map;
 import org.json.JSONException;
 
 import net.sitecore.android.sdk.api.model.ScError;
-import net.sitecore.android.sdk.api.model.ScErrorResponse;
 
 import static net.sitecore.android.sdk.api.LogUtils.LOGD;
 
@@ -110,7 +109,7 @@ public abstract class ScRequest<T extends ScResponse> extends Request<T> {
             LOGD(json);
             ScResponse scResponse = parseResponse(json);
             if (scResponse.isSuccess()) {
-                return Response.success((T)scResponse, HttpHeaderParser.parseCacheHeaders(response));
+                return Response.success((T) scResponse, HttpHeaderParser.parseCacheHeaders(response));
             } else {
                 return Response.error(new ScError(scResponse.getStatusCode(),
                         ((ScErrorResponse) scResponse).getErrorMessage()));

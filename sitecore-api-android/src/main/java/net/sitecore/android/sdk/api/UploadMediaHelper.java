@@ -10,7 +10,10 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-/** <p>This class is designed to process media upload request.</p> Under the hood it uses {@link HttpURLConnection} */
+/**
+ * <p>This class is designed to process media upload request.</p>
+ * Under the hood it uses {@link HttpURLConnection}.
+ */
 class UploadMediaHelper {
     private static final String BOUNDARY = "----WebKitFormBoundaryT5WjphCNABLVDqLd";
     private static final int BUFFER_SIZE = 1024; // bytes

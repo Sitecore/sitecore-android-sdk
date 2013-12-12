@@ -1,4 +1,4 @@
-package net.sitecore.android.sdk.api.model;
+package net.sitecore.android.sdk.api;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Response;

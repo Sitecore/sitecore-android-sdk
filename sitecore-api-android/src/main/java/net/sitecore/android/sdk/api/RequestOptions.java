@@ -81,7 +81,6 @@ class RequestOptions {
         int mPageSize = UNDEFINED;
 
         /**
-         *
          * @return Query string starting with '?' or empty string.
          */
         String getQueryParameters() {

@@ -3,11 +3,9 @@ package net.sitecore.android.sdk.api;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import net.sitecore.android.sdk.api.model.ScErrorResponse;
-
 public abstract class ScResponseParser {
 
-    public abstract ScResponse parseSuccess(int statusCode, JSONObject success) throws JSONException ;
+    public abstract ScResponse parseSuccess(int statusCode, JSONObject success) throws JSONException;
 
     public ScResponse parseJson(String json) throws JSONException {
         JSONObject response = new JSONObject(json);

@@ -8,12 +8,8 @@ import com.android.volley.Response;
 import java.util.Collections;
 import java.util.Set;
 
-import net.sitecore.android.sdk.api.model.CreateItemRequest;
-import net.sitecore.android.sdk.api.model.DeleteItemsRequest;
-import net.sitecore.android.sdk.api.model.GetItemsRequest;
 import net.sitecore.android.sdk.api.model.PayloadType;
 import net.sitecore.android.sdk.api.model.RequestScope;
-import net.sitecore.android.sdk.api.model.UpdateItemFieldsRequest;
 
 import static net.sitecore.android.sdk.api.LogUtils.LOGD;
 

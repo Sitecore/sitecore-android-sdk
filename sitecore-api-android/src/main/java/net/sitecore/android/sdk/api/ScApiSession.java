@@ -7,12 +7,8 @@ import com.android.volley.Response.Listener;
 
 import java.util.ArrayList;
 
-import net.sitecore.android.sdk.api.model.CreateItemRequest;
-import net.sitecore.android.sdk.api.model.DeleteItemsRequest;
 import net.sitecore.android.sdk.api.model.DeleteItemsResponse;
-import net.sitecore.android.sdk.api.model.GetItemsRequest;
 import net.sitecore.android.sdk.api.model.ItemsResponse;
-import net.sitecore.android.sdk.api.model.UpdateItemFieldsRequest;
 
 /**
  * Interface for interaction with Sitecore Item Web API.

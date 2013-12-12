@@ -29,6 +29,10 @@ public class ScItem implements Parcelable {
     private int mVersion;
     private List<ScField> mFields;
 
+    ScItem() {
+        mFields = new ArrayList<ScField>();
+    }
+
     @Override
     public String toString() {
         return mDisplayName;
@@ -110,15 +114,11 @@ public class ScItem implements Parcelable {
         return mFields;
     }
 
-    ScItem() {
-        mFields = new ArrayList<ScField>();
-    }
-
     void addField(ScField field) {
         mFields.add(field);
     }
 
-    protected ScItem(Parcel in) {
+    private ScItem(Parcel in) {
         mDatabase = in.readString();
         mDisplayName = in.readString();
         mHasChildren = in.readByte() != 0x00;
@@ -252,7 +252,6 @@ public class ScItem implements Parcelable {
             return null;
         }
     }
-
 
 
     public String getMediaDownloadUrl(MediaParameters params) {

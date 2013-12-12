@@ -14,7 +14,7 @@ import net.sitecore.android.sdk.api.ScResponseParser;
 import net.sitecore.android.sdk.api.provider.ScItemsContract.Fields;
 import net.sitecore.android.sdk.api.provider.ScItemsContract.Items;
 
-/** Class represents response for {@link DeleteItemsRequest}. */
+/** Class represents response for {@link net.sitecore.android.sdk.api.DeleteItemsRequest}. */
 public class DeleteItemsResponse extends ScResponse {
 
     private List<String> mDeletedItemIds;
@@ -51,7 +51,7 @@ public class DeleteItemsResponse extends ScResponse {
         return operations;
     }
 
-    static class DeleteItemsResponseParser extends ScResponseParser {
+    public static class DeleteItemsResponseParser extends ScResponseParser {
         @Override
         public ScResponse parseSuccess(int statusCode, JSONObject success) throws JSONException {
             DeleteItemsResponse response = new DeleteItemsResponse(statusCode);

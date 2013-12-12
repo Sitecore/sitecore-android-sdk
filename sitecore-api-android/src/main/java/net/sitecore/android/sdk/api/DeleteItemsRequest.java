@@ -1,15 +1,15 @@
-package net.sitecore.android.sdk.api.model;
+package net.sitecore.android.sdk.api;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 
 import org.json.JSONException;
 
-import net.sitecore.android.sdk.api.ScRequest;
-import net.sitecore.android.sdk.api.ScResponse;
+import net.sitecore.android.sdk.api.model.DeleteItemsResponse;
 
 /**
  * Class represents delete item request.
+ *
  * @see CreateItemRequest
  * @see UpdateItemFieldsRequest
  * @see GetItemsRequest
@@ -19,9 +19,10 @@ public class DeleteItemsRequest extends ScRequest<DeleteItemsResponse> {
 
     /**
      * Creates delete request to delete item with specified url.
-     * @param url item full url to delete
+     *
+     * @param url             item full url to delete
      * @param successListener success listener for request
-     * @param errorListener error listener for request
+     * @param errorListener   error listener for request
      */
     public DeleteItemsRequest(String url,
             Response.Listener<DeleteItemsResponse> successListener,

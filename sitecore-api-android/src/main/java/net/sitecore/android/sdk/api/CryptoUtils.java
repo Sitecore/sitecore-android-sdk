@@ -27,8 +27,10 @@ class CryptoUtils {
         boolean hasExp = xmlDsig.contains(Tags.EXP_START) && xmlDsig.contains(Tags.EXP_END);
         if (!hasExp) throw new IllegalArgumentException("RSA exponent not found in response");
 
-        String mod = xmlDsig.substring(xmlDsig.indexOf(Tags.MOD_START) + Tags.MOD_START.length(), xmlDsig.indexOf(Tags.MOD_END));
-        String exp= xmlDsig.substring(xmlDsig.indexOf(Tags.EXP_START) + Tags.EXP_START.length(), xmlDsig.indexOf(Tags.EXP_END));
+        String mod = xmlDsig.substring(xmlDsig.indexOf(Tags.MOD_START) + Tags.MOD_START.length(),
+                xmlDsig.indexOf(Tags.MOD_END));
+        String exp = xmlDsig.substring(xmlDsig.indexOf(Tags.EXP_START) + Tags.EXP_START.length(),
+                xmlDsig.indexOf(Tags.EXP_END));
 
         BigInteger modulus = new BigInteger(1, Base64.decode(mod, Base64.DEFAULT));
         BigInteger exponent = new BigInteger(1, Base64.decode(exp, Base64.DEFAULT));

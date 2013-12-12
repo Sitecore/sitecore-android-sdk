@@ -17,9 +17,10 @@ import net.sitecore.android.sdk.api.UploadMediaService;
 
 import static net.sitecore.android.sdk.api.provider.ScItemsContract.Fields;
 
-/** Class represents response for {@link CreateItemRequest}, {@link UpdateItemFieldsRequest}, {@link GetItemsRequest},
+/**
+ * Class represents response for {@link net.sitecore.android.sdk.api.CreateItemRequest}, {@link net.sitecore.android.sdk.api.UpdateItemFieldsRequest}, {@link net.sitecore.android.sdk.api.GetItemsRequest},
  * and response for  {@link UploadMediaService Uploading media item}.
- * */
+ */
 public class ItemsResponse extends ScResponse {
 
     private int mTotalCount;
@@ -100,7 +101,7 @@ public class ItemsResponse extends ScResponse {
 
             Iterator<String> keyIterator = fieldsObject.keys();
             while (keyIterator.hasNext()) {
-                String id =  keyIterator.next();
+                String id = keyIterator.next();
                 item.addField(parseField(id, fieldsObject.getJSONObject(id)));
             }
             return item;
