@@ -12,18 +12,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.sitecore.android.sdk.api.provider.ScItemsContract.Items;
+import net.sitecore.android.sdk.api.provider.ScItemsProvider;
 
 import static net.sitecore.android.sdk.api.LogUtils.LOGV;
 import static net.sitecore.android.sdk.api.provider.ScItemsContract.Fields;
 import static net.sitecore.android.sdk.api.provider.ScItemsDatabase.Tables;
 
+/**
+ * A loader that queries {@link ScItemsProvider} and returns {@code List<ScItem>}.
+ */
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class ScItemsLoader extends AsyncTaskLoader<List<ScItem>> {
 
     private final ForceLoadContentObserver mObserver;
 
-    private String mSelection;
-    private String[] mSelectionArgs;
+    private final String mSelection;
+    private final String[] mSelectionArgs;
 
     private List<ScItem> mItems;
     private ContentResolver mContentResolver;
@@ -111,7 +115,6 @@ public class ScItemsLoader extends AsyncTaskLoader<List<ScItem>> {
         final ScField.Type type = ScField.Type.getByName(c.getString(ItemsQuery.FIELD_TYPE));
 
         return ScField.createFieldFromType(type, fieldName, fieldId, fieldValue);
-
     }
 
     @Override
@@ -124,8 +127,6 @@ public class ScItemsLoader extends AsyncTaskLoader<List<ScItem>> {
         mItems = data;
 
         if (isStarted()) super.deliverResult(data);
-
-        //TODO: release old resources
     }
 
     @Override
