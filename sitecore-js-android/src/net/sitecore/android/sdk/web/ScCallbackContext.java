@@ -69,7 +69,7 @@ class ScCallbackContext {
     }
 
     private void exec(final String message) {
-        LOGD(message, null);
+        LOGD(message);
         mWebView.postDelayed(new Runnable() {
             @Override
             public void run() {
