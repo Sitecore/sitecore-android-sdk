@@ -12,8 +12,12 @@ import static net.sitecore.android.sdk.web.LogUtils.LOGE;
 /**
  * Plugin for showing android alert dialog.
  * <p>Example :
- * <pre>scmobile.notification.alert('Normal alert', 'message content',
- *          alertCallback, 'button cancel, button ok, button 3, button 4');</pre>
+ * <pre>
+ * scmobile.notification.alert('Normal alert', 'message content',
+ *          alertCallback, 'button cancel, button ok, button 3, button 4');
+ * </pre>
+ *
+ * @since Sitecore Mobile SDK for Android 1.0
  */
 public class AlertPlugin extends ScPlugin {
 

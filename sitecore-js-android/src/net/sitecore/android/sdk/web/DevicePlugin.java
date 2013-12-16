@@ -10,6 +10,8 @@ import android.provider.Settings;
  *     var device_name = scmobile.device.name;
  *     var device_uuid = scmobile.device.uuid;
  * </pre>
+ *
+ * @since Sitecore Mobile SDK for Android 1.0
  */
 public final class DevicePlugin extends ScPlugin {
 

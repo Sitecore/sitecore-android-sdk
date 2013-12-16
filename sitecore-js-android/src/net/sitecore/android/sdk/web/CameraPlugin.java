@@ -32,6 +32,8 @@ import org.json.JSONException;
  *          scmobile.camera.getPicture(onSuccess, onError, options);
  *      }
  * </pre>
+ *
+ * @since Sitecore Mobile SDK for Android 1.0
  */
 public final class CameraPlugin extends ScPlugin {
 

@@ -13,6 +13,9 @@ import static android.provider.CalendarContract.EXTRA_EVENT_BEGIN_TIME;
 import static android.provider.CalendarContract.EXTRA_EVENT_END_TIME;
 import static android.provider.CalendarContract.Events;
 
+/**
+ * @since Sitecore Mobile SDK for Android 1.1
+ */
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class EventsPlugin extends ScPlugin {
     private static final int REQUEST_NEW_EVENT = 2;
