@@ -12,6 +12,7 @@ buildscript {
 
 apply plugin: 'android-library'
 apply plugin: 'android-test'
+apply plugin: 'maven-publish'
 
 repositories {
     mavenCentral()
@@ -40,5 +41,21 @@ android {
     sourceSets {
         //instrumentTest.setRoot('src/test')
     }
-
 }
+
+android.libraryVariants
+publishing {
+    publications {
+        maven(MavenPublication) {
+            artifact '/build/libs/' + POM_ARTIFACT_ID + '-' + VERSION_NAME + '.aar'
+        }
+    }
+    repositories {
+        maven {
+            //url "../../build/release/aar"
+            url project.rootProject.projectDir.absolutePath + "/build/release/aar"
+        }
+    }
+}
+
+build.finalizedBy(publish)

@@ -9,6 +9,7 @@ buildscript {
 }
 
 apply plugin: 'android-library'
+apply plugin: 'maven-publish'
 
 dependencies {
     compile 'com.android.support:support-v4:18.0.0'
@@ -32,3 +33,19 @@ android {
         }
     }
 }
+
+android.libraryVariants
+publishing {
+    publications {
+        maven(MavenPublication) {
+            artifact '/build/libs/' + POM_ARTIFACT_ID + '-' + VERSION_NAME + '.aar'
+        }
+    }
+    repositories {
+        maven {
+            url project.rootProject.projectDir.absolutePath + "/build/release/aar"
+        }
+    }
+}
+
+build.finalizedBy(publish)
