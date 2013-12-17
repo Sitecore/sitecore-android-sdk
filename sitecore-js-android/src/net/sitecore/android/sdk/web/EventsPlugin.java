@@ -14,7 +14,6 @@ import static android.provider.CalendarContract.EXTRA_EVENT_END_TIME;
 import static android.provider.CalendarContract.Events;
 
 /**
- * @since Sitecore Mobile SDK for Android 1.1
  * Plugin for manipulating with phone events.
  * <p>Example :
  * <pre>function createEvent() {
@@ -23,6 +22,8 @@ import static android.provider.CalendarContract.Events;
  *          event.save(onSuccess, onError);
  *      }
  * </pre>
+ *
+ * @since Sitecore Mobile SDK for Android 1.1
  */
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class EventsPlugin extends ScPlugin {
