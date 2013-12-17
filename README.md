@@ -1,4 +1,4 @@
-Sitecore Mobile SDK for Android 1.0
+Sitecore Mobile SDK for Android 1.1
 ===================================
 
 Sitecore Mobile SDK for Android, is a framework that is designed to help the developer produce Android based applications that use and serve content that is managed by Sitecore. 
@@ -16,6 +16,7 @@ This enables developers to rapidly develop Android applications (across multiple
  * Send emails
  * Access to the device address book
  * Open native Google Maps navigation
+ * Create calendar events
 
 ### Java/Android API
  * Access data from Sitecore CMS
@@ -24,6 +25,7 @@ This enables developers to rapidly develop Android applications (across multiple
     * Access item fields and properties
     * Upload media items
     * Getting html rendering of an item
+ * Items Browser component for browsing through content tree with customizable UI
  * QR Code reader
  * A local SQLite DB can be used with the SDK for easy access of Sitecore items offline
 
@@ -35,6 +37,27 @@ All documentation, including installation and developer guides can be found on t
 This repository contains:
  * Source code of the Sitecore SDK for Android framework
  * Binaries of the Sitecore SDK for Android framework in [releases section][5]
+
+## Download
+
+Sitecore SDK for Android framework can be downloaded from [releases section][5] or Maven repository:
+
+```groovy
+repositories {
+    mavenCentral()
+    maven { url "http://sitecore.github.io/sitecore-android-sdk/aar" }
+}
+dependencies {
+    compile 'net.sitecore.android.sdk:sitecore-api-android:1.1'
+    
+    compile 'net.sitecore.android.sdk:sitecore-js-android:1.1'
+    compile 'com.android.support:support-v4:18.0.0'
+
+    compile 'net.sitecore.android.sdk:sitecore-qr-reader:1.1'
+    compile 'com.google.zxing:core:2.2'
+}
+```
+
 
 ## Further Information
 
