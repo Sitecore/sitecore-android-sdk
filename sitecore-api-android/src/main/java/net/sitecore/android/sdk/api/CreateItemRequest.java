@@ -22,7 +22,7 @@ public class CreateItemRequest extends ScRequest<ItemsResponse> {
     /**
      * Creates request to create item with specified fields.
      *
-     * @param url             item full url to update
+     * @param url             item full url to create.
      * @param bodyFields      {@link Map} with {@link ScField#getName()} or {@link ScField#getId()}
      *                        to {@link String} value entries
      * @param successListener success listener for request

@@ -133,7 +133,7 @@ public class MediaParameters {
         }
 
         /**
-         * The name of the Sitecore to pull the image from.
+         * The name of the Sitecore database to pull the image from.
          *
          * @param database database name.
          *

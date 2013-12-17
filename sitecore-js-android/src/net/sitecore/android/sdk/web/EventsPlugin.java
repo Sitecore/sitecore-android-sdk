@@ -15,6 +15,14 @@ import static android.provider.CalendarContract.Events;
 
 /**
  * @since Sitecore Mobile SDK for Android 1.1
+ * Plugin for manipulating with phone events.
+ * <p>Example :
+ * <pre>function createEvent() {
+ *          var event = scmobile.events.create({title: 'Event with title and description', notes: 'Event notes',
+ *              location: 'Event location', alarm: '3600'});
+ *          event.save(onSuccess, onError);
+ *      }
+ * </pre>
  */
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class EventsPlugin extends ScPlugin {
@@ -32,6 +40,15 @@ public class EventsPlugin extends ScPlugin {
         return IoUtils.readRawTextFile(mContext, R.raw.plugin_events);
     }
 
+    /**
+     * Creates event based on received params.
+     *
+     * @param method          {@code String} method name.
+     * @param params          {@link ScParams} params that will be used by action.
+     * @param callbackContext {@link ScCallbackContext} callback for action.
+     *
+     * @throws JSONException if execution fails.
+     */
     @Override
     public void exec(String method, ScParams params, ScCallbackContext callbackContext) throws JSONException {
         mCallbackContext = callbackContext;

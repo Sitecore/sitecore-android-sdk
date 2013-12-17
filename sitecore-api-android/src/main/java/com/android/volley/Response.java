@@ -32,8 +32,8 @@ public class Response<T> {
     /** Callback interface for delivering error responses. */
     public interface ErrorListener {
         /**
-         * Callback method that an error has been occurred with the
-         * provided error code and optional user-readable message.
+         * This method is called when an error happened and provides
+         * error code and optional user-readable message.
          */
         public void onErrorResponse(VolleyError error);
     }

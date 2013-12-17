@@ -8,10 +8,8 @@ import org.json.JSONException;
 /**
  * Plugin for transmission Javascript messages to Android.
  * <p>Example :
- * <pre>scmobile.plugin_console.log('message');
- * </pre>
- *
  * @since Sitecore Mobile SDK for Android 1.0
+ * <pre>scmobile.console.log('message');</pre>
  */
 public final class ConsolePlugin extends ScPlugin {
 
