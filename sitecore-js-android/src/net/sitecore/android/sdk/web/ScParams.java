@@ -154,6 +154,11 @@ class ScParams {
         return resultList;
     }
 
+    @Override
+    public String toString() {
+        return mJSONObject.toString();
+    }
+
     /** Class represents address {@code JSON} object. */
     public class ScAddress {
         public final String street;

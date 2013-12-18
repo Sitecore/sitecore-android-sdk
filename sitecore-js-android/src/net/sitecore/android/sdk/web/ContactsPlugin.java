@@ -14,23 +14,26 @@ import org.json.JSONException;
 /**
  * Plugin for manipulating with phone contacts.
  * <p>Example :
- * <pre>function createContactWithFirstLastName() {
- *     var firstName = "FirstName";
- *     createContact(firstName,"LastName",null, null, null, null, null, null);
- *     var predicate = function (contact) {
- *         return (contact.firstName.indexOf("FirstName") != -1
- *             && contact.lastName.indexOf("LastName") != -1);
- *     }
- *     var displayFirstLastName = function (contacts) {
- *         for (var i = 0; i < contacts.length; i++) {
- *             scmobile.notification.alert("Contact found", contacts[i].firstName +
- *                 " " + contacts[i].lastName, function () {
- *                 }, 'Ok');
- *         }
- *     }
- *     findContact(predicate, displayFirstLastName);
- * }
+ * <pre>function createContact(firstName, lastName, company, emails, phones, addresses, websites, birthday) {
+         var contact = scmobile.contacts.create();
+         if (firstName != null)
+            contact.firstName = firstName;
+         if (lastName != null)
+            contact.lastName = lastName;
+         if (company != null)
+            contact.company = company;
+            contact.emails = emails;
+            contact.phones = phones;
+            contact.addresses = addresses;
+            contact.websites = websites;
+         if (birthday != null)
+            contact.birthday = birthday;
+
+         contact.silentSave(onSuccess, onError);
+ }
  * </pre>
+ *
+ * @since Sitecore Mobile SDK for Android 1.0
  */
 public final class ContactsPlugin extends ScPlugin {
 

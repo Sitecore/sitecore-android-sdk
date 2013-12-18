@@ -14,7 +14,7 @@ import static net.sitecore.android.sdk.web.LogUtils.LOGD;
 /**
  * Plugin for Javascript - Google Maps interaction.
  * <p>Example :
- * <pre>{@code function openMapsFor2AddressesWithRoute() {
+ * <pre>{@code function openMapsForAddressWithRoute() {
  *     var maps = scmobile.google_maps.GoogleMaps();
  *     maps.addresses = [{
  *         country: "Russia",

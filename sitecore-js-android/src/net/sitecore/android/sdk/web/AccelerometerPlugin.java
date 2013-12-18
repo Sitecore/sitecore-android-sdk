@@ -38,6 +38,8 @@ import org.json.JSONObject;
  *         accelerometer.stop();
  *     }
  * </pre>
+ *
+ * @since Sitecore Mobile SDK for Android 1.0
  */
 public final class AccelerometerPlugin extends ScPlugin implements SensorEventListener {
 

@@ -32,6 +32,8 @@ import org.json.JSONException;
  *          scmobile.camera.getPicture(onSuccess, onError, options);
  *      }
  * </pre>
+ *
+ * @since Sitecore Mobile SDK for Android 1.0
  */
 public final class CameraPlugin extends ScPlugin {
 
@@ -102,8 +104,12 @@ public final class CameraPlugin extends ScPlugin {
     private void showGallery() {
         Intent intent = new Intent();
         intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        if (VersionUtils.isKitKatOrLater()) {
+            intent.setAction(Intent.ACTION_PICK);
+        } else {
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+        }
         mPluginManager.getActivityContext(this).startActivityForResult(intent, SOURCE_TYPE_GALLERY);
     }
 

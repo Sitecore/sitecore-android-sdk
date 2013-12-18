@@ -1,35 +1,61 @@
 buildscript {
     repositories {
         mavenCentral()
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
     }
 
     dependencies {
         classpath 'com.android.tools.build:gradle:0.6.+'
+        classpath 'com.squareup.gradle:gradle-android-test-plugin:0.9.1-SNAPSHOT'
     }
 }
 
 apply plugin: 'android-library'
+apply plugin: 'android-test'
+apply plugin: 'maven-publish'
+
+repositories {
+    mavenCentral()
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+}
 
 dependencies {
-    compile files('libs/volley.jar')
-    compile files('libs/gson-2.2.4.jar')
+    testCompile 'junit:junit:4.10'
+    testCompile 'org.robolectric:robolectric:2.3-SNAPSHOT'
+    testCompile 'com.google.mockwebserver:mockwebserver:20130706'
+
+    //instrumentTestCompile 'junit:junit:4.10'
+    //instrumentTestCompile 'org.robolectric:robolectric:2.3-SNAPSHOT'
+    //instrumentTestCompile 'com.google.mockwebserver:mockwebserver:20130706'
 }
 
 android {
-    compileSdkVersion 18
-    buildToolsVersion '18.0.1'
+    compileSdkVersion 19
+    buildToolsVersion '19'
 
     defaultConfig {
         minSdkVersion 8
-        targetSdkVersion 18
+        targetSdkVersion 19
     }
 
     sourceSets {
-        main {
-            manifest.srcFile 'AndroidManifest.xml'
-            java.srcDirs = ['src']
-            res.srcDirs = ['res']
-            assets.srcDirs = ['assets']
+        //instrumentTest.setRoot('src/test')
+    }
+}
+
+android.libraryVariants
+publishing {
+    publications {
+        maven(MavenPublication) {
+            artifact '/build/libs/' + POM_ARTIFACT_ID + '-' + VERSION_NAME + '.aar'
+        }
+    }
+    repositories {
+        maven {
+            //url "../../build/release/aar"
+            url project.rootProject.projectDir.absolutePath + "/build/release/aar"
         }
     }
 }
+
+build.finalizedBy(publish)

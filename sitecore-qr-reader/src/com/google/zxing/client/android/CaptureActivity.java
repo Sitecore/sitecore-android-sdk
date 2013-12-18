@@ -35,10 +35,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Map;
-
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.DecodeHintType;
 import com.google.zxing.Result;
@@ -48,6 +44,10 @@ import com.google.zxing.client.android.camera.CameraManager;
 import com.google.zxing.client.android.result.ResultHandler;
 import com.google.zxing.client.android.result.ResultHandlerFactory;
 
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Map;
+
 /**
  * This activity opens the camera and does the actual scanning on a background thread. It draws a
  * viewfinder to help the user place the barcode correctly, shows feedback as the image processing
@@ -56,6 +56,7 @@ import com.google.zxing.client.android.result.ResultHandlerFactory;
  * @author dswitkin@google.com (Daniel Switkin)
  * @author Sean Owen
  */
+@SuppressWarnings("deprecation")
 public class CaptureActivity extends Activity implements SurfaceHolder.Callback {
 
     private static final String TAG = CaptureActivity.class.getSimpleName();
@@ -317,6 +318,7 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
     }
 
     // Briefly show the contents of the barcode, then handle the result outside Barcode Scanner.
+    @SuppressWarnings("unchecked")
     private void handleDecodeExternally(Result rawResult, ResultHandler resultHandler, Bitmap barcode) {
 
         if (barcode != null) {

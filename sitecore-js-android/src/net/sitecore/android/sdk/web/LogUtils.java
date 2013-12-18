@@ -6,21 +6,12 @@ import android.util.Log;
 
 /**
  * Logger class.
- * <p>Use next imports for clean code:
- * <pre>
- * import static net.sitecore.android.sdk.web.LogUtils.LOGD;
- * import static net.sitecore.android.sdk.web.LogUtils.LOGE;
- * </pre>
  */
 class LogUtils {
 
     private static final String TAG = "ScMobile";
 
     private static boolean sLogEnabled = false;
-
-    public static void setLogEnabled(boolean logEnabled) {
-        sLogEnabled = logEnabled;
-    }
 
     public static void LOGD(String text) {
         if (sLogEnabled) {

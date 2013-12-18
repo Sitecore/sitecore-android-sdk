@@ -33,6 +33,8 @@ import static net.sitecore.android.sdk.web.LogUtils.LOGE;
  *      email.send(onSuccess);
  * </pre>
  * </ul>
+ *
+ * @since Sitecore Mobile SDK for Android 1.0
  */
 public final class SharePlugin extends ScPlugin {
 

@@ -8,7 +8,8 @@ import org.json.JSONException;
 /**
  * Plugin for showing Android {@link Toast} messages.
  * <p>Example :
- * <pre>scmobile.plugin_toast.showMessage('message');</pre>
+ * @since Sitecore Mobile SDK for Android 1.0
+ * <pre>scmobile.toast.showMessage('message');</pre>
  */
 public final class ToastPlugin extends ScPlugin {
 
