@@ -1,4 +1,8 @@
+com.android.volley
+com.android.volley.toolbox
+net.sitecore.android.qr
 net.sitecore.android.sdk.api
 net.sitecore.android.sdk.api.model
 net.sitecore.android.sdk.api.provider
 net.sitecore.android.sdk.web
+net.sitecore.android.sdk.widget
