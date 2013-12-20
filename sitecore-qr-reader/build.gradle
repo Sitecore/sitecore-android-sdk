@@ -38,11 +38,19 @@ android {
     }
 }
 
+task sourceJar(type: Jar) {
+    from android.sourceSets.main.allJava
+}
+
 android.libraryVariants
 publishing {
     publications {
         maven(MavenPublication) {
             artifact '/build/libs/' + POM_ARTIFACT_ID + '-' + VERSION_NAME + '.aar'
+
+            artifact sourceJar {
+                classifier "sources"
+            }
         }
     }
     repositories {
