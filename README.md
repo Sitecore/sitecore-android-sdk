@@ -78,3 +78,7 @@ SITECORE SHARED SOURCE LICENSE
  [5]: https://github.com/Sitecore/sitecore-android-sdk/releases
  [6]: http://sdn.sitecore.net/Products/Sitecore%20Mobile%20SDK/Sitecore%20Mobile%20SDK%20for%20Android/Mobile%20SDK%201,-d-,1%20for%20Android/Documentation.aspx
  
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/Sitecore/sitecore-android-sdk/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
