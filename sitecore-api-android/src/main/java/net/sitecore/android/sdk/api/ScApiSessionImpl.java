@@ -142,7 +142,7 @@ class ScApiSessionImpl implements ScApiSession {
     }
 
     @Override
-    public GetRenderingHtmlRequestBuilder getRenderingHtml(String renderingId, String itemId,
+    public GetRenderingHtmlRequestBuilder getRenderingHtmlRequest(String renderingId, String itemId,
             Listener<String> successListener, ErrorListener errorListener) {
         if (TextUtils.isEmpty(renderingId)) {
             throw new IllegalArgumentException("RenderingId cannot be empty.");

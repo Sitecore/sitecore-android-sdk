@@ -149,7 +149,7 @@ public class RequestBuilderTest extends MockedServerAndroidTestCase {
     @Test
     public void testCetRenderingHTML() {
         GetRenderingHtmlRequest request;
-        request = mSession.getRenderingHtml(TestData.Renderings.MasterSampleRendering.ID,
+        request = mSession.getRenderingHtmlRequest(TestData.Renderings.MasterSampleRendering.ID,
                 TestData.Content.LanguageItemVersions.ID, null, null)
                 .fromSite(TestData.SHELL_SITE)
                 .database("master")

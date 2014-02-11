@@ -102,7 +102,7 @@ public interface ScApiSession {
      * @param successListener Success result callback.
      * @param errorListener   Error result callback
      */
-    public GetRenderingHtmlRequestBuilder getRenderingHtml(String renderingId, String itemId,
+    public GetRenderingHtmlRequestBuilder getRenderingHtmlRequest(String renderingId, String itemId,
             Listener<String> successListener, ErrorListener errorListener);
 
     /**

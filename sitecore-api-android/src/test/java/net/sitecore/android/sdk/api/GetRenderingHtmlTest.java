@@ -18,7 +18,7 @@ public class GetRenderingHtmlTest extends MockedServerAndroidTestCase {
         ScApiSession session = ScApiSessionFactory.newAnonymousSession("http://sample.com");
 
         RequestFuture<String> future = RequestFuture.newFuture();
-        GetRenderingHtmlRequest request = session.getRenderingHtml(
+        GetRenderingHtmlRequest request = session.getRenderingHtmlRequest(
                 "{2075CBFF-REND-434D-9E1B-937782E0DE49}",
                 "{2075CBFF-ITEM-434D-9E1B-937782E0DE49}", future, future)
                 .database("master")
