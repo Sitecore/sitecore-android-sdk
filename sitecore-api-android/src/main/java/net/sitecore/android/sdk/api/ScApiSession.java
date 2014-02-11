@@ -2,6 +2,7 @@ package net.sitecore.android.sdk.api;
 
 import android.content.Context;
 
+import com.android.volley.Request;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 
@@ -85,13 +86,13 @@ public interface ScApiSession {
     public RequestBuilder deleteItemsRequest(Listener<DeleteItemsResponse> successListener, ErrorListener errorListener);
 
     /**
-     * Executes default items request (/-/item/v1/) to check result code.
+     * Creates request to read items from default path (/-/item/v1/) to check result code.
      *
      * @param context  current context.
      * @param callback Is called after request is executed with {@code true} if request succeeded (200 <= code <= 300),
      *                 and {@code false} otherwise.
      */
-    public void validate(Context context, final Listener<Boolean> callback);
+    public Request checkCredentialsRequest(Context context, final Listener<Boolean> callback);
 
     /**
      * Creates {@link GetRenderingHtmlRequestBuilder} to build special request to load

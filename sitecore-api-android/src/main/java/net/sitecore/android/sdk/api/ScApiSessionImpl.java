@@ -121,7 +121,7 @@ class ScApiSessionImpl implements ScApiSession {
     }
 
     @Override
-    public void validate(Context context, final Listener<Boolean> callback) {
+    public Request checkCredentialsRequest(Context context, final Listener<Boolean> callback) {
         final Listener<ItemsResponse> responseListener = new Listener<ItemsResponse>() {
             @Override
             public void onResponse(ItemsResponse response) {
@@ -136,9 +136,7 @@ class ScApiSessionImpl implements ScApiSession {
                 callback.onResponse(false);
             }
         };
-
-        final Request request = readItemsRequest(responseListener, errorListener).build();
-        RequestQueueProvider.getRequestQueue(context).add(request);
+        return readItemsRequest(responseListener, errorListener).build();
     }
 
     @Override
