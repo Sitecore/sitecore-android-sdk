@@ -82,7 +82,7 @@ public interface ScApiSession {
      *
      * @return {@link RequestBuilder} to build the request.
      */
-    public RequestBuilder deleteItems(Listener<DeleteItemsResponse> successListener, ErrorListener errorListener);
+    public RequestBuilder deleteItemsRequest(Listener<DeleteItemsResponse> successListener, ErrorListener errorListener);
 
     /**
      * Executes default items request (/-/item/v1/) to check result code.

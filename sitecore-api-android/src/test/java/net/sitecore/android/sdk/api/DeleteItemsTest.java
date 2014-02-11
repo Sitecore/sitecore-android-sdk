@@ -22,7 +22,7 @@ public class DeleteItemsTest extends MockedServerAndroidTestCase {
         setMockResponse(TestData._200_delete_5_items);
 
         RequestFuture<DeleteItemsResponse> future = RequestFuture.newFuture();
-        ScRequest request = session.deleteItems(future, future).build();
+        ScRequest request = session.deleteItemsRequest(future, future).build();
         assertEquals(Request.Method.DELETE, request.getMethod());
 
         mRequestQueue.add(request);

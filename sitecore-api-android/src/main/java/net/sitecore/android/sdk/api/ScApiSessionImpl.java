@@ -112,7 +112,7 @@ class ScApiSessionImpl implements ScApiSession {
     }
 
     @Override
-    public RequestBuilder deleteItems(Listener<DeleteItemsResponse> successListener, ErrorListener errorListener) {
+    public RequestBuilder deleteItemsRequest(Listener<DeleteItemsResponse> successListener, ErrorListener errorListener) {
         final RequestBuilder builder = new RequestBuilder(this, Request.Method.DELETE);
         builder.setSuccessListener(successListener);
         builder.setErrorListener(errorListener);
