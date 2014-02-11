@@ -61,7 +61,7 @@ public interface ScApiSession {
      *
      * @return {@link RequestBuilder} to build the request.
      */
-    public RequestBuilder createItem(String branchId, Listener<ItemsResponse> successListener,
+    public RequestBuilder createItemRequest(String branchId, Listener<ItemsResponse> successListener,
             ErrorListener errorListener);
 
     /**

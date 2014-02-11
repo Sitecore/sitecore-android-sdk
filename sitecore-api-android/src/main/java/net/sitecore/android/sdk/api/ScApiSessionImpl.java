@@ -91,7 +91,7 @@ class ScApiSessionImpl implements ScApiSession {
     }
 
     @Override
-    public RequestBuilder createItem(String branchId,
+    public RequestBuilder createItemRequest(String branchId,
             Listener<ItemsResponse> successListener,
             ErrorListener errorListener) {
         final RequestBuilder builder = new RequestBuilder(this, Request.Method.POST);
