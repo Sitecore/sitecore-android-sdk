@@ -33,7 +33,7 @@ public class ScItemTest extends MockedServerAndroidTestCase {
         setMockResponse(TestData._200_simple_response);
 
         RequestFuture<ItemsResponse> future = RequestFuture.newFuture();
-        mRequestQueue.add(session.getItems(future, future).build());
+        mRequestQueue.add(session.readItemsRequest(future, future).build());
         mResponse = future.get(5, TimeUnit.SECONDS);
     }
 

@@ -23,7 +23,7 @@ public interface ScApiSession {
      *
      * @return {@link RequestBuilder} to build the request.
      */
-    public RequestBuilder getItems(Listener<ItemsResponse> successListener, ErrorListener errorListener);
+    public RequestBuilder readItemsRequest(Listener<ItemsResponse> successListener, ErrorListener errorListener);
 
     /**
      * Creates {@link GetItemsRequest} to load list of items with particular IDs.

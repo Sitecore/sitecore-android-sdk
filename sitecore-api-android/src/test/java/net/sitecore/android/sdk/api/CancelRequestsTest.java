@@ -48,7 +48,7 @@ public class CancelRequestsTest extends MockedServerAndroidTestCase {
     @Test
     public void testCancelRequest() {
         RequestFuture<ItemsResponse> future = RequestFuture.newFuture();
-        Request request = mSession.getItems(future, future).build();
+        Request request = mSession.readItemsRequest(future, future).build();
 
         request.setRetryPolicy(new DefaultRetryPolicy(
                 10000,
@@ -69,7 +69,7 @@ public class CancelRequestsTest extends MockedServerAndroidTestCase {
     @Test
     public void testCancelOneRequest() throws InterruptedException, ExecutionException, TimeoutException {
         RequestFuture<ItemsResponse> future1 = RequestFuture.newFuture();
-        Request request1 = mSession.getItems(future1, future1).build();
+        Request request1 = mSession.readItemsRequest(future1, future1).build();
 
         request1.setRetryPolicy(new DefaultRetryPolicy(
                 10000,
@@ -77,7 +77,7 @@ public class CancelRequestsTest extends MockedServerAndroidTestCase {
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         RequestFuture<ItemsResponse> future2 = RequestFuture.newFuture();
-        Request request2 = mSession.getItems(future2, future2).build();
+        Request request2 = mSession.readItemsRequest(future2, future2).build();
 
         request2.setRetryPolicy(new DefaultRetryPolicy(
                 10000,

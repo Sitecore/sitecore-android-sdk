@@ -468,7 +468,7 @@ public class ItemsBrowserFragment extends DialogFragment {
 
     private void loadRootFromNetwork() {
         mNetworkEventsListener.onUpdateRequestStarted();
-        ScRequest request = mApiSession.getItems(mFirstItemResponseListener, mErrorListener)
+        ScRequest request = mApiSession.readItemsRequest(mFirstItemResponseListener, mErrorListener)
                 .withScope(RequestScope.SELF, RequestScope.CHILDREN)
                 .byItemPath(mRootFolder)
                 .build();
@@ -488,7 +488,7 @@ public class ItemsBrowserFragment extends DialogFragment {
         LOGV("getChildren: " + itemId);
         if (mApiSession != null) {
             mNetworkEventsListener.onUpdateRequestStarted();
-            ScRequest request = mApiSession.getItems(mItemsResponseListener, mErrorListener)
+            ScRequest request = mApiSession.readItemsRequest(mItemsResponseListener, mErrorListener)
                     .byItemId(itemId)
                     .withScope(RequestScope.CHILDREN)
                     .build();

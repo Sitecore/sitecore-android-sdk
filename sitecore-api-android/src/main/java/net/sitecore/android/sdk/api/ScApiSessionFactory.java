@@ -11,7 +11,6 @@ import com.android.volley.toolbox.StringRequest;
  * Factory class for creation of {@link ScApiSession}.
  */
 public class ScApiSessionFactory {
-    public static final String RSA_SUFFIX = "/-/item/v1/-/actions/getpublickey";
 
     /**
      * Asynchronously creates anonymous session to specified backend url.
@@ -100,20 +99,20 @@ public class ScApiSessionFactory {
     /**
      * Creates {@link com.android.volley.Request} for retrieving {@link ScPublicKey}.
      *
-     * @param url       Sitecore instance URL / server URL.
-     * @param onSuccess Success result callback.
-     * @param onError   Error result callback
+     * @param instanceUrl Sitecore instance URL / server URL.
+     * @param onSuccess   Success result callback.
+     * @param onError     Error result callback
      *
      * @return {@link com.android.volley.Request}.
      */
-    public static Request buildPublicKeyRequest(String url,
+    public static Request buildPublicKeyRequest(String instanceUrl,
             final Response.Listener<ScPublicKey> onSuccess,
             final Response.ErrorListener onError) {
-        if (TextUtils.isEmpty(url)) throw new IllegalArgumentException("Url can't be empty");
+        if (TextUtils.isEmpty(instanceUrl)) throw new IllegalArgumentException("Url can't be empty");
         if (onSuccess == null) throw new IllegalArgumentException("onSuccess listener can't be null");
 
         final PublicKeyResponseListener responseHandler = new PublicKeyResponseListener(onSuccess, onError);
 
-        return new StringRequest(url + RSA_SUFFIX, responseHandler, onError);
+        return new PublicKeyRequest(instanceUrl, responseHandler, onError);
     }
 }

@@ -29,7 +29,7 @@ public class RequestBuilderTest extends MockedServerAndroidTestCase {
 
     @Test
     public void testEmpty() {
-        ScRequest request = mSession.getItems(null, null).build();
+        ScRequest request = mSession.readItemsRequest(null, null).build();
         assertEquals("http://sample.com/-/item/v1", request.getUrl());
     }
 
@@ -39,7 +39,7 @@ public class RequestBuilderTest extends MockedServerAndroidTestCase {
         fields.add("Field1");
         fields.add("{A60ACD61-A6DB-4182-8329-C957982CEC74}");
 
-        ScRequest request = mSession.getItems(null, null)
+        ScRequest request = mSession.readItemsRequest(null, null)
                 .fromSite("/sitecore/shell")
                 .byItemPath("/content/home/items")
                 .apiVersion(2)
@@ -65,43 +65,43 @@ public class RequestBuilderTest extends MockedServerAndroidTestCase {
     public void testScope() {
         ScRequest request;
 
-        request = mSession.getItems(null, null)
+        request = mSession.readItemsRequest(null, null)
                 .withScope(RequestScope.SELF, RequestScope.PARENT, RequestScope.CHILDREN)
                 .build();
         assertEquals("http://sample.com/-/item/v1?scope=s%7Cp%7Cc", request.getUrl());
 
-        request = mSession.getItems(null, null)
+        request = mSession.readItemsRequest(null, null)
                 .withScope(RequestScope.PARENT, RequestScope.SELF, RequestScope.CHILDREN)
                 .build();
         assertEquals("http://sample.com/-/item/v1?scope=p%7Cs%7Cc", request.getUrl());
 
-        request = mSession.getItems(null, null)
+        request = mSession.readItemsRequest(null, null)
                 .withScope(RequestScope.PARENT)
                 .build();
         assertEquals("http://sample.com/-/item/v1?scope=p", request.getUrl());
 
-        request = mSession.getItems(null, null)
+        request = mSession.readItemsRequest(null, null)
                 .withScope(RequestScope.SELF)
                 .build();
         assertEquals("http://sample.com/-/item/v1?scope=s", request.getUrl());
 
-        request = mSession.getItems(null, null)
+        request = mSession.readItemsRequest(null, null)
                 .withScope(RequestScope.CHILDREN)
                 .build();
         assertEquals("http://sample.com/-/item/v1?scope=c", request.getUrl());
 
-        request = mSession.getItems(null, null)
+        request = mSession.readItemsRequest(null, null)
                 .withScope(RequestScope.CHILDREN, RequestScope.CHILDREN)
                 .build();
         assertEquals("http://sample.com/-/item/v1?scope=c", request.getUrl());
 
-        request = mSession.getItems(null, null)
+        request = mSession.readItemsRequest(null, null)
                 .withScope(RequestScope.CHILDREN).byItemPath("/sitecore/content/Home")
                 .build();
         assertEquals("http://sample.com/-/item/v1/sitecore/content/Home?scope=c", request.getUrl());
 
         try {
-            request = mSession.getItems(null, null)
+            request = mSession.readItemsRequest(null, null)
                     .withScope(RequestScope.CHILDREN, RequestScope.CHILDREN, RequestScope.SELF, RequestScope.PARENT)
                     .build();
             fail("> 3 scope params must throw exception.");
@@ -115,14 +115,14 @@ public class RequestBuilderTest extends MockedServerAndroidTestCase {
         Set<String> fields;
 
         fields = new LinkedHashSet<String>();
-        request = mSession.getItems(null, null)
+        request = mSession.readItemsRequest(null, null)
                 .setFields(fields)
                 .build();
         assertEquals("http://sample.com/-/item/v1", request.getUrl());
 
         fields = new LinkedHashSet<String>();
         fields.add("Title");
-        request = mSession.getItems(null, null)
+        request = mSession.readItemsRequest(null, null)
                 .setFields(fields)
                 .build();
         assertEquals("http://sample.com/-/item/v1?fields=Title", request.getUrl());
@@ -130,17 +130,17 @@ public class RequestBuilderTest extends MockedServerAndroidTestCase {
         fields = new LinkedHashSet<String>();
         fields.add("Title1");
         fields.add("Title2");
-        request = mSession.getItems(null, null)
+        request = mSession.readItemsRequest(null, null)
                 .setFields(fields)
                 .build();
         assertEquals("http://sample.com/-/item/v1?fields=Title1%7CTitle2", request.getUrl());
 
-        request = mSession.getItems(null, null)
+        request = mSession.readItemsRequest(null, null)
                 .setFields()
                 .build();
         assertEquals("http://sample.com/-/item/v1", request.getUrl());
 
-        request = mSession.getItems(null, null)
+        request = mSession.readItemsRequest(null, null)
                 .setFields("Title", "Name", "Location")
                 .build();
         assertEquals("http://sample.com/-/item/v1?fields=Title%7CName%7CLocation", request.getUrl());

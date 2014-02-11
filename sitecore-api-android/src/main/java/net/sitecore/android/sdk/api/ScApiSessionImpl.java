@@ -51,7 +51,7 @@ class ScApiSessionImpl implements ScApiSession {
 
 
     @Override
-    public RequestBuilder getItems(Listener<ItemsResponse> successListener, ErrorListener errorListener) {
+    public RequestBuilder readItemsRequest(Listener<ItemsResponse> successListener, ErrorListener errorListener) {
         final RequestBuilder builder = new RequestBuilder(this, Request.Method.GET);
         builder.setSuccessListener(successListener);
         builder.setErrorListener(errorListener);
@@ -137,7 +137,7 @@ class ScApiSessionImpl implements ScApiSession {
             }
         };
 
-        final Request request = getItems(responseListener, errorListener).build();
+        final Request request = readItemsRequest(responseListener, errorListener).build();
         RequestQueueProvider.getRequestQueue(context).add(request);
     }
 
