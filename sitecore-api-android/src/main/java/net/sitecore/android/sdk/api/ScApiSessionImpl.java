@@ -60,7 +60,7 @@ class ScApiSessionImpl implements ScApiSession {
     }
 
     @Override
-    public RequestBuilder getItemsByIds(ArrayList<String> itemIds, Listener<ItemsResponse> successListener, ErrorListener errorListener) {
+    public RequestBuilder readItemsByIdsRequest(ArrayList<String> itemIds, Listener<ItemsResponse> successListener, ErrorListener errorListener) {
         if (itemIds == null) throw new IllegalArgumentException("itemIds can't be null");
         if (itemIds.isEmpty()) throw new IllegalArgumentException("itemIds can't be empty");
 
@@ -79,7 +79,7 @@ class ScApiSessionImpl implements ScApiSession {
     }
 
     @Override
-    public RequestBuilder createItem(String itemName, String template,
+    public RequestBuilder createItemRequest(String itemName, String template,
             Listener<ItemsResponse> successListener,
             ErrorListener errorListener) {
         final RequestBuilder builder = new RequestBuilder(this, Request.Method.POST);

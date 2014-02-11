@@ -34,7 +34,7 @@ public interface ScApiSession {
      *
      * @return {@link GetItemsRequest}.
      */
-    public RequestBuilder getItemsByIds(ArrayList<String> itemIds, Listener<ItemsResponse> successListener,
+    public RequestBuilder readItemsByIdsRequest(ArrayList<String> itemIds, Listener<ItemsResponse> successListener,
             ErrorListener errorListener);
 
     /**
@@ -49,9 +49,8 @@ public interface ScApiSession {
      *
      * @return {@link RequestBuilder} to build the request.
      */
-    public RequestBuilder createItem(String itemName, String template,
-            Listener<ItemsResponse> successListener,
-            ErrorListener errorListener);
+    public RequestBuilder createItemRequest(String itemName, String template,
+            Listener<ItemsResponse> successListener, ErrorListener errorListener);
 
     /**
      * Creates {@link RequestBuilder} to build the {@link CreateItemRequest}
@@ -62,8 +61,7 @@ public interface ScApiSession {
      *
      * @return {@link RequestBuilder} to build the request.
      */
-    public RequestBuilder createItem(String branchId,
-            Listener<ItemsResponse> successListener,
+    public RequestBuilder createItem(String branchId, Listener<ItemsResponse> successListener,
             ErrorListener errorListener);
 
     /**
