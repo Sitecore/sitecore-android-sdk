@@ -72,7 +72,7 @@ public interface ScApiSession {
      *
      * @return {@link RequestBuilder} to build the request.
      */
-    public RequestBuilder updateItems(Listener<ItemsResponse> successListener, ErrorListener errorListener);
+    public RequestBuilder editItemsRequest(Listener<ItemsResponse> successListener, ErrorListener errorListener);
 
     /**
      * Creates {@link RequestBuilder} to build the {@link DeleteItemsRequest}.

@@ -103,7 +103,7 @@ class ScApiSessionImpl implements ScApiSession {
     }
 
     @Override
-    public RequestBuilder updateItems(Listener<ItemsResponse> successListener, ErrorListener errorListener) {
+    public RequestBuilder editItemsRequest(Listener<ItemsResponse> successListener, ErrorListener errorListener) {
         final RequestBuilder builder = new RequestBuilder(this, Request.Method.PUT);
         builder.setSuccessListener(successListener);
         builder.setErrorListener(errorListener);
