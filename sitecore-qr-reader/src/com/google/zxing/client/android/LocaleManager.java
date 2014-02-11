@@ -16,8 +16,10 @@
 
 package com.google.zxing.client.android;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.preference.PreferenceManager;
 
 import java.util.Arrays;
@@ -170,6 +172,7 @@ public final class LocaleManager {
     return tld == null ? DEFAULT_TLD : tld;
   }
 
+  @TargetApi(Build.VERSION_CODES.GINGERBREAD)
   public static String getCountry(Context context) {
     SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
     String countryOverride = prefs.getString(PreferencesActivity.KEY_SEARCH_COUNTRY, null);

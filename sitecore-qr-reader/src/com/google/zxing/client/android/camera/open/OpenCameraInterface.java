@@ -16,7 +16,9 @@
 
 package com.google.zxing.client.android.camera.open;
 
+import android.annotation.TargetApi;
 import android.hardware.Camera;
+import android.os.Build;
 import android.util.Log;
 
 public final class OpenCameraInterface {
@@ -29,6 +31,7 @@ public final class OpenCameraInterface {
   /**
    * Opens a rear-facing camera with {@link Camera#open(int)}, if one exists, or opens camera 0.
    */
+  @TargetApi(Build.VERSION_CODES.GINGERBREAD)
   public static Camera open() {
     
     int numCameras = Camera.getNumberOfCameras();

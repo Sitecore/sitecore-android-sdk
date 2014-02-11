@@ -1,6 +1,8 @@
 package net.sitecore.android.sdk.web;
 
+import android.annotation.TargetApi;
 import android.net.Uri;
+import android.os.Build;
 import android.webkit.WebView;
 
 import static net.sitecore.android.sdk.web.LogUtils.LOGD;
@@ -68,6 +70,7 @@ class ScCallbackContext {
         sendError(new ScJavascriptError(error));
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     private void exec(final String message) {
         LOGD(message);
         mWebView.postDelayed(new Runnable() {

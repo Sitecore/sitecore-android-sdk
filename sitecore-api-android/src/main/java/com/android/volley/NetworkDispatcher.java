@@ -16,6 +16,7 @@
 
 package com.android.volley;
 
+import android.annotation.TargetApi;
 import android.net.TrafficStats;
 import android.os.Build;
 import android.os.Process;
@@ -70,6 +71,7 @@ public class NetworkDispatcher extends Thread {
         interrupt();
     }
 
+    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     @Override
     public void run() {
         Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);

@@ -21,8 +21,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -114,6 +116,7 @@ final class DecodeHintManager {
     return map;
   }
 
+  @TargetApi(Build.VERSION_CODES.GINGERBREAD)
   static Map<DecodeHintType,?> parseDecodeHints(Uri inputUri) {
     String query = inputUri.getEncodedQuery();
     if (query == null || query.isEmpty()) {
