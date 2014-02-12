@@ -5,6 +5,7 @@ import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
 
 public class ScPublicKey {
+
     private final String mRawValue;
     private final RSAPublicKey mKey;
 

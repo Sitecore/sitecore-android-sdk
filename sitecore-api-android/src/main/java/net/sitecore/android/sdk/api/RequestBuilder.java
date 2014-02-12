@@ -11,7 +11,7 @@ import java.util.Set;
 import net.sitecore.android.sdk.api.model.PayloadType;
 import net.sitecore.android.sdk.api.model.RequestScope;
 
-import static net.sitecore.android.sdk.api.LogUtils.LOGD;
+import static net.sitecore.android.sdk.api.internal.LogUtils.LOGD;
 
 /**
  * Helper class for building {@code requests}:

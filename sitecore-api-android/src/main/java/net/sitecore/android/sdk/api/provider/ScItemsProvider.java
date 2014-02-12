@@ -13,7 +13,7 @@ import android.net.Uri;
 
 import java.util.ArrayList;
 
-import static net.sitecore.android.sdk.api.LogUtils.LOGV;
+import static net.sitecore.android.sdk.api.internal.LogUtils.LOGV;
 import static net.sitecore.android.sdk.api.provider.ScItemsContract.Fields;
 import static net.sitecore.android.sdk.api.provider.ScItemsContract.Items;
 import static net.sitecore.android.sdk.api.provider.ScItemsDatabase.Tables;

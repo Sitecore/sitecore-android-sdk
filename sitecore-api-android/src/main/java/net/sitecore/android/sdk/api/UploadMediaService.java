@@ -23,7 +23,7 @@ import net.sitecore.android.sdk.api.model.ItemsResponse;
 import net.sitecore.android.sdk.api.model.ScError;
 
 import static com.android.volley.Response.ErrorListener;
-import static net.sitecore.android.sdk.api.LogUtils.LOGD;
+import static net.sitecore.android.sdk.api.internal.LogUtils.LOGD;
 
 /**
  * Service responsible for sending media data.

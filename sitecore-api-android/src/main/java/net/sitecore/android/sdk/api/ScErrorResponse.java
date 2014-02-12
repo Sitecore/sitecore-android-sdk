@@ -1,6 +1,6 @@
 package net.sitecore.android.sdk.api;
 
-class ScErrorResponse extends ScResponse {
+public class ScErrorResponse extends ScResponse {
     private String mErrorMessage;
 
     public ScErrorResponse(int statusCode, String errorMessage) {

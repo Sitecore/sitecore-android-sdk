@@ -42,8 +42,8 @@ import static android.app.LoaderManager.LoaderCallbacks;
 import static android.view.View.OnClickListener;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
-import static net.sitecore.android.sdk.api.LogUtils.LOGE;
-import static net.sitecore.android.sdk.api.LogUtils.LOGV;
+import static net.sitecore.android.sdk.api.internal.LogUtils.LOGE;
+import static net.sitecore.android.sdk.api.internal.LogUtils.LOGV;
 import static net.sitecore.android.sdk.api.provider.ScItemsContract.Items;
 
 /**

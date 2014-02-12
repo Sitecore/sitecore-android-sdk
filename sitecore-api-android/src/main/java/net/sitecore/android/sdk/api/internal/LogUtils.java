@@ -1,4 +1,4 @@
-package net.sitecore.android.sdk.api;
+package net.sitecore.android.sdk.api.internal;
 
 import android.database.Cursor;
 import android.text.TextUtils;
@@ -7,8 +7,8 @@ import android.util.Log;
 /**
  * Use next imports for clean code:
  * <pre>
- * import static net.sitecore.android.sdk.api.LogUtils.LOGD;
- * import static net.sitecore.android.sdk.api.LogUtils.LOGE;
+ * import static net.sitecore.android.sdk.api.internal.LogUtils.LOGD;
+ * import static net.sitecore.android.sdk.api.internal.LogUtils.LOGE;
  * </pre>
  */
 public class LogUtils {

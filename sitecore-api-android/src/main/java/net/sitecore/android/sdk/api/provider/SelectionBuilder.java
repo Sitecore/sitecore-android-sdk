@@ -33,7 +33,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import static net.sitecore.android.sdk.api.LogUtils.LOGV;
+import static net.sitecore.android.sdk.api.internal.LogUtils.LOGV;
 
 /**
  * Helper for building selection clauses for {@link SQLiteDatabase}. Each

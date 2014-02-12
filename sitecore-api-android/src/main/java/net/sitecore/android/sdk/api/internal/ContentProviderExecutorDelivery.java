@@ -17,7 +17,7 @@ import net.sitecore.android.sdk.api.ScResponse;
 import net.sitecore.android.sdk.api.provider.ScItemsContract;
 import net.sitecore.android.sdk.api.provider.ScItemsProvider;
 
-import static net.sitecore.android.sdk.api.LogUtils.LOGE;
+import static net.sitecore.android.sdk.api.internal.LogUtils.LOGE;
 
 /**
  * Stores successful results in {@link ScItemsProvider} and delivers response.

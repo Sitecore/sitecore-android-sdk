@@ -10,7 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import net.sitecore.android.sdk.api.ScResponse;
-import net.sitecore.android.sdk.api.ScResponseParser;
+import net.sitecore.android.sdk.api.internal.ScResponseParser;
 import net.sitecore.android.sdk.api.provider.ScItemsContract.Fields;
 import net.sitecore.android.sdk.api.provider.ScItemsContract.Items;
 
@@ -18,7 +18,6 @@ import net.sitecore.android.sdk.api.provider.ScItemsContract.Items;
 public class DeleteItemsResponse extends ScResponse {
 
     private List<String> mDeletedItemIds;
-
     private int mCount;
 
     private DeleteItemsResponse(int statusCode) {
@@ -35,9 +34,7 @@ public class DeleteItemsResponse extends ScResponse {
     }
 
     @Override
-    protected ArrayList<ContentProviderOperation> toContentProviderOperations() {
-        final ArrayList<ContentProviderOperation> operations = super.toContentProviderOperations();
-
+    protected void addContentProviderOperations(ArrayList<ContentProviderOperation> operations) {
         for (String itemId : getDeletedItemsIds()) {
             final ContentProviderOperation.Builder deleteFields = ContentProviderOperation.newDelete(Fields.CONTENT_URI);
             deleteFields.withSelection(Fields.ITEM_ID + "=?", new String[]{itemId});
@@ -47,8 +44,6 @@ public class DeleteItemsResponse extends ScResponse {
             deleteItem.withSelection(Items.ITEM_ID + "=?", new String[]{itemId});
             operations.add(deleteItem.build());
         }
-
-        return operations;
     }
 
     public static class DeleteItemsResponseParser extends ScResponseParser {

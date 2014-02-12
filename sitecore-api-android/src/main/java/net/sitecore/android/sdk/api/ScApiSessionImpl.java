@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import net.sitecore.android.sdk.api.model.DeleteItemsResponse;
 import net.sitecore.android.sdk.api.model.ItemsResponse;
 
-import static net.sitecore.android.sdk.api.LogUtils.LOGE;
+import static net.sitecore.android.sdk.api.internal.LogUtils.LOGE;
 
 class ScApiSessionImpl implements ScApiSession {
 
