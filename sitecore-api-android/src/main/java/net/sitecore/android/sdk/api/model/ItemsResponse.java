@@ -12,7 +12,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import net.sitecore.android.sdk.api.ScResponse;
-import net.sitecore.android.sdk.api.ScResponseParser;
+import net.sitecore.android.sdk.api.internal.ScResponseParser;
 import net.sitecore.android.sdk.api.UploadMediaService;
 
 import static net.sitecore.android.sdk.api.provider.ScItemsContract.Fields;
@@ -46,9 +46,7 @@ public class ItemsResponse extends ScResponse {
     }
 
     @Override
-    protected ArrayList<ContentProviderOperation> toContentProviderOperations() {
-        final ArrayList<ContentProviderOperation> operations = super.toContentProviderOperations();
-
+    protected void addContentProviderOperations(ArrayList<ContentProviderOperation> operations) {
         for (ScItem item : getItems()) {
             operations.add(item.toInsertOperation());
             operations.add(newDeleteFieldsOperation(item.getId()));
@@ -56,7 +54,6 @@ public class ItemsResponse extends ScResponse {
                 operations.add(field.toInsertOperation(item.getId()));
             }
         }
-        return operations;
     }
 
     private ContentProviderOperation newDeleteFieldsOperation(String itemId) {

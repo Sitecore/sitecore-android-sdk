@@ -10,16 +10,16 @@ import java.util.Set;
 import net.sitecore.android.sdk.api.model.PayloadType;
 import net.sitecore.android.sdk.api.model.RequestScope;
 
-class RequestOptions {
+public class RequestOptions {
 
     private static final int DEFAULT_API_VERSION = 1;
     private static final String ITEMS_API_PREFIX = "/-/item";
 
     private static final int UNDEFINED = -1;
 
-    final AuthOptions mAuthOptions;
-    final UrlOptions mUrlOptions;
-    final QueryScopeOptions mQueryScopeOptions;
+    public final AuthOptions mAuthOptions;
+    public final UrlOptions mUrlOptions;
+    public final QueryScopeOptions mQueryScopeOptions;
 
     String mItemName;
     String mTemplate;
@@ -38,13 +38,13 @@ class RequestOptions {
         return mUrlOptions.getUrl() + mQueryScopeOptions.getQueryParameters();
     }
 
-    static class AuthOptions {
+    public static class AuthOptions {
         boolean mIsAnonymous = true;
         String mEncodedName;
         String mEncodedPassword;
     }
 
-    static class UrlOptions {
+    public static class UrlOptions {
         int mApiVersion = DEFAULT_API_VERSION;
         String mBaseUrl;
         String mSite;
@@ -74,7 +74,7 @@ class RequestOptions {
         }
     }
 
-    static class QueryScopeOptions {
+    public static class QueryScopeOptions {
         String mItemId;
         int mItemVersion = UNDEFINED;
         String mDatabase;
@@ -89,7 +89,7 @@ class RequestOptions {
         /**
          * @return Query string starting with '?' or empty string.
          */
-        String getQueryParameters() {
+        public String getQueryParameters() {
             final StringBuilder builder = new StringBuilder();
 
             if (!TextUtils.isEmpty(mItemId)) builder.append("&sc_itemid=").append(encodeString(mItemId));
@@ -121,7 +121,7 @@ class RequestOptions {
         }
     }
 
-    String getCreateItemParams() {
+    public String getCreateItemParams() {
         StringBuilder builder = new StringBuilder("template=");
         builder.append(encodeString(mTemplate));
 

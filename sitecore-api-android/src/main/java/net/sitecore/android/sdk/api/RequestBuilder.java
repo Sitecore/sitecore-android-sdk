@@ -11,7 +11,7 @@ import java.util.Set;
 import net.sitecore.android.sdk.api.model.PayloadType;
 import net.sitecore.android.sdk.api.model.RequestScope;
 
-import static net.sitecore.android.sdk.api.LogUtils.LOGD;
+import static net.sitecore.android.sdk.api.internal.LogUtils.LOGD;
 
 /**
  * Helper class for building {@code requests}:
@@ -180,7 +180,7 @@ public class RequestBuilder {
      */
     public RequestBuilder withScope(RequestScope scope, RequestScope... otherScopes) {
         if (otherScopes.length > 2) {
-            throw new IllegalArgumentException("Maximum number os scopes is 3: s|p|c.");
+            throw new IllegalArgumentException("Maximum number of scopes is 3: s|p|c.");
         }
 
         mOptions.mQueryScopeOptions.mScopes.add(scope);

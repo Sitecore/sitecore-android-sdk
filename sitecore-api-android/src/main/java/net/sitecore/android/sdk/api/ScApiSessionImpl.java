@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import net.sitecore.android.sdk.api.model.DeleteItemsResponse;
 import net.sitecore.android.sdk.api.model.ItemsResponse;
 
-import static net.sitecore.android.sdk.api.LogUtils.LOGE;
+import static net.sitecore.android.sdk.api.internal.LogUtils.LOGE;
 
 class ScApiSessionImpl implements ScApiSession {
 
@@ -51,7 +51,7 @@ class ScApiSessionImpl implements ScApiSession {
 
 
     @Override
-    public RequestBuilder getItems(Listener<ItemsResponse> successListener, ErrorListener errorListener) {
+    public RequestBuilder readItemsRequest(Listener<ItemsResponse> successListener, ErrorListener errorListener) {
         final RequestBuilder builder = new RequestBuilder(this, Request.Method.GET);
         builder.setSuccessListener(successListener);
         builder.setErrorListener(errorListener);
@@ -60,7 +60,7 @@ class ScApiSessionImpl implements ScApiSession {
     }
 
     @Override
-    public RequestBuilder getItemsByIds(ArrayList<String> itemIds, Listener<ItemsResponse> successListener, ErrorListener errorListener) {
+    public RequestBuilder readItemsByIdsRequest(ArrayList<String> itemIds, Listener<ItemsResponse> successListener, ErrorListener errorListener) {
         if (itemIds == null) throw new IllegalArgumentException("itemIds can't be null");
         if (itemIds.isEmpty()) throw new IllegalArgumentException("itemIds can't be empty");
 
@@ -79,7 +79,7 @@ class ScApiSessionImpl implements ScApiSession {
     }
 
     @Override
-    public RequestBuilder createItem(String itemName, String template,
+    public RequestBuilder createItemRequest(String itemName, String template,
             Listener<ItemsResponse> successListener,
             ErrorListener errorListener) {
         final RequestBuilder builder = new RequestBuilder(this, Request.Method.POST);
@@ -91,7 +91,7 @@ class ScApiSessionImpl implements ScApiSession {
     }
 
     @Override
-    public RequestBuilder createItem(String branchId,
+    public RequestBuilder createItemRequest(String branchId,
             Listener<ItemsResponse> successListener,
             ErrorListener errorListener) {
         final RequestBuilder builder = new RequestBuilder(this, Request.Method.POST);
@@ -103,7 +103,7 @@ class ScApiSessionImpl implements ScApiSession {
     }
 
     @Override
-    public RequestBuilder updateItems(Listener<ItemsResponse> successListener, ErrorListener errorListener) {
+    public RequestBuilder editItemsRequest(Listener<ItemsResponse> successListener, ErrorListener errorListener) {
         final RequestBuilder builder = new RequestBuilder(this, Request.Method.PUT);
         builder.setSuccessListener(successListener);
         builder.setErrorListener(errorListener);
@@ -112,7 +112,7 @@ class ScApiSessionImpl implements ScApiSession {
     }
 
     @Override
-    public RequestBuilder deleteItems(Listener<DeleteItemsResponse> successListener, ErrorListener errorListener) {
+    public RequestBuilder deleteItemsRequest(Listener<DeleteItemsResponse> successListener, ErrorListener errorListener) {
         final RequestBuilder builder = new RequestBuilder(this, Request.Method.DELETE);
         builder.setSuccessListener(successListener);
         builder.setErrorListener(errorListener);
@@ -121,7 +121,7 @@ class ScApiSessionImpl implements ScApiSession {
     }
 
     @Override
-    public void validate(Context context, final Listener<Boolean> callback) {
+    public Request checkCredentialsRequest(Context context, final Listener<Boolean> callback) {
         final Listener<ItemsResponse> responseListener = new Listener<ItemsResponse>() {
             @Override
             public void onResponse(ItemsResponse response) {
@@ -136,13 +136,11 @@ class ScApiSessionImpl implements ScApiSession {
                 callback.onResponse(false);
             }
         };
-
-        final Request request = getItems(responseListener, errorListener).build();
-        RequestQueueProvider.getRequestQueue(context).add(request);
+        return readItemsRequest(responseListener, errorListener).build();
     }
 
     @Override
-    public GetRenderingHtmlRequestBuilder getRenderingHtml(String renderingId, String itemId,
+    public GetRenderingHtmlRequestBuilder getRenderingHtmlRequest(String renderingId, String itemId,
             Listener<String> successListener, ErrorListener errorListener) {
         if (TextUtils.isEmpty(renderingId)) {
             throw new IllegalArgumentException("RenderingId cannot be empty.");

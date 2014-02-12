@@ -35,7 +35,7 @@ public class ScFieldTest extends MockedServerAndroidTestCase {
         ScApiSession session = ScApiSessionFactory.newAnonymousSession(getBackendUrl());
 
         RequestFuture<ItemsResponse> future = RequestFuture.newFuture();
-        mRequestQueue.add(session.getItems(future, future).build());
+        mRequestQueue.add(session.readItemsRequest(future, future).build());
 
         ItemsResponse mItemsResponse = future.get(5, TimeUnit.SECONDS);
 

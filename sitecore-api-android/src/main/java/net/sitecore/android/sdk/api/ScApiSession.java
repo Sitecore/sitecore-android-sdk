@@ -2,6 +2,7 @@ package net.sitecore.android.sdk.api;
 
 import android.content.Context;
 
+import com.android.volley.Request;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 
@@ -23,7 +24,7 @@ public interface ScApiSession {
      *
      * @return {@link RequestBuilder} to build the request.
      */
-    public RequestBuilder getItems(Listener<ItemsResponse> successListener, ErrorListener errorListener);
+    public RequestBuilder readItemsRequest(Listener<ItemsResponse> successListener, ErrorListener errorListener);
 
     /**
      * Creates {@link GetItemsRequest} to load list of items with particular IDs.
@@ -34,7 +35,7 @@ public interface ScApiSession {
      *
      * @return {@link GetItemsRequest}.
      */
-    public RequestBuilder getItemsByIds(ArrayList<String> itemIds, Listener<ItemsResponse> successListener,
+    public RequestBuilder readItemsByIdsRequest(ArrayList<String> itemIds, Listener<ItemsResponse> successListener,
             ErrorListener errorListener);
 
     /**
@@ -49,9 +50,8 @@ public interface ScApiSession {
      *
      * @return {@link RequestBuilder} to build the request.
      */
-    public RequestBuilder createItem(String itemName, String template,
-            Listener<ItemsResponse> successListener,
-            ErrorListener errorListener);
+    public RequestBuilder createItemRequest(String itemName, String template,
+            Listener<ItemsResponse> successListener, ErrorListener errorListener);
 
     /**
      * Creates {@link RequestBuilder} to build the {@link CreateItemRequest}
@@ -62,8 +62,7 @@ public interface ScApiSession {
      *
      * @return {@link RequestBuilder} to build the request.
      */
-    public RequestBuilder createItem(String branchId,
-            Listener<ItemsResponse> successListener,
+    public RequestBuilder createItemRequest(String branchId, Listener<ItemsResponse> successListener,
             ErrorListener errorListener);
 
     /**
@@ -74,7 +73,7 @@ public interface ScApiSession {
      *
      * @return {@link RequestBuilder} to build the request.
      */
-    public RequestBuilder updateItems(Listener<ItemsResponse> successListener, ErrorListener errorListener);
+    public RequestBuilder editItemsRequest(Listener<ItemsResponse> successListener, ErrorListener errorListener);
 
     /**
      * Creates {@link RequestBuilder} to build the {@link DeleteItemsRequest}.
@@ -84,16 +83,16 @@ public interface ScApiSession {
      *
      * @return {@link RequestBuilder} to build the request.
      */
-    public RequestBuilder deleteItems(Listener<DeleteItemsResponse> successListener, ErrorListener errorListener);
+    public RequestBuilder deleteItemsRequest(Listener<DeleteItemsResponse> successListener, ErrorListener errorListener);
 
     /**
-     * Executes default items request (/-/item/v1/) to check result code.
+     * Creates request to read items from default path (/-/item/v1/) to check result code.
      *
      * @param context  current context.
      * @param callback Is called after request is executed with {@code true} if request succeeded (200 <= code <= 300),
      *                 and {@code false} otherwise.
      */
-    public void validate(Context context, final Listener<Boolean> callback);
+    public Request checkCredentialsRequest(Context context, final Listener<Boolean> callback);
 
     /**
      * Creates {@link GetRenderingHtmlRequestBuilder} to build special request to load
@@ -104,7 +103,7 @@ public interface ScApiSession {
      * @param successListener Success result callback.
      * @param errorListener   Error result callback
      */
-    public GetRenderingHtmlRequestBuilder getRenderingHtml(String renderingId, String itemId,
+    public GetRenderingHtmlRequestBuilder getRenderingHtmlRequest(String renderingId, String itemId,
             Listener<String> successListener, ErrorListener errorListener);
 
     /**

@@ -23,7 +23,7 @@ import net.sitecore.android.sdk.api.model.ItemsResponse;
 import net.sitecore.android.sdk.api.model.ScError;
 
 import static com.android.volley.Response.ErrorListener;
-import static net.sitecore.android.sdk.api.LogUtils.LOGD;
+import static net.sitecore.android.sdk.api.internal.LogUtils.LOGD;
 
 /**
  * Service responsible for sending media data.
@@ -36,15 +36,12 @@ import static net.sitecore.android.sdk.api.LogUtils.LOGD;
  * @see UploadMediaRequestOptions
  */
 public class UploadMediaService extends IntentService {
+
     static final String EXTRA_UPLOAD_OPTIONS = "net.sitecore.android.sdk.api.EXTRA_UPLOAD_OPTIONS";
     static final String EXTRA_STATUS_RECEIVER = "net.sitecore.android.sdk.api.EXTRA_STATUS_RECEIVER";
 
     static final int STATUS_OK = 0;
     static final int STATUS_ERROR = 1;
-
-    public UploadMediaService(String name) {
-        super(name);
-    }
 
     /**
      * Starts to upload media content.

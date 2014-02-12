@@ -7,36 +7,37 @@ import net.sitecore.android.sdk.api.model.ScItem;
 /**
  * Class which represents Sitecore media attributes.
  *
- * @see ScItem#getMediaDownloadUrl(MediaParameters)
+ * @see ScItem#getMediaDownloadUrl(DownloadMediaOptions)
  */
-public class MediaParameters {
+public class DownloadMediaOptions {
 
-    private final HashMap<String, String> params;
+    private final HashMap<String, String> mParams;
 
-    private MediaParameters(HashMap<String, String> params) {
-        this.params = new HashMap<String, String>(params);
+    private DownloadMediaOptions(HashMap<String, String> params) {
+        mParams = new HashMap<String, String>(params);
     }
 
     /**
-     * Converts previously set parameters to url form.
+     * Converts previously set parameters to url parameters, starting with '?'
      *
-     * @return {@code String} url form.
+     * @return {@code String} url parameters or empty text if no options were set.
      */
-    public String buildUrlFromParams() {
+    @Override
+    public String toString() {
         StringBuilder builder = new StringBuilder();
 
         boolean firstTime = true;
-        for (String key : params.keySet()) {
+        for (String key : mParams.keySet()) {
             builder.append(firstTime ? "?" : "&");
             if (firstTime) firstTime = false;
-            String value = params.get(key);
+            String value = mParams.get(key);
             builder.append(key).append("=").append(value);
         }
         return builder.toString();
     }
 
     /**
-     * Helper class for building {@link MediaParameters}.
+     * Helper class for building {@link DownloadMediaOptions}.
      */
     public static class Builder {
         private static final String WIDTH_KEY = "w";
@@ -210,12 +211,12 @@ public class MediaParameters {
         }
 
         /**
-         * Builds {@link net.sitecore.android.sdk.api.MediaParameters}.
+         * Builds {@link DownloadMediaOptions}.
          *
-         * @return {@code MediaParameters} parameters.
+         * @return {@code DownloadMediaOptions} parameters.
          */
-        public MediaParameters build() {
-            return new MediaParameters(params);
+        public DownloadMediaOptions build() {
+            return new DownloadMediaOptions(params);
         }
     }
 }

@@ -11,11 +11,11 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE)
-public class MediaParametersTest {
+public class DownloadMediaOptionsTest {
 
     @Test
     public void testFullParams() {
-        MediaParameters.Builder builder = new MediaParameters.Builder();
+        DownloadMediaOptions.Builder builder = new DownloadMediaOptions.Builder();
         builder.allowStretch(true)
                 .backgroundColor("black")
                 .database("web")
@@ -30,22 +30,22 @@ public class MediaParametersTest {
 
         assertNotNull(builder.build());
 
-        String finalURL = builder.build().buildUrlFromParams();
+        String finalURL = builder.build().toString();
         assertEquals("?w=100&thn=1&db=web&dmc=1&la=en&as=1&mh=100&sc=0.3&mw=100&bc=black&h=100", finalURL);
     }
 
     @Test
     public void testEmptyParams() {
-        MediaParameters.Builder builder = new MediaParameters.Builder();
+        DownloadMediaOptions.Builder builder = new DownloadMediaOptions.Builder();
         assertNotNull(builder.build());
 
-        String finalURL = builder.build().buildUrlFromParams();
+        String finalURL = builder.build().toString();
         assertEquals("", finalURL);
     }
 
     @Test
     public void testNotModifiableParams() {
-        MediaParameters.Builder builder = new MediaParameters.Builder();
+        DownloadMediaOptions.Builder builder = new DownloadMediaOptions.Builder();
         builder.maxHeight(100)
                 .maxHeight(200)
                 .maxHeight(300)
@@ -53,7 +53,7 @@ public class MediaParametersTest {
 
         assertNotNull(builder.build());
 
-        String finalURL = builder.build().buildUrlFromParams();
+        String finalURL = builder.build().toString();
         assertTrue(finalURL.contains("mh"));
         assertEquals(2, finalURL.split("mh").length);
     }

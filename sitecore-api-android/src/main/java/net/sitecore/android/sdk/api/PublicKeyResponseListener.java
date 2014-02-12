@@ -6,7 +6,7 @@ import com.android.volley.VolleyError;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
-import static net.sitecore.android.sdk.api.LogUtils.LOGD;
+import static net.sitecore.android.sdk.api.internal.LogUtils.LOGD;
 
 class PublicKeyResponseListener implements Response.Listener<String> {
 

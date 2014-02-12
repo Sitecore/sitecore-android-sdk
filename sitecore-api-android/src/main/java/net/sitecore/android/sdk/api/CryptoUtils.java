@@ -20,7 +20,7 @@ class CryptoUtils {
 
     private static final String RSA_TRANSFORMATION_TYPE = "RSA/None/PKCS1Padding";
 
-    static RSAPublicKey getPublicKey(String xmlDsig) throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public static RSAPublicKey getPublicKey(String xmlDsig) throws InvalidKeySpecException, NoSuchAlgorithmException {
         boolean hasMod = xmlDsig.contains(Tags.MOD_START) && xmlDsig.contains(Tags.MOD_END);
         if (!hasMod) throw new IllegalArgumentException("RSA modulus not found in response");
 
@@ -42,15 +42,7 @@ class CryptoUtils {
         return pub;
     }
 
-    private interface Tags {
-        String MOD_START = "<Modulus>";
-        String MOD_END = "</Modulus>";
-
-        String EXP_START = "<Exponent>";
-        String EXP_END = "</Exponent>";
-    }
-
-    static String encodeRsaMessage(PublicKey publicKey, String message) throws InvalidKeyException,
+    public static String encodeRsaMessage(PublicKey publicKey, String message) throws InvalidKeyException,
             BadPaddingException, IllegalBlockSizeException, NoSuchPaddingException, NoSuchAlgorithmException {
         final Cipher cipher = Cipher.getInstance(RSA_TRANSFORMATION_TYPE);
         cipher.init(Cipher.ENCRYPT_MODE, publicKey);
@@ -58,5 +50,13 @@ class CryptoUtils {
         String encodedMessage = Base64.encodeToString(cipherData, Base64.DEFAULT).replace("\n", "").replace("\r", "");
 
         return encodedMessage;
+    }
+
+    private interface Tags {
+        String MOD_START = "<Modulus>";
+        String MOD_END = "</Modulus>";
+
+        String EXP_START = "<Exponent>";
+        String EXP_END = "</Exponent>";
     }
 }

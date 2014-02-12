@@ -21,7 +21,7 @@ import org.json.JSONException;
 
 import net.sitecore.android.sdk.api.model.ScError;
 
-import static net.sitecore.android.sdk.api.LogUtils.LOGD;
+import static net.sitecore.android.sdk.api.internal.LogUtils.LOGD;
 
 /**
  * Base class for all sdk network requests.
@@ -60,7 +60,7 @@ public abstract class ScRequest<T extends ScResponse> extends Request<T> {
         mBeforeSaveContentProviderOperations.add(operation);
     }
 
-    ArrayList<ContentProviderOperation> getBeforeSaveContentProviderOperations() {
+    public ArrayList<ContentProviderOperation> getBeforeSaveContentProviderOperations() {
         return mBeforeSaveContentProviderOperations;
     }
 

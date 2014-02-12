@@ -1,4 +1,7 @@
-package net.sitecore.android.sdk.api;
+package net.sitecore.android.sdk.api.internal;
+
+import net.sitecore.android.sdk.api.ScErrorResponse;
+import net.sitecore.android.sdk.api.ScResponse;
 
 import org.json.JSONException;
 import org.json.JSONObject;

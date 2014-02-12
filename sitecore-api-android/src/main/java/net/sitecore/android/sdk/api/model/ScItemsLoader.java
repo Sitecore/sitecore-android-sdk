@@ -14,7 +14,7 @@ import java.util.List;
 import net.sitecore.android.sdk.api.provider.ScItemsContract.Items;
 import net.sitecore.android.sdk.api.provider.ScItemsProvider;
 
-import static net.sitecore.android.sdk.api.LogUtils.LOGV;
+import static net.sitecore.android.sdk.api.internal.LogUtils.LOGV;
 import static net.sitecore.android.sdk.api.provider.ScItemsContract.Fields;
 import static net.sitecore.android.sdk.api.provider.ScItemsDatabase.Tables;
 
@@ -103,7 +103,7 @@ public class ScItemsLoader extends AsyncTaskLoader<List<ScItem>> {
 
         //TODO: add timestamp?
         //item.mTimestamp = c.getString(ItemsQuery.TIMESTAMP);
-        //TODO: add tag(?)
+        //TODO: add tag?
 
         return item;
     }

@@ -25,8 +25,13 @@ public abstract class ScResponse {
         return mStatusCode >= 200 && mStatusCode < 300;
     }
 
-    protected ArrayList<ContentProviderOperation> toContentProviderOperations() {
-        return new ArrayList<ContentProviderOperation>();
+    public final ArrayList<ContentProviderOperation> toContentProviderOperations() {
+        ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
+        addContentProviderOperations(operations);
+        return operations;
+    }
+
+    protected void addContentProviderOperations(ArrayList<ContentProviderOperation> operations) {
     }
 
     protected ScResponse(int statusCode) {
