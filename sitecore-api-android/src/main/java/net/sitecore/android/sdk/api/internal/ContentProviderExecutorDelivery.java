@@ -1,4 +1,4 @@
-package net.sitecore.android.sdk.api;
+package net.sitecore.android.sdk.api.internal;
 
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
@@ -12,6 +12,8 @@ import com.android.volley.Response;
 import java.util.ArrayList;
 import java.util.concurrent.Executor;
 
+import net.sitecore.android.sdk.api.ScRequest;
+import net.sitecore.android.sdk.api.ScResponse;
 import net.sitecore.android.sdk.api.provider.ScItemsContract;
 import net.sitecore.android.sdk.api.provider.ScItemsProvider;
 
@@ -20,7 +22,7 @@ import static net.sitecore.android.sdk.api.LogUtils.LOGE;
 /**
  * Stores successful results in {@link ScItemsProvider} and delivers response.
  */
-class ContentProviderExecutorDelivery extends ExecutorDelivery {
+public class ContentProviderExecutorDelivery extends ExecutorDelivery {
 
     private final ContentResolver mResolver;
 

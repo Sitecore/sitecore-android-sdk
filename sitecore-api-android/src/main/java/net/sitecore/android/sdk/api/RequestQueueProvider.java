@@ -18,6 +18,7 @@ import com.android.volley.toolbox.NoCache;
 
 import java.util.concurrent.Executor;
 
+import net.sitecore.android.sdk.api.internal.ContentProviderExecutorDelivery;
 import net.sitecore.android.sdk.api.provider.ScItemsProvider;
 
 /**
@@ -63,7 +64,7 @@ public class RequestQueueProvider {
     }
 
     static RequestQueue newSitecoreRequestQueue(ContentResolver resolver, Executor executor) {
-        final String userAgent = "Sitecore/1.0 Mobile SDK for Android";
+        final String userAgent = "Sitecore/1.3 Mobile SDK for Android";
 
         HttpStack stack = null;
         if (Build.VERSION.SDK_INT >= 9) {
