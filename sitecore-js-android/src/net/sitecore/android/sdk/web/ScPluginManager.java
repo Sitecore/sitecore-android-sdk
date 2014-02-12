@@ -65,6 +65,7 @@ class ScPluginManager {
         addPlugin(new CameraPlugin());
         addPlugin(new ContactsPlugin());
         addPlugin(new GoogleMapsPlugin());
+        addPlugin(new UploadMediaPlugin());
     }
 
     private void addPlugin(ScPlugin plugin) {
