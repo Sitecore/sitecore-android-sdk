@@ -12,40 +12,31 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-class CompressionHelper {
-    interface OnCompressionFinishedCallback {
-        public void onCompressionFinished(String filePath);
-    }
-
-    private OnCompressionFinishedCallback mCallback;
+abstract class CompressionAsyncTask extends AsyncTask<Void, Void, String> {
     private Context mContext;
+    private String mImageUrl;
+    private String mCompressionQuality;
 
-    CompressionHelper(Context context, OnCompressionFinishedCallback callback) {
-        mCallback = callback;
+    protected CompressionAsyncTask(Context context, String imageUrl, String compressionQuality) {
         mContext = context;
+        mImageUrl = imageUrl;
+        mCompressionQuality = compressionQuality;
     }
 
-    public void compress(final String imageUrl, final String compressionQuality) {
-        new AsyncTask<Void, Void, String>() {
-
-            @Override
-            protected String doInBackground(Void... params) {
-                try {
-                    float level = Float.parseFloat(compressionQuality);
-                    int percentage = (int) ((1 - level) * 100);
-                    if (percentage < 0 || percentage > 100) return imageUrl;
-                    return compress(percentage, "tempImage.jpg", imageUrl);
-                } catch (Exception exception) {
-                    return imageUrl;
-                }
-            }
-
-            @Override
-            protected void onPostExecute(String result) {
-                    mCallback.onCompressionFinished(result);
-            }
-        }.execute((Void) null);
+    @Override
+    protected String doInBackground(Void... params) {
+        try {
+            float level = Float.parseFloat(mCompressionQuality);
+            int percentage = (int) ((1 - level) * 100);
+            if (percentage < 0 || percentage > 100) return mImageUrl;
+            return compress(percentage, "tempImage.jpg", mImageUrl);
+        } catch (Exception exception) {
+            return mImageUrl;
+        }
     }
+
+    @Override
+    abstract protected void onPostExecute(String result);
 
     private String compress(int level, String tempFileName, String imageUrl) throws Exception {
         String filePath = mContext.getCacheDir() + "/" + tempFileName;
