@@ -13,6 +13,8 @@ apply plugin: 'maven-publish'
 
 dependencies {
     compile 'com.android.support:support-v4:18.0.0'
+    compile project(':sdk-public:sitecore-api-android')
+
 }
 
 android {
