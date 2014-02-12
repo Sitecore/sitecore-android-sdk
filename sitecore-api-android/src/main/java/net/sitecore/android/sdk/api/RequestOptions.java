@@ -59,10 +59,16 @@ class RequestOptions {
         String getUrl() {
             final StringBuilder builder = new StringBuilder(mBaseUrl);
             builder.append(ITEMS_API_PREFIX);
-            builder.append("/v").append(mApiVersion).append("/");
+            builder.append("/v").append(mApiVersion);
 
-            if (!TextUtils.isEmpty(mSite)) builder.append(mSite);
-            if (!TextUtils.isEmpty(mItemPath)) builder.append(encodeString(mItemPath));
+            if (!TextUtils.isEmpty(mSite)) {
+                if (!mSite.startsWith("/")) builder.append("/");
+                builder.append(mSite);
+            }
+            if (!TextUtils.isEmpty(mItemPath)) {
+                if (!mItemPath.startsWith("/")) builder.append("/");
+                builder.append(encodeString(mItemPath));
+            }
 
             return builder.toString();
         }
