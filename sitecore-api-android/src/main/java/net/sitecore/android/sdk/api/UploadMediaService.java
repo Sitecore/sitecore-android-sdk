@@ -1,26 +1,28 @@
 package net.sitecore.android.sdk.api;
 
 import android.app.IntentService;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
-
-import com.android.volley.ParseError;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
+import android.webkit.MimeTypeMap;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-import org.json.JSONException;
+import com.android.volley.ParseError;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 
 import net.sitecore.android.sdk.api.model.ItemsResponse;
 import net.sitecore.android.sdk.api.model.ScError;
+
+import org.json.JSONException;
 
 import static com.android.volley.Response.ErrorListener;
 import static net.sitecore.android.sdk.api.internal.LogUtils.LOGD;
@@ -116,7 +118,6 @@ public class UploadMediaService extends IntentService {
         return intent;
     }
 
-
     /**
      * Creates {@code Intent} to upload media content from specified {@code UploadMediaRequestOptions}.
      *
@@ -144,6 +145,14 @@ public class UploadMediaService extends IntentService {
         UploadMediaRequestOptions options = intent.getParcelableExtra(EXTRA_UPLOAD_OPTIONS);
         mResultReceiver = intent.getParcelableExtra(EXTRA_STATUS_RECEIVER);
 
+        String mediaFilePath = options.getMediaFilePath();
+        if (mediaFilePath.startsWith("content:") && options.getFileName() == null) {
+            String fileExtension = getFileExtension(Uri.parse(mediaFilePath));
+            if (fileExtension != null) {
+                options.setFileName(options.getItemName() + "." + fileExtension);
+            }
+        }
+
         try {
             UploadMediaHelper mediaHelper = new UploadMediaHelper(getInputStreamFromUri(options.getMediaFilePath()));
             LOGD("Sending POST " + options.getFullUrl());
@@ -153,6 +162,12 @@ public class UploadMediaService extends IntentService {
         } catch (IOException e) {
             sendResult(STATUS_ERROR, e.getMessage());
         }
+    }
+
+    private String getFileExtension(Uri uri) {
+        ContentResolver resolver = getBaseContext().getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        return mime.getExtensionFromMimeType(resolver.getType(uri));
     }
 
     private void sendResult(int code, String message) {

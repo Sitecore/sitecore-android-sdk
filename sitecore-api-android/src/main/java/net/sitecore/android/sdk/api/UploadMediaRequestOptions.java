@@ -33,6 +33,10 @@ public class UploadMediaRequestOptions implements Parcelable {
         mUrlOptions.mItemPath = itemPath;
     }
 
+    public String getItemName() {
+        return mItemName;
+    }
+
     public void setFileName(String fileName) {
         mFileName = fileName;
     }

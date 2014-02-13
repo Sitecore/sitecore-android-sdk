@@ -112,7 +112,7 @@ public interface ScApiSession {
      *
      * @param itemPath      Media folder path to upload media to.
      * @param itemName      Name of the media item.
-     * @param mediaFilePath any of "content://"(file name should be explicitly set), "http://", "file://"
+     * @param mediaFilePath any of "content://", "http://", "file://"
      *
      * @return {@link UploadMediaRequestOptions} that describe image upload request.
      */
