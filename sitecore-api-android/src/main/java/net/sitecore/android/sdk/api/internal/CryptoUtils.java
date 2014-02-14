@@ -1,4 +1,4 @@
-package net.sitecore.android.sdk.api;
+package net.sitecore.android.sdk.api.internal;
 
 import android.util.Base64;
 
@@ -16,7 +16,7 @@ import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPublicKeySpec;
 
-class CryptoUtils {
+public class CryptoUtils {
 
     private static final String RSA_TRANSFORMATION_TYPE = "RSA/None/PKCS1Padding";
 

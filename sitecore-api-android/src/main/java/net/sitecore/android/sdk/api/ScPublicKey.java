@@ -4,6 +4,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
 
+import net.sitecore.android.sdk.api.internal.CryptoUtils;
+
 public class ScPublicKey {
 
     private final String mRawValue;
