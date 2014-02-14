@@ -26,6 +26,7 @@ import org.json.JSONException;
 
 import static com.android.volley.Response.ErrorListener;
 import static net.sitecore.android.sdk.api.internal.LogUtils.LOGD;
+import static net.sitecore.android.sdk.api.internal.LogUtils.LOGE;
 
 /**
  * Service responsible for sending media data.
@@ -160,7 +161,8 @@ public class UploadMediaService extends IntentService {
             LOGD("Response: " + response);
             sendResult(STATUS_OK, response);
         } catch (IOException e) {
-            sendResult(STATUS_ERROR, e.getMessage());
+            LOGE(e);
+            sendResult(STATUS_ERROR, e + " : " + e.getMessage());
         }
     }
 
