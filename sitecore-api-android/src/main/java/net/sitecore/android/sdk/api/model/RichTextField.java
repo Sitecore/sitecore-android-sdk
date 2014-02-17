@@ -10,8 +10,8 @@ public class RichTextField extends ScField {
     private static Pattern sPattern = Pattern.compile("<img.*?src=(\"|')((~/media).*?)(\"|').*?(/>|</img>)");
     private String mHtmlText;
 
-    protected RichTextField(String name, String id, Type type, String rawValue) {
-        super(name, id, type, rawValue);
+    protected RichTextField(String name, String id, String rawValue) {
+        super(name, id, Type.RICHTEXT, rawValue);
     }
 
     /**

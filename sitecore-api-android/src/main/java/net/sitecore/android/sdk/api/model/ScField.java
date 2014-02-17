@@ -167,7 +167,7 @@ public class ScField implements Parcelable {
                 return new ScDateField(name, id, Type.DATE_TIME, rawValue);
 
             case RICHTEXT:
-                return new RichTextField(name, id, Type.RICHTEXT, rawValue);
+                return new RichTextField(name, id, rawValue);
 
             case IMAGE:
                 return new ImageField(name, id, rawValue);
