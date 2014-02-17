@@ -10,12 +10,12 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import net.sitecore.android.sdk.api.model.CheckBoxField;
+import net.sitecore.android.sdk.api.model.ImageField;
 import net.sitecore.android.sdk.api.model.ItemsResponse;
 import net.sitecore.android.sdk.api.model.ScBaselistField;
-import net.sitecore.android.sdk.api.model.ScCheckBoxField;
 import net.sitecore.android.sdk.api.model.ScDateField;
 import net.sitecore.android.sdk.api.model.ScField;
-import net.sitecore.android.sdk.api.model.ScImageField;
 import net.sitecore.android.sdk.api.model.ScItem;
 
 import static org.junit.Assert.assertEquals;
@@ -61,7 +61,7 @@ public class ScFieldTest extends MockedServerAndroidTestCase {
 
     @Test
     public void testCheckboxField() throws Exception {
-        ScCheckBoxField checkboxField = (ScCheckBoxField) mItem.findFieldByName("CheckBoxField");
+        CheckBoxField checkboxField = (CheckBoxField) mItem.findFieldByName("CheckBoxField");
         assertTrue(checkboxField.isChecked());
         assertEquals("1", checkboxField.getRawValue());
         assertEquals(ScField.Type.CHECKBOX, checkboxField.getType());
@@ -99,7 +99,7 @@ public class ScFieldTest extends MockedServerAndroidTestCase {
 
     @Test
     public void testImageField() {
-        ScImageField imageField = (ScImageField) mItem.findFieldById("{47E89857-EA42-4CC6-9436-34560BDA73ED}");
+        ImageField imageField = (ImageField) mItem.findFieldById("{47E89857-EA42-4CC6-9436-34560BDA73ED}");
         assertEquals("Image", imageField.getName());
         assertEquals("/~/media/4F20B519D5654472B01891CB6103C667.ashx", imageField.getImageSrcUrl());
         assertEquals(ScField.Type.IMAGE, imageField.getType());

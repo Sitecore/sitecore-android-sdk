@@ -16,8 +16,8 @@ package net.sitecore.android.sdk.api.model;
  * <li>Zip</li>
  * </ul>
  */
-public class ScMediaField extends ScField {
-    public ScMediaField(String name, String id, Type type, String rawValue) {
+public class MediaField extends ScField {
+    public MediaField(String name, String id, Type type, String rawValue) {
         super(name, id, type, rawValue);
     }
 }

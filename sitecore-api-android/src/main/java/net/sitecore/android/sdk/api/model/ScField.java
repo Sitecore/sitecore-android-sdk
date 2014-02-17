@@ -9,12 +9,16 @@ import net.sitecore.android.sdk.api.provider.ScItemsContract.Fields;
 /**
  * Base class for Sitecore Field
  *
- * @see ScMediaField
+ * @see MediaField
  * @see ScDateField
- * @see ScImageField
- * @see ScRichtextField
- * @see ScBaselistField
- * @see ScCheckBoxField
+ * @see ImageField
+ * @see RichTextField
+ * @see MultilistField
+ * @see DroplinkField
+ * @see DroptreeField
+ * @see ChecklistField
+ * @see TreelistField
+ * @see CheckBoxField
  */
 public class ScField implements Parcelable {
 
@@ -140,18 +144,22 @@ public class ScField implements Parcelable {
     public static ScField createFieldFromType(Type type, String name, String id, String rawValue) {
         switch (type) {
             case CHECKBOX:
-                return new ScCheckBoxField(name, id, Type.CHECKBOX, rawValue);
+                return new CheckBoxField(name, id, rawValue);
 
             case CHECKLIST:
-                return new ScBaselistField(name, id, Type.CHECKLIST, rawValue);
+                return new ChecklistField(name, id, rawValue);
+
             case MULTILIST:
-                return new ScBaselistField(name, id, Type.MULTILIST, rawValue);
+                return new MultilistField(name, id, rawValue);
+
             case TREELIST:
-                return new ScBaselistField(name, id, Type.TREELIST, rawValue);
+                return new TreelistField(name, id, rawValue);
+
             case DROPLINK:
-                return new ScBaselistField(name, id, Type.DROPLINK, rawValue);
+                return new DroplinkField(name, id, rawValue);
+
             case DROPTREE:
-                return new ScBaselistField(name, id, Type.DROPTREE, rawValue);
+                return new DroptreeField(name, id, rawValue);
 
             case DATE:
                 return new ScDateField(name, id, Type.DATE, rawValue);
@@ -159,32 +167,33 @@ public class ScField implements Parcelable {
                 return new ScDateField(name, id, Type.DATE_TIME, rawValue);
 
             case RICHTEXT:
-                return new ScRichtextField(name, id, Type.RICHTEXT, rawValue);
+                return new RichTextField(name, id, rawValue);
+
             case IMAGE:
-                return new ScImageField(name, id, Type.IMAGE, rawValue);
+                return new ImageField(name, id, rawValue);
 
             case AUDIO:
-                return new ScMediaField(name, id, Type.AUDIO, rawValue);
+                return new MediaField(name, id, Type.AUDIO, rawValue);
             case DOC:
-                return new ScMediaField(name, id, Type.DOC, rawValue);
+                return new MediaField(name, id, Type.DOC, rawValue);
             case DOCUMENT:
-                return new ScMediaField(name, id, Type.DOCUMENT, rawValue);
+                return new MediaField(name, id, Type.DOCUMENT, rawValue);
             case DOCX:
-                return new ScMediaField(name, id, Type.DOCX, rawValue);
+                return new MediaField(name, id, Type.DOCX, rawValue);
             case FILE:
-                return new ScMediaField(name, id, Type.FILE, rawValue);
+                return new MediaField(name, id, Type.FILE, rawValue);
             case FLASH:
-                return new ScMediaField(name, id, Type.FLASH, rawValue);
+                return new MediaField(name, id, Type.FLASH, rawValue);
             case JPEG:
-                return new ScMediaField(name, id, Type.JPEG, rawValue);
+                return new MediaField(name, id, Type.JPEG, rawValue);
             case MOVIE:
-                return new ScMediaField(name, id, Type.MOVIE, rawValue);
+                return new MediaField(name, id, Type.MOVIE, rawValue);
             case MP3:
-                return new ScMediaField(name, id, Type.MP3, rawValue);
+                return new MediaField(name, id, Type.MP3, rawValue);
             case PDF:
-                return new ScMediaField(name, id, Type.PDF, rawValue);
+                return new MediaField(name, id, Type.PDF, rawValue);
             case ZIP:
-                return new ScMediaField(name, id, Type.ZIP, rawValue);
+                return new MediaField(name, id, Type.ZIP, rawValue);
 
             default:
                 return new ScField(name, id, type, rawValue);
