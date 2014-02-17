@@ -170,7 +170,7 @@ public class ScField implements Parcelable {
                 return new RichTextField(name, id, Type.RICHTEXT, rawValue);
 
             case IMAGE:
-                return new ImageField(name, id, Type.IMAGE, rawValue);
+                return new ImageField(name, id, rawValue);
 
             case AUDIO:
                 return new MediaField(name, id, Type.AUDIO, rawValue);

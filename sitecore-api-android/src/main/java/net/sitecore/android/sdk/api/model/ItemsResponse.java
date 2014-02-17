@@ -7,18 +7,20 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import net.sitecore.android.sdk.api.ScResponse;
+import net.sitecore.android.sdk.api.UploadMediaService;
+import net.sitecore.android.sdk.api.internal.ScResponseParser;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import net.sitecore.android.sdk.api.ScResponse;
-import net.sitecore.android.sdk.api.internal.ScResponseParser;
-import net.sitecore.android.sdk.api.UploadMediaService;
-
 import static net.sitecore.android.sdk.api.provider.ScItemsContract.Fields;
 
 /**
- * Class represents response for {@link net.sitecore.android.sdk.api.CreateItemRequest}, {@link net.sitecore.android.sdk.api.UpdateItemFieldsRequest}, {@link net.sitecore.android.sdk.api.GetItemsRequest},
+ * Class represents response for {@link net.sitecore.android.sdk.api.CreateItemRequest},
+ * {@link net.sitecore.android.sdk.api.UpdateItemFieldsRequest},
+ * {@link net.sitecore.android.sdk.api.GetItemsRequest},
  * and response for  {@link UploadMediaService Uploading media item}.
  */
 public class ItemsResponse extends ScResponse {

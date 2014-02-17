@@ -10,8 +10,8 @@ public class ImageField extends ScField {
     private static Pattern SRC_PATTERN = Pattern.compile("src=(\\\\?\")(.*?)\\1"); // Regexp for searching url inside "src" attribute
     private String mImageSrcUrl;
 
-    protected ImageField(String name, String id, Type type, String rawValue) {
-        super(name, id, type, rawValue);
+    protected ImageField(String name, String id, String rawValue) {
+        super(name, id, Type.IMAGE, rawValue);
     }
 
     /**
