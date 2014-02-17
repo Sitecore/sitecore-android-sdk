@@ -11,9 +11,9 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import net.sitecore.android.sdk.api.model.ItemsResponse;
+import net.sitecore.android.sdk.api.model.RichTextField;
 import net.sitecore.android.sdk.api.model.ScField;
 import net.sitecore.android.sdk.api.model.ScItem;
-import net.sitecore.android.sdk.api.model.ScRichtextField;
 
 import static org.junit.Assert.assertEquals;
 
@@ -44,7 +44,7 @@ public class ScRichTextFieldTest extends MockedServerAndroidTestCase {
 
     @Test
     public void testRichTextNotChanged() throws Exception {
-        ScRichtextField richtextField = (ScRichtextField) mItem.findFieldByName("Unchanged text");
+        RichTextField richtextField = (RichTextField) mItem.findFieldByName("Unchanged text");
         assertEquals(ScField.Type.RICHTEXT, richtextField.getType());
 
         String expectedHtml = TestData.rich_text_not_changed;
@@ -54,7 +54,7 @@ public class ScRichTextFieldTest extends MockedServerAndroidTestCase {
 
     @Test
     public void testRichTextNotChangedSingleQoutes() throws Exception {
-        ScRichtextField richtextField = (ScRichtextField) mItem.findFieldByName("Unchanged text Single qoutes");
+        RichTextField richtextField = (RichTextField) mItem.findFieldByName("Unchanged text Single qoutes");
         assertEquals(ScField.Type.RICHTEXT, richtextField.getType());
 
         String expectedHtml = TestData.rich_text_test_notchanged_single_qoutes;
@@ -64,7 +64,7 @@ public class ScRichTextFieldTest extends MockedServerAndroidTestCase {
 
     @Test
     public void testRichTextConverted() throws Exception {
-        ScRichtextField richtextField = (ScRichtextField) mItem.findFieldByName("Normal rich text");
+        RichTextField richtextField = (RichTextField) mItem.findFieldByName("Normal rich text");
         assertEquals(ScField.Type.RICHTEXT, richtextField.getType());
 
         String expectedHtml = TestData.rich_text_test_changed;
@@ -74,7 +74,7 @@ public class ScRichTextFieldTest extends MockedServerAndroidTestCase {
 
     @Test
     public void testRichTextConvertedSingleQoutes() throws Exception {
-        ScRichtextField richtextField = (ScRichtextField) mItem.findFieldByName("Text with single qoutes");
+        RichTextField richtextField = (RichTextField) mItem.findFieldByName("Text with single qoutes");
         assertEquals(ScField.Type.RICHTEXT, richtextField.getType());
 
         String expectedHtml = TestData.rich_text_test_changed_single_qoutes;
@@ -84,7 +84,7 @@ public class ScRichTextFieldTest extends MockedServerAndroidTestCase {
 
     @Test
     public void testRichTextNonLinkUnchangedSingleQoutes() throws Exception {
-        ScRichtextField richtextField = (ScRichtextField) mItem.findFieldByName("With Non link");
+        RichTextField richtextField = (RichTextField) mItem.findFieldByName("With Non link");
         assertEquals(ScField.Type.RICHTEXT, richtextField.getType());
 
         String expectedHtml = TestData.rich_text_test_nonlink_unchanged_singleqoutes;

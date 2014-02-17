@@ -15,6 +15,7 @@ import java.util.TimeZone;
  * The only difference between them is accuracy.
  */
 public class ScDateField extends ScField {
+
     public static SimpleDateFormat DATE_FORMAT;
     private long mDateInMillis;
 

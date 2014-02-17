@@ -3,12 +3,14 @@ package net.sitecore.android.sdk.api.model;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/** This class represents Rich Text field type of Sitecore */
-public class ScRichtextField extends ScField {
+/**
+ * Represents Sitecore RichText field.
+ */
+public class RichTextField extends ScField {
     private static Pattern sPattern = Pattern.compile("<img.*?src=(\"|')((~/media).*?)(\"|').*?(/>|</img>)");
     private String mHtmlText;
 
-    protected ScRichtextField(String name, String id, Type type, String rawValue) {
+    protected RichTextField(String name, String id, Type type, String rawValue) {
         super(name, id, type, rawValue);
     }
 

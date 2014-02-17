@@ -1,13 +1,13 @@
 package net.sitecore.android.sdk.api.model;
 
 /**
- * This class represents Checkbox field type of Sitecore CMS:
+ * Represents Sitecore CheckBox field.
  */
-public class ScCheckBoxField extends ScField {
+public class CheckBoxField extends ScField {
     private boolean mChecked;
 
-    protected ScCheckBoxField(String name, String id, Type type, String rawValue) {
-        super(name, id, type, rawValue);
+    protected CheckBoxField(String name, String id, String rawValue) {
+        super(name, id, Type.CHECKBOX, rawValue);
     }
 
     public boolean isChecked() {

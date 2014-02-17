@@ -3,12 +3,14 @@ package net.sitecore.android.sdk.api.model;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/** Represents Sitecore Image field. */
-public class ScImageField extends ScField {
-    private static Pattern SRC_PATTERN = Pattern.compile("src=(\\\\?\")(.*?)\\1"); // Regex for searching url inside "src" attribute
+/**
+ * Represents Sitecore Image field.
+ */
+public class ImageField extends ScField {
+    private static Pattern SRC_PATTERN = Pattern.compile("src=(\\\\?\")(.*?)\\1"); // Regexp for searching url inside "src" attribute
     private String mImageSrcUrl;
 
-    protected ScImageField(String name, String id, Type type, String rawValue) {
+    protected ImageField(String name, String id, Type type, String rawValue) {
         super(name, id, type, rawValue);
     }
 
