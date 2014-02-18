@@ -239,36 +239,27 @@ class ScApiSessionImpl implements ScApiSession {
 
     @Override
     public void setDefaultSite(String site) {
-        if (TextUtils.isEmpty(site)) {
-            throw new IllegalArgumentException("Site cannot be empty or null");
-        }
         this.mDefaultSite = site;
     }
 
     @Override
     public void setDefaultLanguage(String language) {
-        if (TextUtils.isEmpty(language)) {
-            throw new IllegalArgumentException("Language cannot be empty or null");
-        }
         this.mDefaultLanguage = language;
     }
 
     @Override
     public void setDefaultDatabase(String database) {
-        if (TextUtils.isEmpty(database)) {
-            throw new IllegalArgumentException("Database cannot be empty or null");
-        }
         this.mDefaultDatabse = database;
     }
 
     public void setDefaultOptions(RequestBuilder builder) {
-        if (mDefaultSite != null) {
+        if (!TextUtils.isEmpty(mDefaultSite)) {
             builder.fromSite(mDefaultSite);
         }
-        if (mDefaultLanguage != null) {
+        if (!TextUtils.isEmpty(mDefaultLanguage)) {
             builder.setLanguage(mDefaultLanguage);
         }
-        if (mDefaultDatabse != null) {
+        if (!TextUtils.isEmpty(mDefaultDatabse)) {
             builder.fromSite(mDefaultDatabse);
         }
     }
