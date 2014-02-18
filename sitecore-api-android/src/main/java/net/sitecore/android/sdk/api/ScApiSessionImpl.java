@@ -33,7 +33,7 @@ class ScApiSessionImpl implements ScApiSession {
     private final String mName;
     private final String mPassword;
     private final boolean mIsAnonymous;
-    private String mDefaultDatabse;
+    private String mDefaultDatabase;
     private String mDefaultSite;
     private String mDefaultLanguage;
 
@@ -178,7 +178,7 @@ class ScApiSessionImpl implements ScApiSession {
             options.mEncodedPassword = createEncodedPassword();
         }
 
-        if (mDefaultDatabse != null) builder.database(mDefaultDatabse);
+        if (mDefaultDatabase != null) builder.database(mDefaultDatabase);
         if (mDefaultLanguage != null) builder.setLanguage(mDefaultLanguage);
         if (mDefaultSite != null) builder.fromSite(mDefaultSite);
 
@@ -194,7 +194,7 @@ class ScApiSessionImpl implements ScApiSession {
         options.mAuthOptions.mEncodedName = createEncodedName();
         options.mAuthOptions.mEncodedPassword = createEncodedPassword();
 
-        if (mDefaultDatabse != null) options.setDatabase(mDefaultDatabse);
+        if (mDefaultDatabase != null) options.setDatabase(mDefaultDatabase);
 
         return options;
     }
@@ -249,18 +249,18 @@ class ScApiSessionImpl implements ScApiSession {
 
     @Override
     public void setDefaultDatabase(String database) {
-        this.mDefaultDatabse = database;
+        this.mDefaultDatabase = database;
     }
 
-    public void setDefaultOptions(RequestBuilder builder) {
+    private void setDefaultOptions(RequestBuilder builder) {
         if (!TextUtils.isEmpty(mDefaultSite)) {
             builder.fromSite(mDefaultSite);
         }
         if (!TextUtils.isEmpty(mDefaultLanguage)) {
             builder.setLanguage(mDefaultLanguage);
         }
-        if (!TextUtils.isEmpty(mDefaultDatabse)) {
-            builder.fromSite(mDefaultDatabse);
+        if (!TextUtils.isEmpty(mDefaultDatabase)) {
+            builder.fromSite(mDefaultDatabase);
         }
     }
 
