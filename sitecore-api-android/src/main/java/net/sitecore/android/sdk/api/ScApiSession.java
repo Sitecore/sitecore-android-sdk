@@ -2,14 +2,16 @@ package net.sitecore.android.sdk.api;
 
 import android.content.Context;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import com.android.volley.Request;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 
-import java.util.ArrayList;
-
 import net.sitecore.android.sdk.api.model.DeleteItemsResponse;
 import net.sitecore.android.sdk.api.model.ItemsResponse;
+import net.sitecore.android.sdk.api.model.ScItem;
 
 /**
  * Interface for interaction with Sitecore Item Web API.
@@ -117,6 +119,16 @@ public interface ScApiSession {
      * @return {@link UploadMediaRequestOptions} that describe image upload request.
      */
     public UploadMediaRequestOptions uploadMedia(String itemPath, String itemName, String mediaFilePath);
+
+    public DeleteItemsRequest deleteItem(ScItem item, Listener<DeleteItemsResponse> successListener,
+            ErrorListener errorListener);
+
+    public GetItemsRequest getItemChildren(ScItem parentItem, Listener<ItemsResponse> successListener,
+            ErrorListener errorListener);
+
+    //TODO: find practical usage.
+    public ScRequest updateItemFields(ScItem item, HashMap<String, String> fields,
+            Listener<ItemsResponse> successListener, ErrorListener errorListener);
 
     /** @return Backend url with port. */
     public String getBaseUrl();

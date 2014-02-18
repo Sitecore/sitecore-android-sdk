@@ -3,11 +3,6 @@ package net.sitecore.android.sdk.api;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.android.volley.Request;
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
-
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
@@ -16,10 +11,18 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
+import java.util.HashMap;
+
+import com.android.volley.Request;
+import com.android.volley.Response.ErrorListener;
+import com.android.volley.Response.Listener;
+import com.android.volley.VolleyError;
 
 import net.sitecore.android.sdk.api.internal.CryptoUtils;
 import net.sitecore.android.sdk.api.model.DeleteItemsResponse;
 import net.sitecore.android.sdk.api.model.ItemsResponse;
+import net.sitecore.android.sdk.api.model.RequestScope;
+import net.sitecore.android.sdk.api.model.ScItem;
 
 import static net.sitecore.android.sdk.api.internal.LogUtils.LOGE;
 
@@ -173,6 +176,40 @@ class ScApiSessionImpl implements ScApiSession {
         options.mAuthOptions.mEncodedPassword = createEncodedPassword();
 
         return options;
+    }
+
+    @Override
+    public DeleteItemsRequest deleteItem(ScItem item, Listener<DeleteItemsResponse> successListener,
+            ErrorListener errorListener) {
+        RequestBuilder builder = deleteItemsRequest(successListener, errorListener);
+        builder.byItemId(item.getId());
+        return (DeleteItemsRequest) builder.build();
+    }
+
+    @Override
+    public GetItemsRequest getItemChildren(ScItem parentItem, Listener<ItemsResponse> successListener,
+            ErrorListener errorListener) {
+        RequestBuilder builder = readItemsRequest(successListener, errorListener);
+
+        builder.byItemId(parentItem.getId());
+        builder.withScope(RequestScope.CHILDREN);
+        builder.database(parentItem.getDatabase());
+        builder.setLanguage(parentItem.getLanguage());
+
+        return (GetItemsRequest) builder.build();
+    }
+
+    @Override
+    public ScRequest updateItemFields(ScItem item, HashMap<String, String> fields,
+            Listener<ItemsResponse> successListener, ErrorListener errorListener) {
+        RequestBuilder builder = editItemsRequest(successListener, errorListener);
+
+        builder.byItemId(item.getId());
+        for (String fieldName : fields.keySet()) {
+            builder.updateFieldValue(fieldName, fields.get(fieldName));
+        }
+
+        return builder.build();
     }
 
     @Override
