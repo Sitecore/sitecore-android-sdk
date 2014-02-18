@@ -78,7 +78,7 @@ import static net.sitecore.android.sdk.api.provider.ScItemsContract.Items;
  * </ul>
  */
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-public class ItemsBrowserFragment extends DialogFragment {
+public abstract class ItemsBrowserFragment extends DialogFragment {
 
     /**
      * Default root items browser folder.
@@ -92,9 +92,6 @@ public class ItemsBrowserFragment extends DialogFragment {
 
     private static final String EXTRA_ITEM_ID = "item_id";
     private static final String EXTRA_ITEM_PATH = "item_path";
-
-    private static final int STYLE_LIST = 0;
-    private static final int STYLE_GRID = 1;
 
     private static final int LOADER_CHILD_ITEMS = 0;
     private static final int LOADER_ROOT_ITEM = 1;
@@ -197,8 +194,6 @@ public class ItemsBrowserFragment extends DialogFragment {
     private RequestQueue mRequestQueue;
     private ScApiSession mApiSession;
 
-    private int mStyle = STYLE_LIST;
-    private int mColumnCount = 2;
     private String mRootFolder = DEFAULT_ROOT_FOLDER;
 
     private LinkedList<ScItem> mItems = new LinkedList<ScItem>();
@@ -273,15 +268,9 @@ public class ItemsBrowserFragment extends DialogFragment {
         mContainerList.addView(mGoUpView, new LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
 
         // Add ListView/GridView
-        if (mStyle == STYLE_LIST) {
-            mListView = new ListView(getActivity());
-        } else {
-            GridView grid = new GridView(getActivity());
-            grid.setNumColumns(mColumnCount);
-            mListView = grid;
-        }
-
+        mListView = getContentView();
         mListView.setDrawSelectorOnTop(false);
+
         LinearLayout.LayoutParams listParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0);
         listParams.weight = 1;
         mContainerList.addView(mListView, listParams);
@@ -301,6 +290,8 @@ public class ItemsBrowserFragment extends DialogFragment {
 
         return v;
     }
+
+    protected abstract AbsListView getContentView();
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -389,8 +380,6 @@ public class ItemsBrowserFragment extends DialogFragment {
         super.onInflate(activity, attrs, savedInstanceState);
         TypedArray a = activity.obtainStyledAttributes(attrs, R.styleable.ItemsBrowserFragment);
 
-        mStyle = a.getInt(R.styleable.ItemsBrowserFragment_style, STYLE_LIST);
-        mColumnCount = a.getInt(R.styleable.ItemsBrowserFragment_columnCount, DEFAULT_GRID_COLUMNS_COUNT);
         String root = a.getString(R.styleable.ItemsBrowserFragment_rootFolder);
         if (!TextUtils.isEmpty(root)) mRootFolder = root;
 
@@ -614,23 +603,6 @@ public class ItemsBrowserFragment extends DialogFragment {
             final TextView tv = (TextView) mContainerEmpty;
             tv.setText(textResourceId);
         }
-    }
-
-    /**
-     * Show items as list.
-     */
-    public void setListStyle() {
-        mStyle = STYLE_LIST;
-    }
-
-    /**
-     * Show items as grid.
-     *
-     * @param columnCount Number of columns. Default value is {@link #DEFAULT_GRID_COLUMNS_COUNT}
-     */
-    public void setGridStyle(int columnCount) {
-        mStyle = STYLE_GRID;
-        mColumnCount = columnCount;
     }
 
     /**
