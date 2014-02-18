@@ -33,6 +33,9 @@ class ScApiSessionImpl implements ScApiSession {
     private final String mName;
     private final String mPassword;
     private final boolean mIsAnonymous;
+    private String mDefaultDatabse;
+    private String mDefaultSite;
+    private String mDefaultLanguage;
 
     private boolean mShouldCache = false;
 
@@ -60,6 +63,8 @@ class ScApiSessionImpl implements ScApiSession {
         builder.setSuccessListener(successListener);
         builder.setErrorListener(errorListener);
 
+        setDefaultOptions(builder);
+
         return builder;
     }
 
@@ -79,6 +84,8 @@ class ScApiSessionImpl implements ScApiSession {
         }
         builder.bySitecoreQuery(queryBuilder.build());
 
+        setDefaultOptions(builder);
+
         return builder;
     }
 
@@ -90,6 +97,8 @@ class ScApiSessionImpl implements ScApiSession {
         builder.setSuccessListener(successListener);
         builder.setErrorListener(errorListener);
         builder.setCreateItemData(itemName, template);
+
+        setDefaultOptions(builder);
 
         return builder;
     }
@@ -103,6 +112,8 @@ class ScApiSessionImpl implements ScApiSession {
         builder.setErrorListener(errorListener);
         builder.setCreateItemFromBranchData(branchId);
 
+        setDefaultOptions(builder);
+
         return builder;
     }
 
@@ -112,6 +123,8 @@ class ScApiSessionImpl implements ScApiSession {
         builder.setSuccessListener(successListener);
         builder.setErrorListener(errorListener);
 
+        setDefaultOptions(builder);
+
         return builder;
     }
 
@@ -120,6 +133,8 @@ class ScApiSessionImpl implements ScApiSession {
         final RequestBuilder builder = new RequestBuilder(this, Request.Method.DELETE);
         builder.setSuccessListener(successListener);
         builder.setErrorListener(errorListener);
+
+        setDefaultOptions(builder);
 
         return builder;
     }
@@ -163,6 +178,10 @@ class ScApiSessionImpl implements ScApiSession {
             options.mEncodedPassword = createEncodedPassword();
         }
 
+        if (mDefaultDatabse != null) builder.database(mDefaultDatabse);
+        if (mDefaultLanguage != null) builder.setLanguage(mDefaultLanguage);
+        if (mDefaultSite != null) builder.fromSite(mDefaultSite);
+
         return builder;
     }
 
@@ -175,6 +194,8 @@ class ScApiSessionImpl implements ScApiSession {
         options.mAuthOptions.mEncodedName = createEncodedName();
         options.mAuthOptions.mEncodedPassword = createEncodedPassword();
 
+        if (mDefaultDatabse != null) options.setDatabase(mDefaultDatabse);
+
         return options;
     }
 
@@ -183,6 +204,7 @@ class ScApiSessionImpl implements ScApiSession {
             ErrorListener errorListener) {
         RequestBuilder builder = deleteItemsRequest(successListener, errorListener);
         builder.byItemId(item.getId());
+
         return (DeleteItemsRequest) builder.build();
     }
 
@@ -193,8 +215,6 @@ class ScApiSessionImpl implements ScApiSession {
 
         builder.byItemId(parentItem.getId());
         builder.withScope(RequestScope.CHILDREN);
-        builder.database(parentItem.getDatabase());
-        builder.setLanguage(parentItem.getLanguage());
 
         return (GetItemsRequest) builder.build();
     }
@@ -215,6 +235,42 @@ class ScApiSessionImpl implements ScApiSession {
     @Override
     public String getBaseUrl() {
         return mBaseUrl;
+    }
+
+    @Override
+    public void setDefaultSite(String site) {
+        if (TextUtils.isEmpty(site)) {
+            throw new IllegalArgumentException("Site cannot be empty or null");
+        }
+        this.mDefaultSite = site;
+    }
+
+    @Override
+    public void setDefaultLanguage(String language) {
+        if (TextUtils.isEmpty(language)) {
+            throw new IllegalArgumentException("Language cannot be empty or null");
+        }
+        this.mDefaultLanguage = language;
+    }
+
+    @Override
+    public void setDefaultDatabase(String database) {
+        if (TextUtils.isEmpty(database)) {
+            throw new IllegalArgumentException("Database cannot be empty or null");
+        }
+        this.mDefaultDatabse = database;
+    }
+
+    public void setDefaultOptions(RequestBuilder builder) {
+        if (mDefaultSite != null) {
+            builder.fromSite(mDefaultSite);
+        }
+        if (mDefaultLanguage != null) {
+            builder.setLanguage(mDefaultLanguage);
+        }
+        if (mDefaultDatabse != null) {
+            builder.fromSite(mDefaultDatabse);
+        }
     }
 
     @Override

@@ -133,6 +133,12 @@ public interface ScApiSession {
     /** @return Backend url with port. */
     public String getBaseUrl();
 
+    public void setDefaultSite(String site);
+
+    public void setDefaultLanguage(String language);
+
+    public void setDefaultDatabase(String database);
+
     public boolean isAnonymous();
 
     /** @return {@code true} if requests should cache all responses. {@code false} by default. */
