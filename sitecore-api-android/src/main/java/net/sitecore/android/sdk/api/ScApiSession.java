@@ -3,7 +3,7 @@ package net.sitecore.android.sdk.api;
 import android.content.Context;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Map;
 
 import com.android.volley.Request;
 import com.android.volley.Response.ErrorListener;
@@ -127,7 +127,7 @@ public interface ScApiSession {
             ErrorListener errorListener);
 
     //TODO: find practical usage.
-    public ScRequest updateItemFields(ScItem item, HashMap<String, String> fields,
+    public ScRequest updateItemFields(ScItem item, Map<String, String> fields,
             Listener<ItemsResponse> successListener, ErrorListener errorListener);
 
     /** @return Backend url with port. */

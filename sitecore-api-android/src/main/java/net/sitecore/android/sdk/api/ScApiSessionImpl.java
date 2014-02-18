@@ -11,7 +11,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Map;
 
 import com.android.volley.Request;
 import com.android.volley.Response.ErrorListener;
@@ -200,7 +200,7 @@ class ScApiSessionImpl implements ScApiSession {
     }
 
     @Override
-    public ScRequest updateItemFields(ScItem item, HashMap<String, String> fields,
+    public ScRequest updateItemFields(ScItem item, Map<String, String> fields,
             Listener<ItemsResponse> successListener, ErrorListener errorListener) {
         RequestBuilder builder = editItemsRequest(successListener, errorListener);
 
