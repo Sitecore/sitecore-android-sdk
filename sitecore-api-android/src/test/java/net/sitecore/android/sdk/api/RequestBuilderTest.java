@@ -191,6 +191,21 @@ public class RequestBuilderTest extends MockedServerAndroidTestCase {
     }
 
     @Test
+    public void testDefaultOptionsCleaned() {
+        mSession.setDefaultDatabase("sitecore");
+        mSession.setDefaultLanguage("ru");
+        mSession.setDefaultSite("/sitecore");
+
+        mSession.setDefaultDatabase(null);
+        mSession.setDefaultLanguage(null);
+        mSession.setDefaultSite(null);
+
+        ScRequest request = mSession.readItemsRequest(null, null).byItemId("id").build();
+        assertEquals("http://sample.com/-/item/v1?sc_itemid=id",
+                request.getUrl());
+    }
+
+    @Test
     public void testCetRenderingHTML() {
         GetRenderingHtmlRequest request;
         request = mSession.getRenderingHtmlRequest(TestData.Renderings.MasterSampleRendering.ID,
