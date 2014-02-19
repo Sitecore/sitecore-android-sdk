@@ -147,37 +147,51 @@ public class RequestBuilderTest extends MockedServerAndroidTestCase {
     }
 
     @Test
-    public void testDefaultOptions() {
+    public void testDefaultOptionsOverriding() {
         mSession.setDefaultDatabase("sitecore");
         mSession.setDefaultLanguage("ru");
         mSession.setDefaultSite("/sitecore");
 
-        ScRequest request = mSession.readItemsRequest(null, null).byItemId("id").build();
-        assertEquals("http://sample.com/-/item/v1/sitecore?sc_itemid=id&sc_database=sitecore&language=ru",
-                request.getUrl());
-
-        request = mSession.readItemsRequest(null, null).byItemId("id").fromSite("/shell/").database("web").
+        ScRequest request = mSession.readItemsRequest(null, null).byItemId("id").fromSite("/shell/").database("web").
                 setLanguage("en").build();
-
         assertEquals("http://sample.com/-/item/v1/shell/?sc_itemid=id&sc_database=web&language=en",
                 request.getUrl());
+    }
 
+    @Test
+    public void testDefaultOptionsPartialUsage() {
+        mSession.setDefaultDatabase("web");
+
+        ScRequest request = mSession.readItemsRequest(null, null).byItemId("id").fromSite("/sitecore/shell/").setLanguage("en")
+                .build();
+        assertEquals("http://sample.com/-/item/v1/sitecore/shell/?sc_itemid=id&sc_database=web&language=en",
+                request.getUrl());
+    }
+
+    @Test
+    public void testDefaultOptionsAreEmpty() {
         mSession.setDefaultDatabase(null);
         mSession.setDefaultLanguage(null);
         mSession.setDefaultSite(null);
 
-        request = mSession.readItemsRequest(null, null).byItemId("id").build();
+        ScRequest request = mSession.readItemsRequest(null, null).byItemId("id").build();
 
         assertEquals("http://sample.com/-/item/v1?sc_itemid=id",
                 request.getUrl());
+    }
 
-        mSession.setDefaultDatabase("web");
-
-        request = mSession.readItemsRequest(null, null).byItemId("id").fromSite("/sitecore/shell/").setLanguage("en")
-                .build();
-
-        assertEquals("http://sample.com/-/item/v1/sitecore/shell/?sc_itemid=id&sc_database=web&language=en",
+    @Test
+    public void testDefaultOptionsUsage() {
+        mSession.setDefaultDatabase("sitecore");
+        mSession.setDefaultLanguage("ru");
+        mSession.setDefaultSite("/sitecore");
+        ScRequest request = mSession.readItemsRequest(null, null).byItemId("id").build();
+        assertEquals("http://sample.com/-/item/v1/sitecore?sc_itemid=id&sc_database=sitecore&language=ru",
                 request.getUrl());
+
+
+
+
     }
 
     @Test
