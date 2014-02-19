@@ -220,7 +220,7 @@ class ScApiSessionImpl implements ScApiSession {
     }
 
     @Override
-    public ScRequest updateItemFields(ScItem item, Map<String, String> fields,
+    public UpdateItemFieldsRequest updateItemFields(ScItem item, Map<String, String> fields,
             Listener<ItemsResponse> successListener, ErrorListener errorListener) {
         RequestBuilder builder = editItemsRequest(successListener, errorListener);
 
@@ -229,7 +229,7 @@ class ScApiSessionImpl implements ScApiSession {
             builder.updateFieldValue(fieldName, fields.get(fieldName));
         }
 
-        return builder.build();
+        return (UpdateItemFieldsRequest) builder.build();
     }
 
     @Override
