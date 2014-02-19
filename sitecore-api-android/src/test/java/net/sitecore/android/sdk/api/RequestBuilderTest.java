@@ -188,10 +188,6 @@ public class RequestBuilderTest extends MockedServerAndroidTestCase {
         ScRequest request = mSession.readItemsRequest(null, null).byItemId("id").build();
         assertEquals("http://sample.com/-/item/v1/sitecore?sc_itemid=id&sc_database=sitecore&language=ru",
                 request.getUrl());
-
-
-
-
     }
 
     @Test
