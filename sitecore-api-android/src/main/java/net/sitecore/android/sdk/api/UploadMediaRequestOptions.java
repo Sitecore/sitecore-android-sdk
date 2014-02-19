@@ -18,7 +18,7 @@ public class UploadMediaRequestOptions implements Parcelable {
     final RequestOptions.UrlOptions mUrlOptions;
 
     /**
-     * Class constructor specifying :
+     * Class constructor specifying:
      *
      * @param itemPath      media folder path to upload media to.
      * @param itemName      item name.
