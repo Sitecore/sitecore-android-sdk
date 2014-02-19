@@ -260,7 +260,7 @@ class ScApiSessionImpl implements ScApiSession {
             builder.setLanguage(mDefaultLanguage);
         }
         if (!TextUtils.isEmpty(mDefaultDatabase)) {
-            builder.fromSite(mDefaultDatabase);
+            builder.database(mDefaultDatabase);
         }
     }
 

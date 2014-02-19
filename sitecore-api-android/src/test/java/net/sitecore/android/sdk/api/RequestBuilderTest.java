@@ -3,14 +3,14 @@ package net.sitecore.android.sdk.api;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import net.sitecore.android.sdk.api.model.PayloadType;
+import net.sitecore.android.sdk.api.model.RequestScope;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
-
-import net.sitecore.android.sdk.api.model.PayloadType;
-import net.sitecore.android.sdk.api.model.RequestScope;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -144,6 +144,40 @@ public class RequestBuilderTest extends MockedServerAndroidTestCase {
                 .setFields("Title", "Name", "Location")
                 .build();
         assertEquals("http://sample.com/-/item/v1?fields=Title%7CName%7CLocation", request.getUrl());
+    }
+
+    @Test
+    public void testDefaultOptions() {
+        mSession.setDefaultDatabase("sitecore");
+        mSession.setDefaultLanguage("ru");
+        mSession.setDefaultSite("/sitecore");
+
+        ScRequest request = mSession.readItemsRequest(null, null).byItemId("id").build();
+        assertEquals("http://sample.com/-/item/v1/sitecore?sc_itemid=id&sc_database=sitecore&language=ru",
+                request.getUrl());
+
+        request = mSession.readItemsRequest(null, null).byItemId("id").fromSite("/shell/").database("web").
+                setLanguage("en").build();
+
+        assertEquals("http://sample.com/-/item/v1/shell/?sc_itemid=id&sc_database=web&language=en",
+                request.getUrl());
+
+        mSession.setDefaultDatabase(null);
+        mSession.setDefaultLanguage(null);
+        mSession.setDefaultSite(null);
+
+        request = mSession.readItemsRequest(null, null).byItemId("id").build();
+
+        assertEquals("http://sample.com/-/item/v1?sc_itemid=id",
+                request.getUrl());
+
+        mSession.setDefaultDatabase("web");
+
+        request = mSession.readItemsRequest(null, null).byItemId("id").fromSite("/sitecore/shell/").setLanguage("en")
+                .build();
+
+        assertEquals("http://sample.com/-/item/v1/sitecore/shell/?sc_itemid=id&sc_database=web&language=en",
+                request.getUrl());
     }
 
     @Test
