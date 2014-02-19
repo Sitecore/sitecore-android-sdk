@@ -3,11 +3,6 @@ package net.sitecore.android.sdk.api;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.android.volley.Request;
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
-
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
@@ -16,10 +11,18 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
+import java.util.Map;
+
+import com.android.volley.Request;
+import com.android.volley.Response.ErrorListener;
+import com.android.volley.Response.Listener;
+import com.android.volley.VolleyError;
 
 import net.sitecore.android.sdk.api.internal.CryptoUtils;
 import net.sitecore.android.sdk.api.model.DeleteItemsResponse;
 import net.sitecore.android.sdk.api.model.ItemsResponse;
+import net.sitecore.android.sdk.api.model.RequestScope;
+import net.sitecore.android.sdk.api.model.ScItem;
 
 import static net.sitecore.android.sdk.api.internal.LogUtils.LOGE;
 
@@ -30,6 +33,9 @@ class ScApiSessionImpl implements ScApiSession {
     private final String mName;
     private final String mPassword;
     private final boolean mIsAnonymous;
+    private String mDefaultDatabase;
+    private String mDefaultSite;
+    private String mDefaultLanguage;
 
     private boolean mShouldCache = false;
 
@@ -57,6 +63,8 @@ class ScApiSessionImpl implements ScApiSession {
         builder.setSuccessListener(successListener);
         builder.setErrorListener(errorListener);
 
+        setDefaultOptions(builder);
+
         return builder;
     }
 
@@ -76,6 +84,8 @@ class ScApiSessionImpl implements ScApiSession {
         }
         builder.bySitecoreQuery(queryBuilder.build());
 
+        setDefaultOptions(builder);
+
         return builder;
     }
 
@@ -87,6 +97,8 @@ class ScApiSessionImpl implements ScApiSession {
         builder.setSuccessListener(successListener);
         builder.setErrorListener(errorListener);
         builder.setCreateItemData(itemName, template);
+
+        setDefaultOptions(builder);
 
         return builder;
     }
@@ -100,6 +112,8 @@ class ScApiSessionImpl implements ScApiSession {
         builder.setErrorListener(errorListener);
         builder.setCreateItemFromBranchData(branchId);
 
+        setDefaultOptions(builder);
+
         return builder;
     }
 
@@ -109,6 +123,8 @@ class ScApiSessionImpl implements ScApiSession {
         builder.setSuccessListener(successListener);
         builder.setErrorListener(errorListener);
 
+        setDefaultOptions(builder);
+
         return builder;
     }
 
@@ -117,6 +133,8 @@ class ScApiSessionImpl implements ScApiSession {
         final RequestBuilder builder = new RequestBuilder(this, Request.Method.DELETE);
         builder.setSuccessListener(successListener);
         builder.setErrorListener(errorListener);
+
+        setDefaultOptions(builder);
 
         return builder;
     }
@@ -160,6 +178,10 @@ class ScApiSessionImpl implements ScApiSession {
             options.mEncodedPassword = createEncodedPassword();
         }
 
+        if (mDefaultDatabase != null) builder.database(mDefaultDatabase);
+        if (mDefaultLanguage != null) builder.setLanguage(mDefaultLanguage);
+        if (mDefaultSite != null) builder.fromSite(mDefaultSite);
+
         return builder;
     }
 
@@ -172,12 +194,74 @@ class ScApiSessionImpl implements ScApiSession {
         options.mAuthOptions.mEncodedName = createEncodedName();
         options.mAuthOptions.mEncodedPassword = createEncodedPassword();
 
+        if (mDefaultDatabase != null) options.setDatabase(mDefaultDatabase);
+
         return options;
+    }
+
+    @Override
+    public DeleteItemsRequest deleteItem(ScItem item, Listener<DeleteItemsResponse> successListener,
+            ErrorListener errorListener) {
+        RequestBuilder builder = deleteItemsRequest(successListener, errorListener);
+        builder.byItemId(item.getId());
+
+        return (DeleteItemsRequest) builder.build();
+    }
+
+    @Override
+    public GetItemsRequest getItemChildren(ScItem parentItem, Listener<ItemsResponse> successListener,
+            ErrorListener errorListener) {
+        RequestBuilder builder = readItemsRequest(successListener, errorListener);
+
+        builder.byItemId(parentItem.getId());
+        builder.withScope(RequestScope.CHILDREN);
+
+        return (GetItemsRequest) builder.build();
+    }
+
+    @Override
+    public UpdateItemFieldsRequest updateItemFields(ScItem item, Map<String, String> fields,
+            Listener<ItemsResponse> successListener, ErrorListener errorListener) {
+        RequestBuilder builder = editItemsRequest(successListener, errorListener);
+
+        builder.byItemId(item.getId());
+        for (String fieldName : fields.keySet()) {
+            builder.updateFieldValue(fieldName, fields.get(fieldName));
+        }
+
+        return (UpdateItemFieldsRequest) builder.build();
     }
 
     @Override
     public String getBaseUrl() {
         return mBaseUrl;
+    }
+
+    @Override
+    public void setDefaultSite(String site) {
+        this.mDefaultSite = site;
+    }
+
+    @Override
+    public void setDefaultLanguage(String language) {
+        this.mDefaultLanguage = language;
+    }
+
+    @Override
+    public void setDefaultDatabase(String database) {
+        this.mDefaultDatabase = database;
+    }
+
+    private void setDefaultOptions(RequestBuilder builder) {
+        if (!TextUtils.isEmpty(mDefaultSite)) {
+            builder.fromSite(mDefaultSite);
+        }
+        if (!TextUtils.isEmpty(mDefaultLanguage)) {
+            builder.setLanguage(mDefaultLanguage);
+        }
+        if (!TextUtils.isEmpty(mDefaultDatabase)) {
+            builder.database(mDefaultDatabase);
+        }
     }
 
     @Override

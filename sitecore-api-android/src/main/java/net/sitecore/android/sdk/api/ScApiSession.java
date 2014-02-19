@@ -2,14 +2,17 @@ package net.sitecore.android.sdk.api;
 
 import android.content.Context;
 
+import java.util.ArrayList;
+import java.util.Map;
+
 import com.android.volley.Request;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 
-import java.util.ArrayList;
-
 import net.sitecore.android.sdk.api.model.DeleteItemsResponse;
 import net.sitecore.android.sdk.api.model.ItemsResponse;
+import net.sitecore.android.sdk.api.model.ScField;
+import net.sitecore.android.sdk.api.model.ScItem;
 
 /**
  * Interface for interaction with Sitecore Item Web API.
@@ -118,8 +121,71 @@ public interface ScApiSession {
      */
     public UploadMediaRequestOptions uploadMedia(String itemPath, String itemName, String mediaFilePath);
 
+    /**
+     * Creates {@link DeleteItemsRequest} to delete item.
+     *
+     * @param successListener Success result callback.
+     * @param errorListener   Error result callback
+     * @param item            {@code ScItem} to delete.
+     *
+     * @return {@link DeleteItemsRequest} to delete item.
+     */
+    public DeleteItemsRequest deleteItem(ScItem item, Listener<DeleteItemsResponse> successListener,
+            ErrorListener errorListener);
+
+    /**
+     * Creates {@link GetItemsRequest} to retrieve children of specified {@code ScItem}.
+     *
+     * @param successListener Success result callback.
+     * @param errorListener   Error result callback.
+     * @param parentItem      parent item who's children to retrieve.
+     *
+     * @return {@link GetItemsRequest} to retrieve items.
+     */
+    public GetItemsRequest getItemChildren(ScItem parentItem, Listener<ItemsResponse> successListener,
+            ErrorListener errorListener);
+
+    /**
+     * Creates {@link UpdateItemFieldsRequest} to update item fields.
+     *
+     * @param successListener Success result callback.
+     * @param errorListener   Error result callback
+     * @param item            target {@code ScItem} who's fields to update.
+     * @param fields          {@link Map} with {@link ScField#getName()} or
+     *                        {@link ScField#getId()}
+     *                        to {@link String} value entries
+     *
+     * @return {@link UpdateItemFieldsRequest} to update item fields.
+     */
+    public UpdateItemFieldsRequest updateItemFields(ScItem item, Map<String, String> fields,
+            Listener<ItemsResponse> successListener, ErrorListener errorListener);
+
     /** @return Backend url with port. */
     public String getBaseUrl();
+
+    /**
+     * Specifies default site name for requests.
+     * This values is overridden by {@link RequestBuilder#fromSite(String)} method.
+     *
+     * @param site site name.
+     */
+    public void setDefaultSite(String site);
+
+    /**
+     * Specifies default language for requests.
+     * This values is overridden by {@link RequestBuilder#setLanguage(String)} method.
+     *
+     * @param language language.
+     */
+    public void setDefaultLanguage(String language);
+
+    /**
+     * Specifies default database for requests.
+     * This values is overridden by {@link RequestBuilder#database(String)} method.
+     *
+     * @param database database.
+     */
+    public void setDefaultDatabase(String database);
 
     public boolean isAnonymous();
 
