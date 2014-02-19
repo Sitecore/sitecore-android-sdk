@@ -3,11 +3,6 @@ package net.sitecore.android.sdk.api;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.android.volley.Request;
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
-
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
@@ -16,6 +11,11 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
+
+import com.android.volley.Request;
+import com.android.volley.Response.ErrorListener;
+import com.android.volley.Response.Listener;
+import com.android.volley.VolleyError;
 
 import net.sitecore.android.sdk.api.internal.CryptoUtils;
 import net.sitecore.android.sdk.api.model.DeleteItemsResponse;
@@ -49,7 +49,6 @@ class ScApiSessionImpl implements ScApiSession {
 
         mIsAnonymous = isAnonymous;
     }
-
 
     @Override
     public RequestBuilder readItemsRequest(Listener<ItemsResponse> successListener, ErrorListener errorListener) {
@@ -173,6 +172,14 @@ class ScApiSessionImpl implements ScApiSession {
         options.mAuthOptions.mEncodedPassword = createEncodedPassword();
 
         return options;
+    }
+
+    @Override
+    public UploadMediaIntentBuilder uploadMediaIntent(String itemPath, String itemName, String mediaFilePath) {
+        final UploadMediaIntentBuilder builder = new UploadMediaIntentBuilder(itemPath, itemName, mediaFilePath);
+        builder.setBaseUrl(mBaseUrl)
+                .setAuthOptions(createEncodedName(), createEncodedPassword());
+        return builder;
     }
 
     @Override

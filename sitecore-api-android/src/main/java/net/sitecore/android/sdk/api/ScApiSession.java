@@ -118,6 +118,9 @@ public interface ScApiSession {
      */
     public UploadMediaRequestOptions uploadMedia(String itemPath, String itemName, String mediaFilePath);
 
+
+    public UploadMediaIntentBuilder uploadMediaIntent(String itemPath, String itemName, String mediaFilePath);
+
     /** @return Backend url with port. */
     public String getBaseUrl();
 
