@@ -121,10 +121,8 @@ public interface ScApiSession {
      */
     public UploadMediaRequestOptions uploadMedia(String itemPath, String itemName, String mediaFilePath);
 
-<<<<<<< HEAD
-
     public UploadMediaIntentBuilder uploadMediaIntent(String itemPath, String itemName, String mediaFilePath);
-=======
+
     /**
      * Creates {@link DeleteItemsRequest} to delete item.
      *
@@ -163,7 +161,6 @@ public interface ScApiSession {
      */
     public UpdateItemFieldsRequest updateItemFields(ScItem item, Map<String, String> fields,
             Listener<ItemsResponse> successListener, ErrorListener errorListener);
->>>>>>> dev
 
     /** @return Backend url with port. */
     public String getBaseUrl();

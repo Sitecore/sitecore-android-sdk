@@ -204,13 +204,14 @@ class ScApiSessionImpl implements ScApiSession {
     }
 
     @Override
-<<<<<<< HEAD
     public UploadMediaIntentBuilder uploadMediaIntent(String itemPath, String itemName, String mediaFilePath) {
         final UploadMediaIntentBuilder builder = new UploadMediaIntentBuilder(itemPath, itemName, mediaFilePath);
         builder.setBaseUrl(mBaseUrl)
                 .setAuthOptions(createEncodedName(), createEncodedPassword());
         return builder;
-=======
+    }
+
+    @Override
     public DeleteItemsRequest deleteItem(ScItem item, Listener<DeleteItemsResponse> successListener,
             ErrorListener errorListener) {
         RequestBuilder builder = deleteItemsRequest(successListener, errorListener);
@@ -241,7 +242,6 @@ class ScApiSessionImpl implements ScApiSession {
         }
 
         return (UpdateItemFieldsRequest) builder.build();
->>>>>>> dev
     }
 
     @Override
