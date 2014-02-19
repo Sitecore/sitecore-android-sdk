@@ -17,17 +17,15 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.GridView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
+
+import java.util.LinkedList;
+import java.util.List;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-
-import java.util.LinkedList;
-import java.util.List;
 
 import net.sitecore.android.sdk.api.R;
 import net.sitecore.android.sdk.api.ScApiSession;
@@ -48,34 +46,13 @@ import static net.sitecore.android.sdk.api.provider.ScItemsContract.Items;
 
 /**
  * <p>
- * A fragment that allows to browse through Sitecore content tree. It manages all network events
+ * Abstract fragment that allows to browse through Sitecore content tree. It manages all network events
  * and caches successful responses using {@link ScItemsProvider} content provider.
  * Under the hood items are loaded using {@link ScApiSession} and cached in database using {@link ScItemsProvider}.
  * </p>
- * Since fragment extends {@link DialogFragment}, it can be used as modal dialog as well.
- * <p><strong>UI customization</strong></p>
- * Fragment provides default UI, and it can be fully customized. By default content is represented by {@link ListView},
- * and it can be changed to {@link GridView} using {@link #setGridStyle(int)} method.
- * Next methods also can be overridden:
- * <ul>
- * <li> {@link #onCreateHeaderView} creates view, which is shown above the content and always visible.
- * <li> {@link #onCreateFooterView} creates view, which is shown below the content and always visible.
- * <li> {@link #onCreateUpButtonView} creates 'up' navigation button.
- * <li> {@link #onCreateEmptyView} creates view, which will be shown if there's no content on current level.
- * By default empty {@link TextView} is created, and it's value can be set using {@link #setEmptyText}.
- * <li> {@link #onCreateItemViewBinder} returns instance of {@link ItemViewBinder} interface,
- * which defines how {@link View} will be create from {@link ScItem}.
- * </ul>
- * <p>
- * <strong>Listening to events</strong>
- * </p>
- * Next methods can be used for listening various events:
- * <ul>
- * <li> {@link #onScItemClick(ScItem)}
- * <li> {@link #onScItemLongClick(ScItem)}
- * <li> {@link #setContentTreePositionListener}
- * <li> {@link #setNetworkEventsListener}
- * </ul>
+ *
+ * @see ItemsListBrowserFragment
+ * @see ItemsGridBrowserFragment
  */
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public abstract class ItemsBrowserFragment extends DialogFragment {
