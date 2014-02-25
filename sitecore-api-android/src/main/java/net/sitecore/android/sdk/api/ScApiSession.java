@@ -1,6 +1,7 @@
 package net.sitecore.android.sdk.api;
 
 import android.content.Context;
+import android.content.Intent;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -110,16 +111,16 @@ public interface ScApiSession {
             Listener<String> successListener, ErrorListener errorListener);
 
     /**
-     * Creates {@link UploadMediaRequestOptions} that describe image upload request.
-     * Afterwards {@link UploadMediaService#startUpload} or {@link UploadMediaService#newUploadIntent} must be used.
+     * Creates {@link UploadMediaIntentBuilder} that describe image upload request.
+     * Afterwards {@link Context#startService(Intent)}} should be used.
      *
      * @param itemPath      Media folder path to upload media to.
      * @param itemName      Name of the media item.
      * @param mediaFilePath any of "content://", "http://", "file://"
      *
-     * @return {@link UploadMediaRequestOptions} that describe image upload request.
+     * @return {@link UploadMediaIntentBuilder} to build image upload intent.
      */
-    public UploadMediaRequestOptions uploadMedia(String itemPath, String itemName, String mediaFilePath);
+    public UploadMediaIntentBuilder uploadMediaIntent(String itemPath, String itemName, String mediaFilePath);
 
     /**
      * Creates {@link DeleteItemsRequest} to delete item.

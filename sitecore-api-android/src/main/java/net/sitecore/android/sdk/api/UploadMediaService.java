@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.ResultReceiver;
 import android.webkit.MimeTypeMap;
 
@@ -17,7 +16,6 @@ import java.net.URL;
 
 import com.android.volley.ParseError;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 
 import net.sitecore.android.sdk.api.model.ItemsResponse;
 import net.sitecore.android.sdk.api.model.ScError;
@@ -111,7 +109,7 @@ public class UploadMediaService extends IntentService {
             }
         };
 
-        final UpdateResultReceiver resultReceiver = new UpdateResultReceiver(null, listener, errorListener);
+        final UploadResultReceiver resultReceiver = new UploadResultReceiver(null, listener, errorListener);
         final Intent intent = new Intent(context, uploaderClass);
         intent.putExtra(EXTRA_UPLOAD_OPTIONS, options);
         intent.putExtra(EXTRA_STATUS_RECEIVER, resultReceiver);
@@ -192,35 +190,6 @@ public class UploadMediaService extends IntentService {
             return url.openStream();
         } else {
             return new FileInputStream(path);
-        }
-    }
-
-    static class UpdateResultReceiver extends ResultReceiver {
-
-        private Response.Listener<String> mSuccessListener;
-        private ErrorListener mErrorListener;
-
-        public UpdateResultReceiver(Handler handler,
-                Response.Listener<String> successListener,
-                ErrorListener errorListener) {
-            super(handler);
-            mSuccessListener = successListener;
-            mErrorListener = errorListener;
-        }
-
-        @Override
-        protected void onReceiveResult(int resultCode, Bundle resultData) {
-            final String message = resultData.getString(Intent.EXTRA_TEXT);
-
-            switch (resultCode) {
-                case STATUS_OK:
-                    mSuccessListener.onResponse(message);
-                    break;
-
-                case STATUS_ERROR:
-                    mErrorListener.onErrorResponse(new VolleyError(message));
-                    break;
-            }
         }
     }
 

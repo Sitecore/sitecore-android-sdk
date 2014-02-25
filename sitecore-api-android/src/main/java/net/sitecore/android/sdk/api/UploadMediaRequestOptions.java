@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import android.text.TextUtils;
 
 /** <p>This class represents request options for {@link UploadMediaService}.</p> */
-public class UploadMediaRequestOptions implements Parcelable {
+class UploadMediaRequestOptions implements Parcelable {
 
     private final String mItemName;
     private final String mMediaFilePath;
@@ -18,13 +18,13 @@ public class UploadMediaRequestOptions implements Parcelable {
     final RequestOptions.UrlOptions mUrlOptions;
 
     /**
-     * Class constructor specifying :
+     * Class constructor specifying:
      *
      * @param itemPath      media folder path to upload media to.
      * @param itemName      item name.
      * @param mediaFilePath path to media file.
      */
-    public UploadMediaRequestOptions(String itemPath, String itemName, String mediaFilePath) {
+    UploadMediaRequestOptions(String itemPath, String itemName, String mediaFilePath) {
         mItemName = itemName;
         mMediaFilePath = mediaFilePath;
 

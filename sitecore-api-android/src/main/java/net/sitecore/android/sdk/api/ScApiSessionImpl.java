@@ -18,6 +18,11 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 
+import com.android.volley.Request;
+import com.android.volley.Response.ErrorListener;
+import com.android.volley.Response.Listener;
+import com.android.volley.VolleyError;
+
 import net.sitecore.android.sdk.api.internal.CryptoUtils;
 import net.sitecore.android.sdk.api.model.DeleteItemsResponse;
 import net.sitecore.android.sdk.api.model.ItemsResponse;
@@ -55,7 +60,6 @@ class ScApiSessionImpl implements ScApiSession {
 
         mIsAnonymous = isAnonymous;
     }
-
 
     @Override
     public RequestBuilder readItemsRequest(Listener<ItemsResponse> successListener, ErrorListener errorListener) {
@@ -186,17 +190,13 @@ class ScApiSessionImpl implements ScApiSession {
     }
 
     @Override
-    public UploadMediaRequestOptions uploadMedia(String itemPath, String itemName, String mediaFilePath) {
-        final UploadMediaRequestOptions options = new UploadMediaRequestOptions(itemPath, itemName, mediaFilePath);
-        options.mUrlOptions.mBaseUrl = mBaseUrl;
+    public UploadMediaIntentBuilder uploadMediaIntent(String itemPath, String itemName, String mediaFilePath) {
+        final UploadMediaIntentBuilder builder = new UploadMediaIntentBuilder(itemPath, itemName, mediaFilePath);
+        builder.setBaseUrl(mBaseUrl)
+                .setAuthOptions(createEncodedName(), createEncodedPassword())
+                .setDatabase(mDefaultDatabase);
 
-        options.mAuthOptions.mIsAnonymous = mIsAnonymous;
-        options.mAuthOptions.mEncodedName = createEncodedName();
-        options.mAuthOptions.mEncodedPassword = createEncodedPassword();
-
-        if (mDefaultDatabase != null) options.setDatabase(mDefaultDatabase);
-
-        return options;
+        return builder;
     }
 
     @Override
