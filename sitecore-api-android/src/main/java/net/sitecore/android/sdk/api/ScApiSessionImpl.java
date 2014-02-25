@@ -190,24 +190,12 @@ class ScApiSessionImpl implements ScApiSession {
     }
 
     @Override
-    public UploadMediaRequestOptions uploadMedia(String itemPath, String itemName, String mediaFilePath) {
-        final UploadMediaRequestOptions options = new UploadMediaRequestOptions(itemPath, itemName, mediaFilePath);
-        options.mUrlOptions.mBaseUrl = mBaseUrl;
-
-        options.mAuthOptions.mIsAnonymous = mIsAnonymous;
-        options.mAuthOptions.mEncodedName = createEncodedName();
-        options.mAuthOptions.mEncodedPassword = createEncodedPassword();
-
-        if (mDefaultDatabase != null) options.setDatabase(mDefaultDatabase);
-
-        return options;
-    }
-
-    @Override
     public UploadMediaIntentBuilder uploadMediaIntent(String itemPath, String itemName, String mediaFilePath) {
         final UploadMediaIntentBuilder builder = new UploadMediaIntentBuilder(itemPath, itemName, mediaFilePath);
         builder.setBaseUrl(mBaseUrl)
-                .setAuthOptions(createEncodedName(), createEncodedPassword());
+                .setAuthOptions(createEncodedName(), createEncodedPassword())
+                .setDatabase(mDefaultDatabase);
+
         return builder;
     }
 

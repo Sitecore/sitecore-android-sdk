@@ -45,6 +45,21 @@ public class UploadMediaIntentBuilder {
         return this;
     }
 
+    public UploadMediaIntentBuilder setDatabase(String database) {
+        mUploadMediaRequestOptions.setDatabase(database);
+        return this;
+    }
+
+    public UploadMediaIntentBuilder setFileName(String fileName) {
+        mUploadMediaRequestOptions.setFileName(fileName);
+        return this;
+    }
+
+    public UploadMediaIntentBuilder setSite(String site) {
+        mUploadMediaRequestOptions.setSite(site);
+        return this;
+    }
+
     UploadMediaIntentBuilder setBaseUrl(String baseUrl) {
         mUploadMediaRequestOptions.mUrlOptions.mBaseUrl = baseUrl;
         return this;
