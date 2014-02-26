@@ -83,7 +83,6 @@ class UploadMediaHelper {
             return stringBuilder.toString();
         } finally {
             if (responseStreamReader != null) responseStreamReader.close();
-            if (connection != null) connection.disconnect();
             if (request != null) request.close();
         }
     }
