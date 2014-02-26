@@ -18,11 +18,6 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 
-import com.android.volley.Request;
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
-
 import net.sitecore.android.sdk.api.internal.CryptoUtils;
 import net.sitecore.android.sdk.api.model.DeleteItemsResponse;
 import net.sitecore.android.sdk.api.model.ItemsResponse;
@@ -204,6 +199,10 @@ class ScApiSessionImpl implements ScApiSession {
             ErrorListener errorListener) {
         RequestBuilder builder = deleteItemsRequest(successListener, errorListener);
         builder.byItemId(item.getId());
+        builder.database(item.getDatabase());
+        if (mDefaultSite != null) {
+            builder.fromSite(mDefaultSite);
+        }
 
         return (DeleteItemsRequest) builder.build();
     }
@@ -212,9 +211,12 @@ class ScApiSessionImpl implements ScApiSession {
     public GetItemsRequest getItemChildren(ScItem parentItem, Listener<ItemsResponse> successListener,
             ErrorListener errorListener) {
         RequestBuilder builder = readItemsRequest(successListener, errorListener);
-
         builder.byItemId(parentItem.getId());
+        builder.database(parentItem.getDatabase());
         builder.withScope(RequestScope.CHILDREN);
+        if (mDefaultSite != null) {
+            builder.fromSite(mDefaultSite);
+        }
 
         return (GetItemsRequest) builder.build();
     }
@@ -223,8 +225,12 @@ class ScApiSessionImpl implements ScApiSession {
     public UpdateItemFieldsRequest updateItemFields(ScItem item, Map<String, String> fields,
             Listener<ItemsResponse> successListener, ErrorListener errorListener) {
         RequestBuilder builder = editItemsRequest(successListener, errorListener);
-
+        builder.database(item.getDatabase());
         builder.byItemId(item.getId());
+        if (mDefaultSite != null) {
+            builder.fromSite(mDefaultSite);
+        }
+
         for (String fieldName : fields.keySet()) {
             builder.updateFieldValue(fieldName, fields.get(fieldName));
         }

@@ -124,30 +124,40 @@ public interface ScApiSession {
 
     /**
      * Creates {@link DeleteItemsRequest} to delete item.
+     * It will use default website if it's set in {@code ScApiSession}.
+     * To specify another website, use {@link ScApiSession#deleteItemsRequest}.
      *
      * @param successListener Success result callback.
      * @param errorListener   Error result callback
      * @param item            {@code ScItem} to delete.
      *
      * @return {@link DeleteItemsRequest} to delete item.
+     * @see ScApiSession#setDefaultSite(String)
+     * @see ScApiSession#deleteItemsRequest(Listener, ErrorListener)
      */
     public DeleteItemsRequest deleteItem(ScItem item, Listener<DeleteItemsResponse> successListener,
             ErrorListener errorListener);
 
     /**
      * Creates {@link GetItemsRequest} to retrieve children of specified {@code ScItem}.
+     * It will use default website if it's set in {@code ScApiSession}.
+     * To specify another website, use {@link ScApiSession#readItemsRequest(Listener, ErrorListener)}.
      *
      * @param successListener Success result callback.
      * @param errorListener   Error result callback.
      * @param parentItem      parent item who's children to retrieve.
      *
      * @return {@link GetItemsRequest} to retrieve items.
+     * @see ScApiSession#setDefaultSite(String)
+     * @see ScApiSession#readItemsRequest(Listener, ErrorListener)
      */
     public GetItemsRequest getItemChildren(ScItem parentItem, Listener<ItemsResponse> successListener,
             ErrorListener errorListener);
 
     /**
      * Creates {@link UpdateItemFieldsRequest} to update item fields.
+     * It will use default website if it's set in {@code ScApiSession}.
+     * To specify another website, use {@link ScApiSession#editItemsRequest(Listener, ErrorListener)}.
      *
      * @param successListener Success result callback.
      * @param errorListener   Error result callback
@@ -157,6 +167,8 @@ public interface ScApiSession {
      *                        to {@link String} value entries
      *
      * @return {@link UpdateItemFieldsRequest} to update item fields.
+     * @see ScApiSession#setDefaultSite(String)
+     * @see ScApiSession#editItemsRequest(Listener, ErrorListener)
      */
     public UpdateItemFieldsRequest updateItemFields(ScItem item, Map<String, String> fields,
             Listener<ItemsResponse> successListener, ErrorListener errorListener);
