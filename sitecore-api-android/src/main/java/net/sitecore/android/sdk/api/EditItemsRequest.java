@@ -1,23 +1,23 @@
 package net.sitecore.android.sdk.api;
 
-import com.android.volley.Response;
-
 import java.util.Map;
 
-import org.json.JSONException;
+import com.android.volley.Response;
 
 import net.sitecore.android.sdk.api.model.ItemsResponse;
 import net.sitecore.android.sdk.api.model.ScField;
+
+import org.json.JSONException;
 
 /**
  * Class represents update fields request.
  *
  * @see CreateItemRequest
  * @see DeleteItemsRequest
- * @see GetItemsRequest
+ * @see ReadItemsRequest
  * @see ScRequest
  */
-public class UpdateItemFieldsRequest extends ScRequest<ItemsResponse> {
+public class EditItemsRequest extends ScRequest<ItemsResponse> {
 
     /**
      * Creates update specified fields request.
@@ -27,7 +27,7 @@ public class UpdateItemFieldsRequest extends ScRequest<ItemsResponse> {
      * @param listener      success listener for request
      * @param errorListener error listener for request
      */
-    public UpdateItemFieldsRequest(String url, Map<String, String> bodyFields, Response.Listener<ItemsResponse> listener, Response.ErrorListener errorListener) {
+    public EditItemsRequest(String url, Map<String, String> bodyFields, Response.Listener<ItemsResponse> listener, Response.ErrorListener errorListener) {
         super(Method.PUT, url, listener, errorListener);
         mBodyFields = bodyFields;
     }

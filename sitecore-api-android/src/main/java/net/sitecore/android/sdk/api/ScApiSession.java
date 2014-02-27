@@ -21,7 +21,7 @@ import net.sitecore.android.sdk.api.model.ScItem;
  */
 public interface ScApiSession {
     /**
-     * Creates {@link RequestBuilder} to build the {@link GetItemsRequest}.
+     * Creates {@link RequestBuilder} to build the {@link ReadItemsRequest}.
      *
      * @param successListener Success result callback.
      * @param errorListener   Error result callback
@@ -31,13 +31,13 @@ public interface ScApiSession {
     public RequestBuilder readItemsRequest(Listener<ItemsResponse> successListener, ErrorListener errorListener);
 
     /**
-     * Creates {@link GetItemsRequest} to load list of items with particular IDs.
+     * Creates {@link ReadItemsRequest} to load list of items with particular IDs.
      *
      * @param successListener Success result callback.
      * @param errorListener   Error result callback
      * @param itemIds         specifies the ids of the items.
      *
-     * @return {@link GetItemsRequest}.
+     * @return {@link ReadItemsRequest}.
      */
     public RequestBuilder readItemsByIdsRequest(ArrayList<String> itemIds, Listener<ItemsResponse> successListener,
             ErrorListener errorListener);
@@ -70,7 +70,7 @@ public interface ScApiSession {
             ErrorListener errorListener);
 
     /**
-     * Creates {@link RequestBuilder} to build the {@link UpdateItemFieldsRequest}.
+     * Creates {@link RequestBuilder} to build the {@link EditItemsRequest}.
      *
      * @param successListener Success result callback.
      * @param errorListener   Error result callback
@@ -139,7 +139,7 @@ public interface ScApiSession {
             ErrorListener errorListener);
 
     /**
-     * Creates {@link GetItemsRequest} to retrieve children of specified {@code ScItem}.
+     * Creates {@link ReadItemsRequest} to retrieve children of specified {@code ScItem}.
      * It will use default website if it's set in {@code ScApiSession}.
      * To specify another website, use {@link ScApiSession#readItemsRequest(Listener, ErrorListener)}.
      *
@@ -147,15 +147,15 @@ public interface ScApiSession {
      * @param errorListener   Error result callback.
      * @param parentItem      parent item who's children to retrieve.
      *
-     * @return {@link GetItemsRequest} to retrieve items.
+     * @return {@link ReadItemsRequest} to retrieve items.
      * @see ScApiSession#setDefaultSite(String)
      * @see ScApiSession#readItemsRequest(Listener, ErrorListener)
      */
-    public GetItemsRequest getItemChildren(ScItem parentItem, Listener<ItemsResponse> successListener,
+    public ReadItemsRequest getItemChildren(ScItem parentItem, Listener<ItemsResponse> successListener,
             ErrorListener errorListener);
 
     /**
-     * Creates {@link UpdateItemFieldsRequest} to update item fields.
+     * Creates {@link EditItemsRequest} to update item fields.
      * It will use default website if it's set in {@code ScApiSession}.
      * To specify another website, use {@link ScApiSession#editItemsRequest(Listener, ErrorListener)}.
      *
@@ -166,11 +166,11 @@ public interface ScApiSession {
      *                        {@link ScField#getId()}
      *                        to {@link String} value entries
      *
-     * @return {@link UpdateItemFieldsRequest} to update item fields.
+     * @return {@link EditItemsRequest} to update item fields.
      * @see ScApiSession#setDefaultSite(String)
      * @see ScApiSession#editItemsRequest(Listener, ErrorListener)
      */
-    public UpdateItemFieldsRequest updateItemFields(ScItem item, Map<String, String> fields,
+    public EditItemsRequest editItemFields(ScItem item, Map<String, String> fields,
             Listener<ItemsResponse> successListener, ErrorListener errorListener);
 
     /** @return Backend url with port. */

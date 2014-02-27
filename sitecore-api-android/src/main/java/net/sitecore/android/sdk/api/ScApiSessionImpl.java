@@ -208,7 +208,7 @@ class ScApiSessionImpl implements ScApiSession {
     }
 
     @Override
-    public GetItemsRequest getItemChildren(ScItem parentItem, Listener<ItemsResponse> successListener,
+    public ReadItemsRequest getItemChildren(ScItem parentItem, Listener<ItemsResponse> successListener,
             ErrorListener errorListener) {
         RequestBuilder builder = readItemsRequest(successListener, errorListener);
         builder.byItemId(parentItem.getId());
@@ -218,11 +218,11 @@ class ScApiSessionImpl implements ScApiSession {
             builder.fromSite(mDefaultSite);
         }
 
-        return (GetItemsRequest) builder.build();
+        return (ReadItemsRequest) builder.build();
     }
 
     @Override
-    public UpdateItemFieldsRequest updateItemFields(ScItem item, Map<String, String> fields,
+    public EditItemsRequest editItemFields(ScItem item, Map<String, String> fields,
             Listener<ItemsResponse> successListener, ErrorListener errorListener) {
         RequestBuilder builder = editItemsRequest(successListener, errorListener);
         builder.database(item.getDatabase());
@@ -235,7 +235,7 @@ class ScApiSessionImpl implements ScApiSession {
             builder.updateFieldValue(fieldName, fields.get(fieldName));
         }
 
-        return (UpdateItemFieldsRequest) builder.build();
+        return (EditItemsRequest) builder.build();
     }
 
     @Override

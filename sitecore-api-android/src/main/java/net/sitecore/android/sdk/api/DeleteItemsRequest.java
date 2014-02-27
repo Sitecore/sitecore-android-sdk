@@ -11,8 +11,8 @@ import net.sitecore.android.sdk.api.model.DeleteItemsResponse;
  * Class represents delete item request.
  *
  * @see CreateItemRequest
- * @see UpdateItemFieldsRequest
- * @see GetItemsRequest
+ * @see EditItemsRequest
+ * @see ReadItemsRequest
  * @see ScRequest
  */
 public class DeleteItemsRequest extends ScRequest<DeleteItemsResponse> {

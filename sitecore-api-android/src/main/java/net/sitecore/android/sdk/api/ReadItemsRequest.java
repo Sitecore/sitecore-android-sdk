@@ -2,19 +2,19 @@ package net.sitecore.android.sdk.api;
 
 import com.android.volley.Response;
 
-import org.json.JSONException;
-
 import net.sitecore.android.sdk.api.model.ItemsResponse;
+
+import org.json.JSONException;
 
 /**
  * Class represents get item request.
  *
  * @see CreateItemRequest
- * @see UpdateItemFieldsRequest
+ * @see EditItemsRequest
  * @see DeleteItemsRequest
  * @see ScRequest
  */
-public class GetItemsRequest extends ScRequest<ItemsResponse> {
+public class ReadItemsRequest extends ScRequest<ItemsResponse> {
 
     /**
      * Creates get item request with specified url.
@@ -23,7 +23,7 @@ public class GetItemsRequest extends ScRequest<ItemsResponse> {
      * @param successListener success listener for request
      * @param errorListener   error listener for request
      */
-    public GetItemsRequest(String url, Response.Listener<ItemsResponse> successListener,
+    public ReadItemsRequest(String url, Response.Listener<ItemsResponse> successListener,
             Response.ErrorListener errorListener) {
         super(Method.GET, url, successListener, errorListener);
     }

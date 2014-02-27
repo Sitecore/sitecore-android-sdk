@@ -19,8 +19,8 @@ import static net.sitecore.android.sdk.api.provider.ScItemsContract.Fields;
 
 /**
  * Class represents response for {@link net.sitecore.android.sdk.api.CreateItemRequest},
- * {@link net.sitecore.android.sdk.api.UpdateItemFieldsRequest},
- * {@link net.sitecore.android.sdk.api.GetItemsRequest},
+ * {@link net.sitecore.android.sdk.api.EditItemsRequest},
+ * {@link net.sitecore.android.sdk.api.ReadItemsRequest},
  * and response for  {@link UploadMediaService Uploading media item}.
  */
 public class ItemsResponse extends ScResponse {

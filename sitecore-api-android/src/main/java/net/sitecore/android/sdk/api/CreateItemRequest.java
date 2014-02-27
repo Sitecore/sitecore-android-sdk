@@ -12,9 +12,9 @@ import net.sitecore.android.sdk.api.model.ScField;
 /**
  * Class represents create item request.
  *
- * @see UpdateItemFieldsRequest
+ * @see EditItemsRequest
  * @see DeleteItemsRequest
- * @see GetItemsRequest
+ * @see ReadItemsRequest
  * @see ScRequest
  */
 public class CreateItemRequest extends ScRequest<ItemsResponse> {

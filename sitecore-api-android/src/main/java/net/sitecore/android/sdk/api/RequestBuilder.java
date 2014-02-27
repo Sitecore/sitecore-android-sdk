@@ -16,9 +16,9 @@ import static net.sitecore.android.sdk.api.internal.LogUtils.LOGD;
 /**
  * Helper class for building {@code requests}:
  * <ul>
- * <li>{@link GetItemsRequest}</li>
+ * <li>{@link ReadItemsRequest}</li>
  * <li>{@link DeleteItemsRequest}</li>
- * <li>{@link UpdateItemFieldsRequest}</li>
+ * <li>{@link EditItemsRequest}</li>
  * <li>{@link CreateItemRequest}</li>
  * </ul>
  */
@@ -253,7 +253,7 @@ public class RequestBuilder {
 
     /**
      * Update field value.
-     * Used by {@link CreateItemRequest} and {@link UpdateItemFieldsRequest} only.
+     * Used by {@link CreateItemRequest} and {@link EditItemsRequest} only.
      *
      * @param key   field ID or name to update
      * @param value updated field value
@@ -285,7 +285,7 @@ public class RequestBuilder {
         ScRequest request;
         switch (mRequestMethod) {
             case Request.Method.GET:
-                request = new GetItemsRequest(url, mSuccessListener, mErrorListener);
+                request = new ReadItemsRequest(url, mSuccessListener, mErrorListener);
                 break;
 
             case Request.Method.POST:
@@ -297,7 +297,7 @@ public class RequestBuilder {
                 break;
 
             case Request.Method.PUT:
-                request = new UpdateItemFieldsRequest(url, mOptions.mFieldValues, mSuccessListener, mErrorListener);
+                request = new EditItemsRequest(url, mOptions.mFieldValues, mSuccessListener, mErrorListener);
                 break;
 
             case Request.Method.DELETE:
