@@ -35,7 +35,7 @@ import static net.sitecore.android.sdk.api.internal.LogUtils.LOGE;
  * <p>
  *
  * @see ScApiSession#uploadMediaIntent(String, String, String)
- * @see UploadMediaRequestOptions
+ * @see UploadMediaIntentBuilder
  */
 public class UploadMediaService extends IntentService {
 

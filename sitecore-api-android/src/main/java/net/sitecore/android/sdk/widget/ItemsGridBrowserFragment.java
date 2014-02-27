@@ -55,7 +55,7 @@ public class ItemsGridBrowserFragment extends ItemsBrowserFragment {
     protected AbsListView getContentView() {
         GridView grid = new GridView(getActivity());
         grid.setNumColumns(mColumnCount);
-        return null;
+        return grid;
     }
 
     @Override
