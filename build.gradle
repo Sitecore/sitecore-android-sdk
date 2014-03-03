@@ -8,7 +8,7 @@ buildscript {
     }
 }
 
-allprojects {
+subprojects {
     version = VERSION_NAME
     group = GROUP
 
