@@ -2,12 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.google.zxing.client.android">
 
-    <uses-sdk
-        android:minSdkVersion="8"
-        android:targetSdkVersion="18" />
-
     <application>
-
         <!--
         <activity android:name="net.sitecore.android.qr.QrReaderActivity"
             android:screenOrientation="landscape"
@@ -17,7 +12,6 @@
             android:theme="@style/Theme.QrReader"
             android:windowSoftInputMode="stateAlwaysHidden" />
             -->
-
     </application>
 
 </manifest>

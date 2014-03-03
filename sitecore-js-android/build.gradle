@@ -1,38 +1,18 @@
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath 'com.android.tools.build:gradle:0.8.+'
-    }
-}
-
 apply plugin: 'android-library'
 apply plugin: 'maven-publish'
 
 dependencies {
     compile 'com.android.support:support-v4:19.0.1'
     compile project(':sitecore-api-android')
-
 }
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion '19.0.2'
+    compileSdkVersion Integer.parseInt(project.ANDROID_TARGET_SDK)
+    buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
 
     defaultConfig {
-        minSdkVersion 8
-        targetSdkVersion 19
-    }
-
-    sourceSets {
-        main {
-            manifest.srcFile 'AndroidManifest.xml'
-            java.srcDirs = ['src']
-            res.srcDirs = ['res']
-            assets.srcDirs = ['assets']
-        }
+        minSdkVersion Integer.parseInt(project.ANDROID_MIN_SDK)
+        targetSdkVersion Integer.parseInt(project.ANDROID_TARGET_SDK)
     }
 }
 
@@ -40,7 +20,6 @@ task sourceJar(type: Jar) {
     from android.sourceSets.main.allJava
 }
 
-android.libraryVariants
 publishing {
     publications {
         maven(MavenPublication) {
