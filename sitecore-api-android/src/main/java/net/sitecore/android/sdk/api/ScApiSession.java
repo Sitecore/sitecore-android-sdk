@@ -200,6 +200,21 @@ public interface ScApiSession {
      */
     public void setDefaultDatabase(String database);
 
+    /**
+     * Specifies media library path for uploading media.
+     * If path is not set default media library path will be "/sitecore/media library".
+     *
+     * @param path media library path.
+     */
+    public void setMediaLibraryPath(String path);
+
+    /**
+     * Returns current media library path.
+     *
+     * @return media library path.
+     */
+    public String getMediaLibraryPath();
+
     public boolean isAnonymous();
 
     /** @return {@code true} if requests should cache all responses. {@code false} by default. */
