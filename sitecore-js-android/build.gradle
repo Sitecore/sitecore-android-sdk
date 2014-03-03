@@ -12,14 +12,14 @@ apply plugin: 'android-library'
 apply plugin: 'maven-publish'
 
 dependencies {
-    compile 'com.android.support:support-v4:18.0.0'
-    compile project(':sdk-public:sitecore-api-android')
+    compile 'com.android.support:support-v4:19.0.1'
+    compile project(':sitecore-api-android')
 
 }
 
 android {
     compileSdkVersion 19
-    buildToolsVersion '19.0.1'
+    buildToolsVersion '19.0.2'
 
     defaultConfig {
         minSdkVersion 8

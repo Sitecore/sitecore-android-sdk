@@ -1,4 +1,4 @@
-package net.sitecore.android.sdk.widget;
+package net.sitecore.android.sdk.ui;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -8,8 +8,6 @@ import android.os.Bundle;
 import android.util.AttributeSet;
 import android.widget.AbsListView;
 import android.widget.GridView;
-
-import net.sitecore.android.sdk.api.R;
 
 /**
  * <p>

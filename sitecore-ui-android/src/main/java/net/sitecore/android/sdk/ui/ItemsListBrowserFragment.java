@@ -1,4 +1,4 @@
-package net.sitecore.android.sdk.widget;
+package net.sitecore.android.sdk.ui;
 
 import android.annotation.TargetApi;
 import android.os.Build;
