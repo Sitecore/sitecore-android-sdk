@@ -1,4 +1,4 @@
-package net.sitecore.android.sdk.widget;
+package net.sitecore.android.sdk.ui;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -27,9 +27,10 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
-import net.sitecore.android.sdk.api.R;
 import net.sitecore.android.sdk.api.ScApiSession;
 import net.sitecore.android.sdk.api.ScRequest;
+import net.sitecore.android.sdk.api.ScRequestQueue;
+import net.sitecore.android.sdk.api.internal.LogUtils;
 import net.sitecore.android.sdk.api.model.ItemsResponse;
 import net.sitecore.android.sdk.api.model.RequestScope;
 import net.sitecore.android.sdk.api.model.ScItem;
@@ -168,7 +169,7 @@ public abstract class ItemsBrowserFragment extends DialogFragment {
     private ScItemsAdapter mAdapter;
     private ItemViewBinder mItemViewBinder = new DefaultItemViewBinder();
 
-    private RequestQueue mRequestQueue;
+    private ScRequestQueue mRequestQueue;
     private ScApiSession mApiSession;
 
     private String mRootFolder = DEFAULT_ROOT_FOLDER;
@@ -202,12 +203,12 @@ public abstract class ItemsBrowserFragment extends DialogFragment {
     private final OnClickListener mOnUpClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
-            LOGV("UP clicked in: " + mItems.peek().getId());
+            LogUtils.LOGV("UP clicked in: " + mItems.peek().getId());
             mItems.pop();
 
             final ScItem newCurrentItem = mItems.peek();
             String newCurrentItemId = newCurrentItem.getId();
-            LOGV("New folder item id: " + newCurrentItemId);
+            LogUtils.LOGV("New folder item id: " + newCurrentItemId);
 
             reloadChildrenFromNetwork(newCurrentItemId);
             reloadChildrenFromDatabase(newCurrentItemId);
@@ -266,6 +267,12 @@ public abstract class ItemsBrowserFragment extends DialogFragment {
         }
 
         return v;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mRequestQueue = new ScRequestQueue(getActivity().getContentResolver());
     }
 
     protected abstract AbsListView getContentView();
@@ -386,12 +393,9 @@ public abstract class ItemsBrowserFragment extends DialogFragment {
     }
 
     /**
-     * @param requestQueue {@link RequestQueue} which will execute the requests.
      * @param session      {@link ScApiSession} to create the requests.
      */
-    public void setApiProperties(RequestQueue requestQueue, ScApiSession session) {
-        mRequestQueue = requestQueue;
-
+    public void setApiProperties(ScApiSession session) {
         mApiSession = session;
         mApiSession.setShouldCache(true);
 
@@ -444,14 +448,14 @@ public abstract class ItemsBrowserFragment extends DialogFragment {
     }
 
     private void reloadChildrenFromDatabase(String itemId) {
-        LOGV("Reload db children of: " + itemId);
+        LogUtils.LOGV("Reload db children of: " + itemId);
         final Bundle bundle = new Bundle();
         bundle.putString(EXTRA_ITEM_ID, itemId);
         getLoaderManager().restartLoader(LOADER_CHILD_ITEMS, bundle, mChildrenLoader);
     }
 
     private void reloadChildrenFromNetwork(String itemId) {
-        LOGV("getChildren: " + itemId);
+        LogUtils.LOGV("getChildren: " + itemId);
         if (mApiSession != null) {
             mNetworkEventsListener.onUpdateRequestStarted();
             ScRequest request = mApiSession.readItemsRequest(mItemsResponseListener, mErrorListener)
@@ -500,7 +504,7 @@ public abstract class ItemsBrowserFragment extends DialogFragment {
     private Response.ErrorListener mErrorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
-            LOGE("Error response: " + error);
+            LogUtils.LOGE("Error response: " + error);
 
             if (!mIsInitialized) {
                 mIsInitialized = true;
@@ -593,7 +597,7 @@ public abstract class ItemsBrowserFragment extends DialogFragment {
      * @param item which received click event.
      */
     public void onScItemClick(ScItem item) {
-        LOGV("New folder item id: " + item.getId());
+        LogUtils.LOGV("New folder item id: " + item.getId());
         mItems.push(item);
 
         if (mGoUpView.getVisibility() == View.GONE) mGoUpView.setVisibility(View.VISIBLE);

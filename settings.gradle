@@ -1,0 +1,4 @@
+include ':sitecore-api-android'
+include ':sitecore-js-android'
+include ':sitecore-ui-android'
+include ':sitecore-qr-reader'

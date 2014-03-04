@@ -1,4 +1,4 @@
-package net.sitecore.android.sdk.widget;
+package net.sitecore.android.sdk.ui;
 
 import android.content.Context;
 import android.view.LayoutInflater;

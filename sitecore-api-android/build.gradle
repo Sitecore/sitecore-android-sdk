@@ -24,22 +24,22 @@ dependencies {
     testCompile 'org.robolectric:robolectric:2.3-SNAPSHOT'
     testCompile 'com.google.mockwebserver:mockwebserver:20130706'
 
-    //instrumentTestCompile 'junit:junit:4.10'
-    //instrumentTestCompile 'org.robolectric:robolectric:2.3-SNAPSHOT'
-    //instrumentTestCompile 'com.google.mockwebserver:mockwebserver:20130706'
+    instrumentTestCompile 'junit:junit:4.10'
+    instrumentTestCompile 'org.robolectric:robolectric:2.3-SNAPSHOT'
+    instrumentTestCompile 'com.google.mockwebserver:mockwebserver:20130706'
 }
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion '19.0.1'
+    compileSdkVersion Integer.parseInt(project.ANDROID_TARGET_SDK)
+    buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
 
     defaultConfig {
-        minSdkVersion 8
-        targetSdkVersion 19
+        minSdkVersion Integer.parseInt(project.ANDROID_MIN_SDK)
+        targetSdkVersion Integer.parseInt(project.ANDROID_TARGET_SDK)
     }
 
     sourceSets {
-        //instrumentTest.setRoot('src/test')
+        instrumentTest.setRoot('src/test')
     }
 }
 
@@ -47,7 +47,6 @@ task sourceJar(type: Jar) {
     from android.sourceSets.main.allJava
 }
 
-android.libraryVariants
 publishing {
     publications {
         maven(MavenPublication) {
@@ -60,7 +59,6 @@ publishing {
     }
     repositories {
         maven {
-            //url "../../build/release/aar"
             url project.rootProject.projectDir.absolutePath + "/build/release/aar"
         }
     }
