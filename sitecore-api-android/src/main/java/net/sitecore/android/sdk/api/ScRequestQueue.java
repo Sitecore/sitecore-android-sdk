@@ -43,6 +43,7 @@ public class ScRequestQueue extends RequestQueue {
 
     public ScRequestQueue(ContentResolver resolver, Executor executor) {
         super(new NoCache(), sNetwork, 4, new ContentProviderExecutorDelivery(resolver, executor));
+        start();
     }
 
     private static class MainLooperExecutor implements Executor {

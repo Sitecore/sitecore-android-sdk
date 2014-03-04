@@ -11,6 +11,8 @@ import com.google.mockwebserver.MockWebServer;
 import java.io.IOException;
 import java.util.concurrent.Executors;
 
+import net.sitecore.android.sdk.api.ScRequestQueue;
+
 import org.junit.After;
 import org.junit.Before;
 import org.robolectric.Robolectric;
@@ -18,15 +20,14 @@ import org.robolectric.Robolectric;
 public class MockedServerAndroidTestCase {
 
     MockWebServer mServer;
-    RequestQueue mRequestQueue;
+    ScRequestQueue mRequestQueue;
 
     @Before
     public void setUp() throws Exception {
         //ShadowLog.stream = System.out;
         mServer = new MockWebServer();
         mServer.play();
-        mRequestQueue = RequestQueueProvider.newSitecoreRequestQueue(getContext().getContentResolver(),
-                Executors.newSingleThreadExecutor());
+        mRequestQueue = new ScRequestQueue(getContext().getContentResolver(), Executors.newSingleThreadExecutor());
     }
 
     @After

@@ -36,6 +36,7 @@ class ScApiSessionImpl implements ScApiSession {
     private String mDefaultDatabase;
     private String mDefaultSite;
     private String mDefaultLanguage;
+    private String mMediaLibraryPath = "/sitecore/media library";
 
     private boolean mShouldCache = false;
 
@@ -186,7 +187,8 @@ class ScApiSessionImpl implements ScApiSession {
 
     @Override
     public UploadMediaIntentBuilder uploadMediaIntent(String itemPath, String itemName, String mediaFilePath) {
-        final UploadMediaIntentBuilder builder = new UploadMediaIntentBuilder(itemPath, itemName, mediaFilePath);
+        String path = mMediaLibraryPath + itemPath;
+        final UploadMediaIntentBuilder builder = new UploadMediaIntentBuilder(path, itemName, mediaFilePath);
         builder.setBaseUrl(mBaseUrl)
                 .setAuthOptions(createEncodedName(), createEncodedPassword())
                 .setDatabase(mDefaultDatabase);
@@ -256,6 +258,19 @@ class ScApiSessionImpl implements ScApiSession {
     @Override
     public void setDefaultDatabase(String database) {
         this.mDefaultDatabase = database;
+    }
+
+    @Override
+    public void setMediaLibraryPath(String path) {
+        if (TextUtils.isEmpty(path)){
+            throw new IllegalArgumentException("Media Library path can't be null or empty");
+        }
+        mMediaLibraryPath = path;
+    }
+
+    @Override
+    public String getMediaLibraryPath() {
+        return mMediaLibraryPath;
     }
 
     private void setDefaultOptions(RequestBuilder builder) {
