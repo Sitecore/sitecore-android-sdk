@@ -29,6 +29,7 @@ import com.android.volley.VolleyError;
 
 import net.sitecore.android.sdk.api.ScApiSession;
 import net.sitecore.android.sdk.api.ScRequest;
+import net.sitecore.android.sdk.api.ScRequestQueue;
 import net.sitecore.android.sdk.api.internal.LogUtils;
 import net.sitecore.android.sdk.api.model.ItemsResponse;
 import net.sitecore.android.sdk.api.model.RequestScope;
@@ -168,7 +169,7 @@ public abstract class ItemsBrowserFragment extends DialogFragment {
     private ScItemsAdapter mAdapter;
     private ItemViewBinder mItemViewBinder = new DefaultItemViewBinder();
 
-    private RequestQueue mRequestQueue;
+    private ScRequestQueue mRequestQueue;
     private ScApiSession mApiSession;
 
     private String mRootFolder = DEFAULT_ROOT_FOLDER;
@@ -266,6 +267,12 @@ public abstract class ItemsBrowserFragment extends DialogFragment {
         }
 
         return v;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mRequestQueue = new ScRequestQueue(getActivity().getContentResolver());
     }
 
     protected abstract AbsListView getContentView();
@@ -386,12 +393,9 @@ public abstract class ItemsBrowserFragment extends DialogFragment {
     }
 
     /**
-     * @param requestQueue {@link RequestQueue} which will execute the requests.
      * @param session      {@link ScApiSession} to create the requests.
      */
-    public void setApiProperties(RequestQueue requestQueue, ScApiSession session) {
-        mRequestQueue = requestQueue;
-
+    public void setApiProperties(ScApiSession session) {
         mApiSession = session;
         mApiSession.setShouldCache(true);
 
