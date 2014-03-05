@@ -1,5 +1,4 @@
 apply plugin: 'android-library'
-apply plugin: 'maven-publish'
 
 dependencies {
     compile 'com.android.support:support-v4:19.0.1'
@@ -13,26 +12,5 @@ android {
     defaultConfig {
         minSdkVersion 8
         targetSdkVersion 19
-    }
-}
-
-task sourceJar(type: Jar) {
-    from android.sourceSets.main.allJava
-}
-
-publishing {
-    publications {
-        maven(MavenPublication) {
-            artifact '/build/libs/' + POM_ARTIFACT_ID + '-' + VERSION_NAME + '.aar'
-
-            artifact sourceJar {
-                classifier "sources"
-            }
-        }
-    }
-    repositories {
-        maven {
-            url project.rootProject.projectDir.absolutePath + "/build/release/aar"
-        }
     }
 }
