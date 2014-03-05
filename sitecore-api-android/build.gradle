@@ -30,12 +30,12 @@ dependencies {
 }
 
 android {
-    compileSdkVersion Integer.parseInt(project.ANDROID_TARGET_SDK)
-    buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
+    compileSdkVersion 19
+    buildToolsVersion '19.0.3'
 
     defaultConfig {
-        minSdkVersion Integer.parseInt(project.ANDROID_MIN_SDK)
-        targetSdkVersion Integer.parseInt(project.ANDROID_TARGET_SDK)
+        minSdkVersion 8
+        targetSdkVersion 19
     }
 
     sourceSets {
@@ -63,5 +63,3 @@ publishing {
         }
     }
 }
-
-build.finalizedBy(publish)
