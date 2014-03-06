@@ -1,7 +1,9 @@
 package net.sitecore.android.sdk.web;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONArray;
@@ -152,6 +154,32 @@ class ScParams {
             }
         }
         return resultList;
+    }
+
+    /**
+     * Returns key-value pairs parsed from json object.
+     *
+     * @param key of the target json object.
+     *
+     * @return {@code Map} fulfilled with key and values otherwise empty {@code Map}.
+     */
+    public Map<String, String> getParsedJsonObject(String key) {
+        Map<String, String> fields = new HashMap<String, String>();
+
+        try {
+            JSONObject object = mJSONObject.getJSONObject(key);
+            JSONArray names = object.names();
+            if (names == null) return fields;
+
+            for (int i = 0; i < names.length(); i++) {
+                String fieldName = (String) names.get(i);
+                String fieldValue = object.getString(fieldName);
+                fields.put(fieldName, fieldValue);
+            }
+        } catch (JSONException e) {
+            LogUtils.LOGD("Error happened while parsing json object to Map");
+        }
+        return fields;
     }
 
     @Override
