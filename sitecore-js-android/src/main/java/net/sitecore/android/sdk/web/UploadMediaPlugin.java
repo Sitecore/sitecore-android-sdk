@@ -24,6 +24,7 @@ public final class UploadMediaPlugin extends ScPlugin {
     private ScCallbackContext mCallbackContext;
     private ScParams mParams;
     private ScApiSession mSession;
+    private ScRequestQueue mQueue;
 
     private Response.Listener<ItemsResponse> mSuccessEditListener = new Response.Listener<ItemsResponse>() {
         @Override
@@ -46,14 +47,14 @@ public final class UploadMediaPlugin extends ScPlugin {
             if (response.getItems().size() == 1) {
                 Map<String, String> fields = mParams.getParsedJsonObject(FIELDS_KEY);
                 if (!fields.isEmpty()) {
-                    editItem(response.getItems().get(0));
+                    mQueue.add(mSession.editItemFields(response.getItems().get(0),
+                            fields, mSuccessEditListener, mErrorListener));
                 } else {
                     mCallbackContext.sendSuccess();
                 }
             } else mCallbackContext.sendError("Failed to upload media.");
         }
     };
-
     private Listener<ScApiSession> mSessionListener = new Listener<ScApiSession>() {
         @Override
         public void onResponse(final ScApiSession session) {
@@ -79,12 +80,6 @@ public final class UploadMediaPlugin extends ScPlugin {
         }
     };
 
-    private void editItem(ScItem item) {
-        Map<String, String> fields = mParams.getParsedJsonObject(FIELDS_KEY);
-        new ScRequestQueue(mContext.getContentResolver())
-                .add(mSession.editItemFields(item, fields, mSuccessEditListener, mErrorListener));
-    }
-
     @Override
     public String getPluginName() {
         return "contentapi";
@@ -109,8 +104,8 @@ public final class UploadMediaPlugin extends ScPlugin {
         if (TextUtils.isEmpty(login) || TextUtils.isEmpty(password)) {
             ScApiSessionFactory.getAnonymousSession(url, mSessionListener);
         } else {
-            ScRequestQueue queue = new ScRequestQueue(mContext.getContentResolver());
-            ScApiSessionFactory.getSession(queue, url, login, password, mSessionListener, mErrorListener);
+            mQueue = new ScRequestQueue(mContext.getContentResolver());
+            ScApiSessionFactory.getSession(mQueue, url, login, password, mSessionListener, mErrorListener);
         }
     }
 
