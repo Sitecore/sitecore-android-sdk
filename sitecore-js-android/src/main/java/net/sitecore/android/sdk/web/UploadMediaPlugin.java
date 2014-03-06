@@ -1,5 +1,6 @@
 package net.sitecore.android.sdk.web;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
@@ -15,12 +16,10 @@ import net.sitecore.android.sdk.api.ScApiSessionFactory;
 import net.sitecore.android.sdk.api.ScRequestQueue;
 import net.sitecore.android.sdk.api.UploadMediaIntentBuilder;
 import net.sitecore.android.sdk.api.model.ItemsResponse;
-import net.sitecore.android.sdk.api.model.ScItem;
 
 import org.json.JSONException;
 
 public final class UploadMediaPlugin extends ScPlugin {
-    private final String FIELDS_KEY = "fields";
     private ScCallbackContext mCallbackContext;
     private ScParams mParams;
     private ScApiSession mSession;
@@ -45,7 +44,7 @@ public final class UploadMediaPlugin extends ScPlugin {
         @Override
         public void onResponse(ItemsResponse response) {
             if (response.getItems().size() == 1) {
-                Map<String, String> fields = mParams.getParsedJsonObject(FIELDS_KEY);
+                Map<String, String> fields = mParams.getParsedJsonObject("fields");
                 if (!fields.isEmpty()) {
                     mQueue.add(mSession.editItemFields(response.getItems().get(0),
                             fields, mSuccessEditListener, mErrorListener));
@@ -81,6 +80,12 @@ public final class UploadMediaPlugin extends ScPlugin {
     };
 
     @Override
+    public void init(Context context, ScPluginManager pluginManager) {
+        super.init(context, pluginManager);
+        mQueue = new ScRequestQueue(context.getContentResolver());
+    }
+
+    @Override
     public String getPluginName() {
         return "contentapi";
     }
@@ -104,7 +109,6 @@ public final class UploadMediaPlugin extends ScPlugin {
         if (TextUtils.isEmpty(login) || TextUtils.isEmpty(password)) {
             ScApiSessionFactory.getAnonymousSession(url, mSessionListener);
         } else {
-            mQueue = new ScRequestQueue(mContext.getContentResolver());
             ScApiSessionFactory.getSession(mQueue, url, login, password, mSessionListener, mErrorListener);
         }
     }
