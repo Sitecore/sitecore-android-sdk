@@ -23,10 +23,8 @@ import android.widget.TextView;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-
 import net.sitecore.android.sdk.api.ScApiSession;
 import net.sitecore.android.sdk.api.ScRequest;
 import net.sitecore.android.sdk.api.ScRequestQueue;
@@ -41,8 +39,6 @@ import static android.app.LoaderManager.LoaderCallbacks;
 import static android.view.View.OnClickListener;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
-import static net.sitecore.android.sdk.api.internal.LogUtils.LOGE;
-import static net.sitecore.android.sdk.api.internal.LogUtils.LOGV;
 import static net.sitecore.android.sdk.api.provider.ScItemsContract.Items;
 
 /**
@@ -395,7 +391,7 @@ public abstract class ItemsBrowserFragment extends DialogFragment {
     /**
      * @param session      {@link ScApiSession} to create the requests.
      */
-    public void setApiProperties(ScApiSession session) {
+    public void loadContent(ScApiSession session) {
         mApiSession = session;
         mApiSession.setShouldCache(true);
 
@@ -403,7 +399,7 @@ public abstract class ItemsBrowserFragment extends DialogFragment {
     }
 
     /**
-     * @param loadContentWithoutConnection Use {@code true} to show cached content without setting {@link #setApiProperties}.
+     * @param loadContentWithoutConnection Use {@code true} to show cached content without setting {@link ScApiSession}.
      */
     public void setLoadContentWithoutConnection(boolean loadContentWithoutConnection) {
         mLoadContentWithoutConnection = true;
