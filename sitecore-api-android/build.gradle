@@ -5,7 +5,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.8.+'
+        classpath 'com.android.tools.build:gradle:0.9.+'
         classpath 'com.squareup.gradle:gradle-android-test-plugin:0.9.1-SNAPSHOT'
     }
 }
@@ -23,9 +23,9 @@ dependencies {
     testCompile 'org.robolectric:robolectric:2.3-SNAPSHOT'
     testCompile 'com.google.mockwebserver:mockwebserver:20130706'
 
-    instrumentTestCompile 'junit:junit:4.10'
-    instrumentTestCompile 'org.robolectric:robolectric:2.3-SNAPSHOT'
-    instrumentTestCompile 'com.google.mockwebserver:mockwebserver:20130706'
+    androidTestCompile 'junit:junit:4.10'
+    androidTestCompile 'org.robolectric:robolectric:2.3-SNAPSHOT'
+    androidTestCompile 'com.google.mockwebserver:mockwebserver:20130706'
 }
 
 android {
@@ -38,6 +38,6 @@ android {
     }
 
     sourceSets {
-        instrumentTest.setRoot('src/test')
+        androidTest.setRoot('src/test')
     }
 }
