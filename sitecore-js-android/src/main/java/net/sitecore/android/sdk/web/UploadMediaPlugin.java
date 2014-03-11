@@ -114,9 +114,11 @@ public final class UploadMediaPlugin extends ScPlugin {
     }
 
     private void startUpload(String itemUrl) {
-        final String itemPath = mParams.getString("path");
+        String itemPath = mParams.getString("path");
         String itemName = mParams.getString("itemName");
         String database = mParams.getString("database");
+
+        if (!mSession.getMediaLibraryPath().endsWith("/") && !itemPath.startsWith("/")) itemPath = "/".concat(itemPath);
 
         UploadMediaIntentBuilder mediaIntentBuilder = mSession.uploadMediaIntent(itemPath, itemName, itemUrl)
                 .setDatabase(database)
