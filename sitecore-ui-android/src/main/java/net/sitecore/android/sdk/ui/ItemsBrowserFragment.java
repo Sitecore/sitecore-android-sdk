@@ -440,6 +440,9 @@ public abstract class ItemsBrowserFragment extends DialogFragment {
                 .build();
         request.setTag(ItemsBrowserFragment.this);
 
+        if (mRequestQueue == null) {
+            throw new IllegalStateException("Fragment is not attached to Activity");
+        }
         mRequestQueue.add(request);
     }
 
