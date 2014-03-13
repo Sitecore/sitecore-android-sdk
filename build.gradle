@@ -9,34 +9,7 @@ buildscript {
 }
 
 subprojects {
-    version = VERSION_NAME
-    group = GROUP
-
     repositories {
         mavenCentral()
-    }
-
-    apply plugin: 'maven-publish'
-    apply plugin: 'android-library'
-
-    task sourceJar(type: Jar) {
-        from android.sourceSets.main.allJava
-    }
-
-    publishing {
-        publications {
-            maven(MavenPublication) {
-                artifact '/build/libs/' + POM_ARTIFACT_ID + '-' + VERSION_NAME + '.aar'
-
-                artifact sourceJar {
-                    classifier "sources"
-                }
-            }
-        }
-        repositories {
-            maven {
-                url project.rootProject.projectDir.absolutePath + "/build/release/aar"
-            }
-        }
     }
 }
