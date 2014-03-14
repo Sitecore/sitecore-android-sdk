@@ -73,7 +73,7 @@ public class EventsPlugin extends ScPlugin {
                     Calendar startTime = parseTime(startDate);
                     intent.putExtra(EXTRA_EVENT_BEGIN_TIME, startTime.getTimeInMillis());
                 } catch (NumberFormatException exception) {
-//                    In case of exception we simply don't set it to the intent.
+                    // In case of exception we simply don't set it to the intent.
                 }
             }
 
@@ -82,7 +82,7 @@ public class EventsPlugin extends ScPlugin {
                     Calendar endTime = parseTime(endDate);
                     intent.putExtra(EXTRA_EVENT_END_TIME, endTime.getTimeInMillis());
                 } catch (NumberFormatException exception) {
-//                    In case of exception we simply don't set it to the intent.
+                    // In case of exception we simply don't set it to the intent.
                 }
             }
 
