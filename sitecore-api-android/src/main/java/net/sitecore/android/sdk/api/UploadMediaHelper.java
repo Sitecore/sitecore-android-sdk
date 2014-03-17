@@ -10,6 +10,8 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import static net.sitecore.android.sdk.api.internal.LogUtils.LOGE;
+
 /**
  * <p>This class is designed to process media upload request.</p>
  * Under the hood it uses {@link HttpURLConnection}.
@@ -82,8 +84,14 @@ class UploadMediaHelper {
             }
             return stringBuilder.toString();
         } finally {
-            if (responseStreamReader != null) responseStreamReader.close();
-            if (request != null) request.close();
+            try {
+                if (responseStreamReader != null) responseStreamReader.close();
+                if (request != null) request.flush();
+            } catch (IOException exception) {
+                responseStreamReader = null;
+                request = null;
+                LOGE(exception);
+            }
         }
     }
 
