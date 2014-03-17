@@ -2,9 +2,8 @@ scmobile.google_maps = (function() {
 
     var GoogleMaps = function() {
         this.plugin = new scmobile.utils.ScPlugin('google_maps');
+        this.addresses = [];
     }
-
-    GoogleMaps.prototype.addresses = [];
 
     GoogleMaps.prototype.show = function(onSuccess, onError) {
         var params = {
