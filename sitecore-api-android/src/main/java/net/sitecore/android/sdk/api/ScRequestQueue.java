@@ -21,7 +21,7 @@ import net.sitecore.android.sdk.api.internal.ContentProviderExecutorDelivery;
 public class ScRequestQueue extends RequestQueue {
 
     static {
-        final String userAgent = "Sitecore/1.3 Mobile SDK for Android";
+        final String userAgent = "Sitecore/2.0 Mobile SDK for Android";
 
         HttpStack stack = null;
         if (Build.VERSION.SDK_INT >= 9) {
