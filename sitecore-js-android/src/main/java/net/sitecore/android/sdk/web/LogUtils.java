@@ -7,11 +7,15 @@ import android.util.Log;
 /**
  * Logger class.
  */
-class LogUtils {
+public class LogUtils {
 
     private static final String TAG = "ScMobile";
 
     private static boolean sLogEnabled = false;
+
+    public static void setLogEnabled(boolean logEnabled) {
+        sLogEnabled = logEnabled;
+    }
 
     public static void LOGD(String text) {
         if (sLogEnabled) {
