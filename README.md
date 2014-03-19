@@ -1,4 +1,4 @@
-Sitecore Mobile SDK for Android 1.1
+Sitecore Mobile SDK for Android 2.0
 ===================================
 
 Sitecore Mobile SDK for Android, is a framework that is designed to help the developer produce Android based applications that use and serve content that is managed by Sitecore. 
@@ -25,9 +25,11 @@ This enables developers to rapidly develop Android applications (across multiple
     * Access item fields and properties
     * Upload media items
     * Getting html rendering of an item
+ * A local SQLite DB can be used with the SDK for easy access of Sitecore items offline
+
+### UI components
  * Items Browser component for browsing through content tree with customizable UI
  * QR Code reader
- * A local SQLite DB can be used with the SDK for easy access of Sitecore items offline
 
 As a part of the release we have created a sample application that can be used as a starting point to understand the Mobile SDK for Android and the features available. 
 This project can be found [on Github][4]
@@ -48,12 +50,13 @@ repositories {
     maven { url "http://sitecore.github.io/sitecore-android-sdk/aar" }
 }
 dependencies {
-    compile 'net.sitecore.android.sdk:sitecore-api-android:1.1'
+    compile 'net.sitecore.android.sdk:sitecore-api-android:2.0'
+    compile 'net.sitecore.android.sdk:sitecore-ui-android:2.0'
     
-    compile 'net.sitecore.android.sdk:sitecore-js-android:1.1'
-    compile 'com.android.support:support-v4:18.0.0'
+    compile 'net.sitecore.android.sdk:sitecore-js-android:2.0'
+    compile 'com.android.support:support-v4:19.0.1'
 
-    compile 'net.sitecore.android.sdk:sitecore-qr-reader:1.1'
+    compile 'net.sitecore.android.sdk:sitecore-qr-reader:2.0'
     compile 'com.google.zxing:core:2.2'
 }
 ```
@@ -73,7 +76,7 @@ SITECORE SHARED SOURCE LICENSE
 
  [1]: http://sdn.sitecore.net/Products/Sitecore%20Mobile%20SDK/Sitecore%20Mobile%20SDK%20for%20Android/Mobile%20SDK%201,-d-,0%20for%20Android.aspx
  [2]: http://sdn.sitecore.net/Products/Sitecore%20Item%20Web%20API.aspx
- [3]: http://sitecore.github.io/sitecore-android-sdk/javadoc
+ [3]: http://sitecore.github.io/sitecore-android-sdk/javadoc/v2.0
  [4]: http://github.com/Sitecore/sitecore-android-sdk-sample
  [5]: https://github.com/Sitecore/sitecore-android-sdk/releases
  [6]: http://sdn.sitecore.net/Products/Sitecore%20Mobile%20SDK/Sitecore%20Mobile%20SDK%20for%20Android/Mobile%20SDK%201,-d-,0%20for%20Android/Documentation.aspx
