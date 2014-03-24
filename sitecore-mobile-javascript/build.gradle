@@ -1,5 +1,10 @@
 apply plugin: 'android-library'
 
+dependencies {
+    compile 'com.android.support:support-v4:19.0.1'
+    compile project(':sitecore-mobile-sdk')
+}
+
 android {
     compileSdkVersion 19
     buildToolsVersion '19.0.3'
@@ -8,8 +13,4 @@ android {
         minSdkVersion 8
         targetSdkVersion 19
     }
-}
-
-dependencies {
-    compile project(':sitecore-api-android')
 }

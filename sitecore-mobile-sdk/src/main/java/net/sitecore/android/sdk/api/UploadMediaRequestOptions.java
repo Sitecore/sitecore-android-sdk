@@ -5,8 +5,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
-/** <p>This class represents request options for {@link UploadMediaService}.</p> */
-class UploadMediaRequestOptions implements Parcelable {
+/** This class represents request options for {@link UploadMediaService}. */
+public class UploadMediaRequestOptions implements Parcelable {
 
     private final String mItemName;
     private final String mMediaFilePath;
