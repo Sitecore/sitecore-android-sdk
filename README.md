@@ -1,4 +1,4 @@
-Sitecore Mobile SDK for Android 2.0
+Sitecore Mobile SDK 2.0 for Android
 ===================================
 
 Sitecore Mobile SDK for Android, is a framework that is designed to help the developer produce Android based applications that use and serve content that is managed by Sitecore. 
