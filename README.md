@@ -17,6 +17,7 @@ This enables developers to rapidly develop Android applications (across multiple
  * Access to the device address book
  * Open native Google Maps navigation
  * Create calendar events
+ * Upload media files to the Sitecore media library
 
 ### Java/Android API
  * Access data from Sitecore CMS
