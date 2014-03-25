@@ -49,6 +49,9 @@ Item Web Api][2] service.
  * **sitecore-mobile-javascript** – a library that allows using native features of iOS in mobile optimized Sitecore renderings. It contains an **enhanced web view** and **web plug-ins**.
  * **sitecore-mobile-ui** – UI extensions on top of **sitecore-mobile-sdk**. It contains Items Browser component for browsing through content tree with customizable UI.
 
+The frameworks have some dependencies between each other. The dependencies are described in the following diagram:
+![Framework Dependencies](https://raw.githubusercontent.com/Sitecore/sitecore-android-sdk/gh-pages/image/AndroidFrameworkDependencies.png)
+
 ## Download
 
 Sitecore SDK for Android framework can be downloaded from [releases section][5] or Maven repository:
