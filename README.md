@@ -14,6 +14,10 @@ This enables developers to rapidly develop Android applications (across multiple
  * Social networks integration
  * Google Maps integration
 
+You can also download a sample application that can be used as a starting point to understand the Mobile SDK for iOS and the features available. This project can be found in a corresponding [github repository][4]
+
+Documentation, including installation and developer guides can be found on the [Sitecore Developer Network (SDN)][1]
+
 ## Framework Structure
 The Sitecore Mobile SDK consists of three primary modules. They are
 
@@ -51,11 +55,6 @@ The frameworks have some dependencies between each other. The dependencies are d
 ### UI components
  * Items Browser component for browsing through content tree with customizable UI
  * QR Code reader
-
-As a part of the release we have created a sample application that can be used as a starting point to understand the Mobile SDK for Android and the features available. 
-This project can be found [on Github][4]
-
-All documentation, including installation and developer guides can be found on the [Sitecore Developer Network (SDN)][6]
 
 ## This repository contains:
  * Source code of the Sitecore SDK for Android framework
@@ -100,8 +99,6 @@ SITECORE SHARED SOURCE LICENSE
  [3]: http://sitecore.github.io/sitecore-android-sdk/javadoc/v2.0
  [4]: http://github.com/Sitecore/sitecore-android-sdk-sample
  [5]: https://github.com/Sitecore/sitecore-android-sdk/releases
- [6]: http://sdn.sitecore.net/Products/Sitecore%20Mobile%20SDK/Sitecore%20Mobile%20SDK%20for%20Android/Mobile%20SDK%201,-d-,1%20for%20Android/Documentation.aspx
- 
 
 
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/Sitecore/sitecore-android-sdk/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
