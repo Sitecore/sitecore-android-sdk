@@ -3,7 +3,16 @@ Sitecore Mobile SDK 2.0 for Android
 
 Sitecore Mobile SDK for Android, is a framework that is designed to help the developer produce Android based applications that use and serve content that is managed by Sitecore. 
 
-This enables developers to rapidly develop Android applications (across multiple Android devices with differing screen sizes) that fully utilize the features of the device, for example, camera, location, accelerometer, and gestures. 
+This enables developers to rapidly develop Android applications (across multiple Android devices with differing screen sizes) that fully utilize the features of the device, for example, camera, location, accelerometer, and gestures. The SDK includes the following features:
+
+ * Access to the camera and the photo library
+ * QR code usage (scan and use QR Codes)
+ * Accelerometer functions
+ * Device information
+ * Access to the built-in address book and easy creation of new contacts
+ * Sending emails using the e-mail account
+ * Social networks integration
+ * Google Maps integration
 
 ## Framework Structure
 The Sitecore Mobile SDK consists of three primary modules. They are
