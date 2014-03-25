@@ -48,7 +48,7 @@ This project can be found [on Github][4]
 
 All documentation, including installation and developer guides can be found on the [Sitecore Developer Network (SDN)][6]
 
-This repository contains:
+## This repository contains:
  * Source code of the Sitecore SDK for Android framework
  * Binaries of the Sitecore SDK for Android framework in [releases section][5]
 
