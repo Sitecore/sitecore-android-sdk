@@ -5,7 +5,27 @@ Sitecore Mobile SDK for Android, is a framework that is designed to help the dev
 
 This enables developers to rapidly develop Android applications (across multiple Android devices with differing screen sizes) that fully utilize the features of the device, for example, camera, location, accelerometer, and gestures. 
 
+## Framework Structure
+The Sitecore Mobile SDK consists of three primary modules. They are
+
+ * **sitecore-mobile-sdk** – a set of core classes that interact with the [Sitecore
+Item Web Api][2] service.
+ * **sitecore-mobile-javascript** – a library that allows using native features of iOS in mobile optimized Sitecore renderings. It contains an **enhanced web view** and **web plug-ins**.
+ * **sitecore-mobile-ui** – UI extensions on top of **sitecore-mobile-sdk**. It contains Items Browser component for browsing through content tree with customizable UI.
+
+The frameworks have some dependencies between each other. The dependencies are described in the following diagram:
+![Framework Dependencies](https://raw.githubusercontent.com/Sitecore/sitecore-android-sdk/gh-pages/image/AndroidFrameworkDependencies.png)
+
 ## The SDK includes the following features:
+
+### Java/Android API
+ * Access data from Sitecore CMS
+    * Authentication
+    * CRUD operations on items
+    * Access item fields and properties
+    * Upload media items
+    * Getting html rendering of an item
+ * A local SQLite DB can be used with the SDK for easy access of Sitecore items offline
 
 ### JavaScript API
  * Show native alert
@@ -19,15 +39,6 @@ This enables developers to rapidly develop Android applications (across multiple
  * Create calendar events
  * Upload media files to the Sitecore media library
 
-### Java/Android API
- * Access data from Sitecore CMS
-    * Authentication
-    * CRUD operations on items
-    * Access item fields and properties
-    * Upload media items
-    * Getting html rendering of an item
- * A local SQLite DB can be used with the SDK for easy access of Sitecore items offline
-
 ### UI components
  * Items Browser component for browsing through content tree with customizable UI
  * QR Code reader
@@ -40,17 +51,6 @@ All documentation, including installation and developer guides can be found on t
 This repository contains:
  * Source code of the Sitecore SDK for Android framework
  * Binaries of the Sitecore SDK for Android framework in [releases section][5]
-
-## Framework Structure
-The Sitecore Mobile SDK consists of three primary modules. They are
-
- * **sitecore-mobile-sdk** – a set of core classes that interact with the [Sitecore
-Item Web Api][2] service.
- * **sitecore-mobile-javascript** – a library that allows using native features of iOS in mobile optimized Sitecore renderings. It contains an **enhanced web view** and **web plug-ins**.
- * **sitecore-mobile-ui** – UI extensions on top of **sitecore-mobile-sdk**. It contains Items Browser component for browsing through content tree with customizable UI.
-
-The frameworks have some dependencies between each other. The dependencies are described in the following diagram:
-![Framework Dependencies](https://raw.githubusercontent.com/Sitecore/sitecore-android-sdk/gh-pages/image/AndroidFrameworkDependencies.png)
 
 ## Download
 
