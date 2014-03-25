@@ -41,6 +41,14 @@ This repository contains:
  * Source code of the Sitecore SDK for Android framework
  * Binaries of the Sitecore SDK for Android framework in [releases section][5]
 
+## Framework Structure
+The Sitecore Mobile SDK consists of three primary modules. They are
+
+ * **sitecore-mobile-sdk** – a set of core classes that interact with the [Sitecore
+Item Web Api][2] service.
+ * **sitecore-mobile-javascript** – a library that allows using native features of iOS in mobile optimized Sitecore renderings. It contains an **enhanced web view** and **web plug-ins**.
+ * **sitecore-mobile-ui** – UI extensions on top of **sitecore-mobile-sdk**. It contains Items Browser component for browsing through content tree with customizable UI.
+
 ## Download
 
 Sitecore SDK for Android framework can be downloaded from [releases section][5] or Maven repository:
@@ -51,10 +59,10 @@ repositories {
     maven { url "http://sitecore.github.io/sitecore-android-sdk/aar" }
 }
 dependencies {
-    compile 'net.sitecore.android.sdk:sitecore-api-android:2.0'
-    compile 'net.sitecore.android.sdk:sitecore-ui-android:2.0'
+    compile 'net.sitecore.android.sdk:sitecore-mobile-sdk:2.0'
+    compile 'net.sitecore.android.sdk:sitecore-mobile-ui:2.0'
     
-    compile 'net.sitecore.android.sdk:sitecore-js-android:2.0'
+    compile 'net.sitecore.android.sdk:sitecore-mobile-javascript:2.0'
     compile 'com.android.support:support-v4:19.0.1'
 
     compile 'net.sitecore.android.sdk:sitecore-qr-reader:2.0'
