@@ -92,11 +92,10 @@ public interface ScApiSession {
     /**
      * Creates request to read items from default path (/-/item/v1/) to check result code.
      *
-     * @param context  current context.
      * @param callback Is called after request is executed with {@code true} if request succeeded (200 <= code <= 300),
      *                 and {@code false} otherwise.
      */
-    public Request checkCredentialsRequest(Context context, final Listener<Boolean> callback);
+    public Request checkCredentialsRequest(final Listener<Boolean> callback);
 
     /**
      * Creates {@link GetRenderingHtmlRequestBuilder} to build special request to load

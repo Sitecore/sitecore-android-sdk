@@ -139,8 +139,7 @@ class ScApiSessionImpl implements ScApiSession {
         return builder;
     }
 
-    @Override
-    public Request checkCredentialsRequest(Context context, final Listener<Boolean> callback) {
+    public Request checkCredentialsRequest(final Listener<Boolean> callback) {
         final Listener<ItemsResponse> responseListener = new Listener<ItemsResponse>() {
             @Override
             public void onResponse(ItemsResponse response) {
