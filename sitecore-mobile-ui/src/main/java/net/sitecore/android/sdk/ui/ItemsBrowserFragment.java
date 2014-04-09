@@ -34,6 +34,7 @@ import net.sitecore.android.sdk.api.model.ItemsResponse;
 import net.sitecore.android.sdk.api.model.RequestScope;
 import net.sitecore.android.sdk.api.model.ScItem;
 import net.sitecore.android.sdk.api.model.ScItemsLoader;
+import net.sitecore.android.sdk.api.model.ScItemsLoaderFilter;
 import net.sitecore.android.sdk.api.provider.ScItemsContract.Items.Query;
 import net.sitecore.android.sdk.api.provider.ScItemsProvider;
 
@@ -73,6 +74,7 @@ public abstract class ItemsBrowserFragment extends DialogFragment {
     private static final int LOADER_ROOT_ITEM = 1;
 
     private Comparator<ScItem> mSortOrderComparator;
+    private ScItemsLoaderFilter mItemsFilter;
 
     /**
      * Defines content tree position change callback methods.
@@ -525,6 +527,7 @@ public abstract class ItemsBrowserFragment extends DialogFragment {
             final String path = args.getString(EXTRA_ITEM_PATH);
             final ScItemsLoader itemsLoader = new ScItemsLoader(getActivity(), Query.BY_ITEM_PATH, new String[]{path});
             if (mSortOrderComparator != null) itemsLoader.setItemsSortOrder(mSortOrderComparator);
+            if (mItemsFilter != null) itemsLoader.setItemsFilter(mItemsFilter);
             return itemsLoader;
         }
 
@@ -561,6 +564,7 @@ public abstract class ItemsBrowserFragment extends DialogFragment {
             }
 
             if (mSortOrderComparator != null) itemsLoader.setItemsSortOrder(mSortOrderComparator);
+            if (mItemsFilter != null) itemsLoader.setItemsFilter(mItemsFilter);
 
             return itemsLoader;
         }
@@ -579,6 +583,10 @@ public abstract class ItemsBrowserFragment extends DialogFragment {
 
     public void setItemsSortOrder(Comparator<ScItem> comparator) {
         mSortOrderComparator = comparator;
+    }
+
+    public void setItemsFilter (ScItemsLoaderFilter filter) {
+        mItemsFilter = filter;
     }
 
     /**

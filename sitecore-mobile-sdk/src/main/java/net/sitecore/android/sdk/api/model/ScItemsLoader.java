@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 import net.sitecore.android.sdk.api.provider.ScItemsContract.Items;
@@ -35,6 +36,7 @@ public class ScItemsLoader extends AsyncTaskLoader<List<ScItem>> {
     private ContentResolver mContentResolver;
 
     private Comparator<ScItem> mSortOrderComparator;
+    private ScItemsLoaderFilter mItemsLoaderFilter;
 
     public ScItemsLoader(Context context) {
         this(context, null, null);
@@ -96,6 +98,14 @@ public class ScItemsLoader extends AsyncTaskLoader<List<ScItem>> {
                 currentItem.addField(rowField);
             }
         } while (c.moveToNext());
+
+        if (mItemsLoaderFilter != null) {
+            // removing items in for-each loop is not allowed, so iterator is used
+            for (Iterator<ScItem> iterator = result.iterator(); iterator.hasNext(); ) {
+                ScItem item = iterator.next();
+                if (!mItemsLoaderFilter.shouldShow(item)) iterator.remove();
+            }
+        }
 
         if (mSortOrderComparator != null) {
             Collections.sort(result, mSortOrderComparator);
@@ -167,6 +177,10 @@ public class ScItemsLoader extends AsyncTaskLoader<List<ScItem>> {
     protected void onForceLoad() {
         mItems = null;
         super.onForceLoad();
+    }
+
+    public void setItemsFilter(ScItemsLoaderFilter filter) {
+        mItemsLoaderFilter = filter;
     }
 
     private interface ItemsQuery {
