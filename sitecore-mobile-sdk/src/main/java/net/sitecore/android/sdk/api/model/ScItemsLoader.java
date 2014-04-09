@@ -9,6 +9,8 @@ import android.os.Build;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import net.sitecore.android.sdk.api.provider.ScItemsContract.Items;
@@ -31,6 +33,8 @@ public class ScItemsLoader extends AsyncTaskLoader<List<ScItem>> {
 
     private List<ScItem> mItems;
     private ContentResolver mContentResolver;
+
+    private Comparator<ScItem> mSortOrderComparator;
 
     public ScItemsLoader(Context context) {
         this(context, null, null);
@@ -63,6 +67,14 @@ public class ScItemsLoader extends AsyncTaskLoader<List<ScItem>> {
         return parseCursor(c);
     }
 
+    /**
+     *
+     * @param comparator describes sorting order of loaded data.
+     */
+    public void setItemsSortOrder(Comparator<ScItem> comparator) {
+        mSortOrderComparator = comparator;
+    }
+
     private ArrayList<ScItem> parseCursor(Cursor c) {
         final ArrayList<ScItem> result = new ArrayList<ScItem>();
         if (!c.moveToFirst()) return result;
@@ -84,6 +96,10 @@ public class ScItemsLoader extends AsyncTaskLoader<List<ScItem>> {
                 currentItem.addField(rowField);
             }
         } while (c.moveToNext());
+
+        if (mSortOrderComparator != null) {
+            Collections.sort(result, mSortOrderComparator);
+        }
 
         return result;
     }

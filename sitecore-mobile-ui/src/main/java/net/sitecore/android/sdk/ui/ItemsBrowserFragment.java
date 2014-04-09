@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -33,6 +34,7 @@ import net.sitecore.android.sdk.api.model.ItemsResponse;
 import net.sitecore.android.sdk.api.model.RequestScope;
 import net.sitecore.android.sdk.api.model.ScItem;
 import net.sitecore.android.sdk.api.model.ScItemsLoader;
+import net.sitecore.android.sdk.api.provider.ScItemsContract.Items.Query;
 import net.sitecore.android.sdk.api.provider.ScItemsProvider;
 
 import static android.app.LoaderManager.LoaderCallbacks;
@@ -69,6 +71,8 @@ public abstract class ItemsBrowserFragment extends DialogFragment {
 
     private static final int LOADER_CHILD_ITEMS = 0;
     private static final int LOADER_ROOT_ITEM = 1;
+
+    private Comparator<ScItem> mSortOrderComparator;
 
     /**
      * Defines content tree position change callback methods.
@@ -269,6 +273,7 @@ public abstract class ItemsBrowserFragment extends DialogFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mRequestQueue = new ScRequestQueue(getActivity().getContentResolver());
+        if (mApiSession != null) loadRootFromNetwork();
     }
 
     protected abstract AbsListView getContentView();
@@ -395,7 +400,7 @@ public abstract class ItemsBrowserFragment extends DialogFragment {
         mApiSession = session;
         mApiSession.setShouldCache(true);
 
-        loadRootFromNetwork();
+        if (mRequestQueue != null) loadRootFromNetwork();
     }
 
     /**
@@ -441,7 +446,7 @@ public abstract class ItemsBrowserFragment extends DialogFragment {
         request.setTag(ItemsBrowserFragment.this);
 
         if (mRequestQueue == null) {
-            throw new IllegalStateException("Fragment is not attached to Activity");
+            //throw new IllegalStateException("Fragment is not attached to Activity");
         }
         mRequestQueue.add(request);
     }
@@ -518,7 +523,9 @@ public abstract class ItemsBrowserFragment extends DialogFragment {
         @Override
         public Loader<List<ScItem>> onCreateLoader(int id, Bundle args) {
             final String path = args.getString(EXTRA_ITEM_PATH);
-            return new ScItemsLoader(getActivity(), Items.Query.BY_ITEM_PATH, new String[]{path});
+            final ScItemsLoader itemsLoader = new ScItemsLoader(getActivity(), Query.BY_ITEM_PATH, new String[]{path});
+            if (mSortOrderComparator != null) itemsLoader.setItemsSortOrder(mSortOrderComparator);
+            return itemsLoader;
         }
 
         @Override
@@ -545,12 +552,17 @@ public abstract class ItemsBrowserFragment extends DialogFragment {
 
         @Override
         public Loader<List<ScItem>> onCreateLoader(int id, Bundle args) {
+            ScItemsLoader itemsLoader;
             if (args == null) {
-                return new ScItemsLoader(getActivity(), null, null);
+                itemsLoader = new ScItemsLoader(getActivity(), null, null);
+            } else {
+                final String currentItemId = args.getString(EXTRA_ITEM_ID);
+                itemsLoader = new ScItemsLoader(getActivity(), Items.Query.BY_ITEM_PARENT_ID, new String[]{currentItemId});
             }
 
-            final String currentItemId = args.getString(EXTRA_ITEM_ID);
-            return new ScItemsLoader(getActivity(), Items.Query.BY_ITEM_PARENT_ID, new String[]{currentItemId});
+            if (mSortOrderComparator != null) itemsLoader.setItemsSortOrder(mSortOrderComparator);
+
+            return itemsLoader;
         }
 
         @Override
@@ -564,6 +576,10 @@ public abstract class ItemsBrowserFragment extends DialogFragment {
             mAdapter.clear();
         }
     };
+
+    public void setItemsSortOrder(Comparator<ScItem> comparator) {
+        mSortOrderComparator = comparator;
+    }
 
     /**
      * @param text Text to set.
