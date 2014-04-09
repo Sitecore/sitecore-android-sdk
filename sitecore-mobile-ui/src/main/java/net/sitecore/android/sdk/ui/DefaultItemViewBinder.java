@@ -15,7 +15,7 @@ public class DefaultItemViewBinder implements ItemViewBinder {
         ViewHolder holder = (ViewHolder) v.getTag();
 
         holder.text1.setText(item.getDisplayName());
-        holder.text2.setText(item.getPath());
+        holder.text2.setText(item.getTemplate());
     }
 
     @Override
