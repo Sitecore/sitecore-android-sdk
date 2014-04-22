@@ -1,6 +1,5 @@
 package net.sitecore.android.sdk.api;
 
-import android.content.Context;
 import android.text.TextUtils;
 
 import javax.crypto.BadPaddingException;
@@ -28,6 +27,8 @@ import static net.sitecore.android.sdk.api.internal.LogUtils.LOGE;
 
 class ScApiSessionImpl implements ScApiSession {
 
+    private static final String SITECORE_MEDIA_LIBRARY = "/sitecore/media library";
+
     private final String mBaseUrl;
     private final RSAPublicKey mPublicKey;
     private final String mName;
@@ -36,7 +37,7 @@ class ScApiSessionImpl implements ScApiSession {
     private String mDefaultDatabase;
     private String mDefaultSite;
     private String mDefaultLanguage;
-    private String mMediaLibraryPath = "/sitecore/media library";
+    private String mMediaLibraryPath = SITECORE_MEDIA_LIBRARY;
 
     private boolean mShouldCache = false;
 
@@ -261,7 +262,7 @@ class ScApiSessionImpl implements ScApiSession {
 
     @Override
     public void setMediaLibraryPath(String path) {
-        if (TextUtils.isEmpty(path)){
+        if (TextUtils.isEmpty(path)) {
             throw new IllegalArgumentException("Media Library path can't be null or empty");
         }
         mMediaLibraryPath = path;
