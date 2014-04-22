@@ -64,4 +64,8 @@ public class ItemsGridBrowserFragment extends ItemsBrowserFragment {
         mColumnCount = a.getInt(R.styleable.ItemsGridBrowserFragment_columnCount, DEFAULT_GRID_COLUMNS_COUNT);
         a.recycle();
     }
+
+    public void setColumnCount(int columnCount) {
+        mColumnCount = columnCount;
+    }
 }
