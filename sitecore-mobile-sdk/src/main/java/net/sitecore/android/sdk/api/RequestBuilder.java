@@ -58,9 +58,6 @@ public class RequestBuilder {
      * @return this builder.
      */
     public RequestBuilder fromSite(String site) {
-        if (!TextUtils.isEmpty(site) && !site.startsWith("/")) {
-            throw new IllegalArgumentException("Site name must start with '/'.");
-        }
         mOptions.mUrlOptions.mSite = site;
         return this;
     }
@@ -198,9 +195,6 @@ public class RequestBuilder {
      * @throws IllegalStateException if {@code query} is already set.
      */
     public RequestBuilder bySitecoreQuery(String query) {
-        if (!TextUtils.isEmpty(mOptions.mQueryScopeOptions.mSitecoreQuery)) {
-            throw new IllegalStateException("Query is already set");
-        }
         mOptions.mQueryScopeOptions.mSitecoreQuery = query;
         return this;
     }
@@ -217,8 +211,8 @@ public class RequestBuilder {
      * @throws IllegalArgumentException if {@code pageNumber} < 0 or {@code pageSize} < 1.
      */
     public RequestBuilder setPage(int pageNumber, int pageSize) {
-        if (pageNumber < 0) throw new IllegalArgumentException("Page number must be >= 0.");
-        if (pageSize < 1) throw new IllegalArgumentException("Page size must be > 0.");
+        if (pageNumber < 0) throw new IllegalArgumentException("Page number must be >= 0");
+        if (pageSize < 1) throw new IllegalArgumentException("Page size must be > 0");
 
         mOptions.mQueryScopeOptions.mPage = pageNumber;
         mOptions.mQueryScopeOptions.mPageSize = pageSize;
