@@ -8,10 +8,9 @@ import android.text.TextUtils;
 /** This class represents request options for {@link UploadMediaService}. */
 public class UploadMediaRequestOptions implements Parcelable {
 
-    private final String mItemName;
-    private final String mMediaFilePath;
+    private String mItemName;
+    private String mMediaFilePath;
     private String mFileName;
-
     private String mDatabase;
 
     final RequestOptions.AuthOptions mAuthOptions;
@@ -51,6 +50,18 @@ public class UploadMediaRequestOptions implements Parcelable {
 
     public void setSite(String site) {
         mUrlOptions.mSite = site;
+    }
+
+    public String getDatabase() {
+        return mDatabase;
+    }
+
+    public void setMediaFilePath(String mediaFilePath) {
+        mMediaFilePath = mediaFilePath;
+    }
+
+    public void setItemName(String itemName) {
+        mItemName = itemName;
     }
 
     /**
