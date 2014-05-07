@@ -2,7 +2,6 @@ package net.sitecore.android.sdk.api;
 
 import android.app.IntentService;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,15 +13,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-import com.android.volley.ParseError;
-import com.android.volley.Response;
-
-import net.sitecore.android.sdk.api.model.ItemsResponse;
-import net.sitecore.android.sdk.api.model.ScError;
-
-import org.json.JSONException;
-
-import static com.android.volley.Response.ErrorListener;
 import static net.sitecore.android.sdk.api.internal.LogUtils.LOGD;
 import static net.sitecore.android.sdk.api.internal.LogUtils.LOGE;
 
@@ -32,7 +22,7 @@ import static net.sitecore.android.sdk.api.internal.LogUtils.LOGE;
  * <pre>
  *  &lt;service android:name="net.sitecore.android.sdk.api.UploadMediaService" //>
  * </pre>
- * <p>
+ * <p/>
  *
  * @see ScApiSession#uploadMediaIntent(String, String, String)
  * @see UploadMediaIntentBuilder
@@ -69,10 +59,10 @@ public class UploadMediaService extends IntentService {
             LOGD("Sending POST " + options.getFullUrl());
             String response = mediaHelper.executeRequest(options);
             LOGD("Response: " + response);
-            sendResult(STATUS_OK, response);
-        } catch (IOException e) {
+            sendResult(response);
+        } catch (Exception e) {
             LOGE(e);
-            sendResult(STATUS_ERROR, e + " : " + e.getMessage());
+            sendError(e);
         }
     }
 
@@ -82,11 +72,19 @@ public class UploadMediaService extends IntentService {
         return mime.getExtensionFromMimeType(resolver.getType(uri));
     }
 
-    private void sendResult(int code, String message) {
+    private void sendResult(String message) {
         if (mResultReceiver != null) {
             Bundle bundle = new Bundle();
-            bundle.putString(Intent.EXTRA_TEXT, message);
-            mResultReceiver.send(code, bundle);
+            bundle.putString(UploadResultReceiver.EXTRA_MESSAGE, message);
+            mResultReceiver.send(STATUS_OK, bundle);
+        }
+    }
+
+    private void sendError(Exception exception) {
+        if (mResultReceiver != null) {
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(UploadResultReceiver.EXTRA_ERROR, exception);
+            mResultReceiver.send(STATUS_ERROR, bundle);
         }
     }
 

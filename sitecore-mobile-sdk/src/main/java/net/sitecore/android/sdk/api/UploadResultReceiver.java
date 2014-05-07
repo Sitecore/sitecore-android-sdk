@@ -1,6 +1,5 @@
 package net.sitecore.android.sdk.api;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
@@ -10,6 +9,8 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 
 class UploadResultReceiver extends ResultReceiver {
+    static final String EXTRA_ERROR = "upload_error";
+    static final String EXTRA_MESSAGE = "upload_message";
 
     private Response.Listener<String> mSuccessListener;
     private ErrorListener mErrorListener;
@@ -24,15 +25,14 @@ class UploadResultReceiver extends ResultReceiver {
 
     @Override
     protected void onReceiveResult(int resultCode, Bundle resultData) {
-        final String message = resultData.getString(Intent.EXTRA_TEXT);
-
         switch (resultCode) {
             case UploadMediaService.STATUS_OK:
-                mSuccessListener.onResponse(message);
+                mSuccessListener.onResponse(resultData.getString(EXTRA_MESSAGE));
                 break;
 
             case UploadMediaService.STATUS_ERROR:
-                mErrorListener.onErrorResponse(new VolleyError(message));
+                VolleyError error = new VolleyError((Throwable) resultData.getSerializable(EXTRA_ERROR));
+                mErrorListener.onErrorResponse(error);
                 break;
         }
     }
