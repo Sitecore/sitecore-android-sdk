@@ -26,6 +26,7 @@ import java.util.List;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+
 import net.sitecore.android.sdk.api.ScApiSession;
 import net.sitecore.android.sdk.api.ScRequest;
 import net.sitecore.android.sdk.api.ScRequestQueue;
@@ -396,7 +397,7 @@ public abstract class ItemsBrowserFragment extends DialogFragment {
     }
 
     /**
-     * @param session      {@link ScApiSession} to create the requests.
+     * @param session {@link ScApiSession} to create the requests.
      */
     public void loadContent(ScApiSession session) {
         mApiSession = session;
@@ -405,10 +406,7 @@ public abstract class ItemsBrowserFragment extends DialogFragment {
         if (mRequestQueue != null) loadRootFromNetwork();
     }
 
-    /**
-     * @param loadContentWithoutConnection Use {@code true} to show cached content without setting {@link ScApiSession}.
-     */
-    public void setLoadContentWithoutConnection(boolean loadContentWithoutConnection) {
+    public void setLoadContentWithoutConnection() {
         mLoadContentWithoutConnection = true;
         if (getView() != null) {
             loadRootFromCache();
@@ -429,8 +427,10 @@ public abstract class ItemsBrowserFragment extends DialogFragment {
      * Trigger manual update of current folder.
      */
     public void update() {
-        final ScItem item = mItems.peek();
-        reloadChildrenFromNetwork(item.getId());
+        ScItem item = mItems.peek();
+        if (item != null) {
+            reloadChildrenFromNetwork(item.getId());
+        }
     }
 
     private void loadRootFromCache() {
@@ -504,6 +504,7 @@ public abstract class ItemsBrowserFragment extends DialogFragment {
         @Override
         public void onResponse(ItemsResponse itemsResponse) {
             mNetworkEventsListener.onUpdateSuccess(itemsResponse);
+            reloadChildrenFromDatabase(mItems.peek().getId());
         }
     };
 
@@ -585,7 +586,7 @@ public abstract class ItemsBrowserFragment extends DialogFragment {
         mSortOrderComparator = comparator;
     }
 
-    public void setItemsFilter (ScItemsLoaderFilter filter) {
+    public void setItemsFilter(ScItemsLoaderFilter filter) {
         mItemsFilter = filter;
     }
 
