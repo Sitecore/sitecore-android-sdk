@@ -1,12 +1,10 @@
 package net.sitecore.android.sdk.api;
 
 import android.app.IntentService;
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.ResultReceiver;
-import android.webkit.MimeTypeMap;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -46,14 +44,6 @@ public class UploadMediaService extends IntentService {
         UploadMediaRequestOptions options = intent.getParcelableExtra(EXTRA_UPLOAD_OPTIONS);
         mResultReceiver = intent.getParcelableExtra(EXTRA_STATUS_RECEIVER);
 
-        String mediaFilePath = options.getMediaFilePath();
-        if (mediaFilePath.startsWith("content:") && options.getFileName() == null) {
-            String fileExtension = getFileExtension(Uri.parse(mediaFilePath));
-            if (fileExtension != null) {
-                options.setFileName(options.getItemName() + "." + fileExtension);
-            }
-        }
-
         try {
             UploadMediaHelper mediaHelper = new UploadMediaHelper(getInputStreamFromUri(options.getMediaFilePath()));
             LOGD("Sending POST " + options.getFullUrl());
@@ -64,12 +54,6 @@ public class UploadMediaService extends IntentService {
             LOGE(e);
             sendError(e);
         }
-    }
-
-    private String getFileExtension(Uri uri) {
-        ContentResolver resolver = getBaseContext().getContentResolver();
-        MimeTypeMap mime = MimeTypeMap.getSingleton();
-        return mime.getExtensionFromMimeType(resolver.getType(uri));
     }
 
     private void sendResult(String message) {
