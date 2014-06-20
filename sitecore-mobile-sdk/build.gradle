@@ -5,13 +5,13 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.9.+'
-        classpath 'com.squareup.gradle:gradle-android-test-plugin:0.9.1-SNAPSHOT'
+        classpath 'com.android.tools.build:gradle:0.11.+'
+        classpath 'org.robolectric:robolectric-gradle-plugin:0.11.+'
     }
 }
 
 apply plugin: 'android-library'
-apply plugin: 'android-test'
+apply plugin: 'robolectric'
 
 repositories {
     mavenCentral()
@@ -19,18 +19,14 @@ repositories {
 }
 
 dependencies {
-    testCompile 'junit:junit:4.10'
-    testCompile 'org.robolectric:robolectric:2.3-SNAPSHOT'
-    testCompile 'com.google.mockwebserver:mockwebserver:20130706'
-
     androidTestCompile 'junit:junit:4.10'
-    androidTestCompile 'org.robolectric:robolectric:2.3-SNAPSHOT'
+    androidTestCompile 'org.robolectric:robolectric:2.3+'
     androidTestCompile 'com.google.mockwebserver:mockwebserver:20130706'
 }
 
 android {
     compileSdkVersion 19
-    buildToolsVersion '19.0.3'
+    buildToolsVersion '19.1.0'
 
     defaultConfig {
         minSdkVersion 8
