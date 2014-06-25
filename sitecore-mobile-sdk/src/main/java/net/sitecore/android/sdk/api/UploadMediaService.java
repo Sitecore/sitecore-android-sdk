@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.ResultReceiver;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -79,12 +80,17 @@ public class UploadMediaService extends IntentService {
             return getContentResolver().openInputStream(uri);
         }
 
-        if (path.startsWith("http:") || path.startsWith("https:") || path.startsWith("file:")) {
+        if (path.startsWith("http:") || path.startsWith("https:")) {
             URL url = new URL(path);
             return url.openStream();
-        } else {
-            return new FileInputStream(path);
         }
+
+        if (path.startsWith("file:")) {
+            URL url = new URL(path);
+            return url.openStream();
+        }
+
+        return new FileInputStream(path);
     }
 
 }

@@ -10,6 +10,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import static net.sitecore.android.sdk.api.internal.LogUtils.LOGD;
 import static net.sitecore.android.sdk.api.internal.LogUtils.LOGE;
 
 /**
@@ -107,9 +108,13 @@ class UploadMediaHelper {
             throws IOException {
         byte[] buffer = new byte[BUFFER_SIZE];
         int bytesRead;
+        long copied = 0;
         while ((bytesRead = input.read(buffer)) != -1) {
             output.write(buffer, 0, bytesRead);
+            copied += bytesRead;
         }
+
+        LOGD("" + copied + " bytes of media uploaded.");
     }
 
 }

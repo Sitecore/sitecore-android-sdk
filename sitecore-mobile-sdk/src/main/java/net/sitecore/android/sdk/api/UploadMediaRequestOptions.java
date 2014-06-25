@@ -78,7 +78,11 @@ public class UploadMediaRequestOptions implements Parcelable {
      */
     public String getFullUrl() {
         StringBuilder builder = new StringBuilder(mUrlOptions.getUrl());
-        builder.append("?name=").append(Uri.encode(mItemName));
+
+        // ItemsWebAPI doesn't understand non-alphanumeric chars
+        final String cleanName = mItemName.replaceAll("[^A-Za-z0-9]", "");
+
+        builder.append("?name=").append(cleanName);
         if (!TextUtils.isEmpty(mDatabase)) builder.append("&sc_database=").append(mDatabase);
         return builder.toString();
     }
@@ -120,6 +124,18 @@ public class UploadMediaRequestOptions implements Parcelable {
         dest.writeString(mUrlOptions.mItemPath);
         dest.writeString(mUrlOptions.mSite);
         dest.writeInt(mUrlOptions.mApiVersion);
+    }
+
+    @Override
+    public String toString() {
+        return "UploadMediaRequestOptions{" +
+                "mItemName='" + mItemName + '\'' +
+                ", mMediaFilePath='" + mMediaFilePath + '\'' +
+                ", mFileName='" + mFileName + '\'' +
+                ", mDatabase='" + mDatabase + '\'' +
+                ", mAuthOptions=" + mAuthOptions +
+                ", mUrlOptions=" + mUrlOptions +
+                '}';
     }
 
     public static final Creator<UploadMediaRequestOptions> CREATOR = new Creator<UploadMediaRequestOptions>() {
