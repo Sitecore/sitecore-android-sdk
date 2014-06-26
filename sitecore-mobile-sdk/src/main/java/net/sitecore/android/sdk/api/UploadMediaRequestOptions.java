@@ -79,10 +79,7 @@ public class UploadMediaRequestOptions implements Parcelable {
     public String getFullUrl() {
         StringBuilder builder = new StringBuilder(mUrlOptions.getUrl());
 
-        // ItemsWebAPI doesn't understand non-alphanumeric chars
-        final String cleanName = mItemName.replaceAll("[^A-Za-z0-9]", "");
-
-        builder.append("?name=").append(cleanName);
+        builder.append("?name=").append(mItemName);
         if (!TextUtils.isEmpty(mDatabase)) builder.append("&sc_database=").append(mDatabase);
         return builder.toString();
     }
