@@ -79,7 +79,7 @@ public class UploadMediaRequestOptions implements Parcelable {
     public String getFullUrl() {
         StringBuilder builder = new StringBuilder(mUrlOptions.getUrl());
 
-        builder.append("?name=").append(mItemName);
+        builder.append("?name=").append(Uri.encode(mItemName, "/"));
         if (!TextUtils.isEmpty(mDatabase)) builder.append("&sc_database=").append(mDatabase);
         return builder.toString();
     }

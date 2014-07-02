@@ -18,10 +18,11 @@ import static net.sitecore.android.sdk.api.internal.LogUtils.LOGE;
  * Under the hood it uses {@link HttpURLConnection}.
  */
 class UploadMediaHelper {
+
     private static final String BOUNDARY = "----WebKitFormBoundaryT5WjphCNABLVDqLd";
     private static final int BUFFER_SIZE = 1024; // bytes
 
-    private InputStream mInputStream;
+    private final InputStream mInputStream;
 
     /**
      * <p>Creates {@link UploadMediaHelper} based on {@link InputStream} </p>
