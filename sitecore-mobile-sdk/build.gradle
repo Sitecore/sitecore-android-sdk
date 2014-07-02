@@ -19,6 +19,8 @@ repositories {
 }
 
 dependencies {
+    compile 'com.squareup.okhttp:okhttp:2.0.0'
+
     androidTestCompile 'junit:junit:4.10'
     androidTestCompile 'org.robolectric:robolectric:2.3+'
     androidTestCompile 'com.google.mockwebserver:mockwebserver:20130706'

@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.ResultReceiver;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,7 +45,9 @@ public class UploadMediaService extends IntentService {
         mResultReceiver = intent.getParcelableExtra(EXTRA_STATUS_RECEIVER);
 
         try {
-            UploadMediaHelper mediaHelper = new UploadMediaHelper(getInputStreamFromUri(options.getMediaFilePath()));
+            final InputStream dataStream = getInputStreamFromUri(options.getMediaFilePath());
+            final OkUploadMediaHelper mediaHelper = new OkUploadMediaHelper(dataStream);
+
             LOGD("Sending POST " + options.getFullUrl());
             String response = mediaHelper.executeRequest(options);
             LOGD("Response: " + response);
