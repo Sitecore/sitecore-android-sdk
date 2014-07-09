@@ -1,5 +1,8 @@
 package net.sitecore.android.sdk.api;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.MultipartBuilder;
@@ -7,9 +10,6 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 import okio.BufferedSink;
 import okio.Okio;
@@ -70,7 +70,7 @@ class OkUploadMediaHelper {
         private final InputStream mInputStream;
 
         private InputStreamRequestBody(InputStream inputStream) {
-            this.mInputStream = inputStream;
+            mInputStream = inputStream;
         }
 
         @Override

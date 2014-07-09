@@ -40,8 +40,10 @@ public class UploadMediaService extends IntentService {
     }
 
     @Override
-    protected void onHandleIntent(Intent intent) {
+    protected final void onHandleIntent(Intent intent) {
         UploadMediaRequestOptions options = intent.getParcelableExtra(EXTRA_UPLOAD_OPTIONS);
+        onMediaUploadStarted(intent, options);
+
         mResultReceiver = intent.getParcelableExtra(EXTRA_STATUS_RECEIVER);
 
         try {
@@ -56,6 +58,9 @@ public class UploadMediaService extends IntentService {
             LOGE(e);
             sendError(e);
         }
+    }
+
+    protected void onMediaUploadStarted(Intent intent, UploadMediaRequestOptions options) {
     }
 
     private void sendResult(String message) {
